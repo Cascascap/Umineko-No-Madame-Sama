@@ -1,0 +1,36 @@
+fileFormatVersion: 2
+guid: 0fa660cfb6f024d469e0b356649e646f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - PlayerLeaderImage: {instanceID: 0}
+  - EnemyLeaderImage: {instanceID: 0}
+  - PlayerHandCard1: {instanceID: 0}
+  - PlayerHandCard2: {instanceID: 0}
+  - PlayerHandCard3: {instanceID: 0}
+  - PlayerHandCard4: {instanceID: 0}
+  - PlayerHandCard5: {instanceID: 0}
+  - EnemyHandCard1: {instanceID: 0}
+  - EnemyHandCard2: {instanceID: 0}
+  - EnemyHandCard3: {instanceID: 0}
+  - EnemyHandCard4: {instanceID: 0}
+  - EnemyHandCard5: {instanceID: 0}
+  - CardSlot00: {instanceID: 0}
+  - CardSlot01: {instanceID: 0}
+  - CardSlot02: {instanceID: 0}
+  - CardSlot10: {instanceID: 0}
+  - CardSlot11: {instanceID: 0}
+  - CardSlot12: {instanceID: 0}
+  - CardSlot20: {instanceID: 0}
+  - CardSlot21: {instanceID: 0}
+  - CardSlot22: {instanceID: 0}
+  - CardSlot30: {instanceID: 0}
+  - CardSlot31: {instanceID: 0}
+  - CardSlot32: {instanceID: 0}
+  - ZoomedCard: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
