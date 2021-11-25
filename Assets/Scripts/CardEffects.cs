@@ -79,4 +79,9 @@ public class CardEffects
     {
         throw new NotImplementedException();
     }
+
+    internal static void LambdaEffect()
+    {
+        throw new NotImplementedException();
+    }
 }

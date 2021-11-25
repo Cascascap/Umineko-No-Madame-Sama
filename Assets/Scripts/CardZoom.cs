@@ -35,7 +35,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 string cardName = this.GetComponent<Image>().sprite.name;
                 Card clickedCard = null;
-                foreach (Deck d in GameStart.DecksInGame)
+                foreach (Deck d in GameStart.INSTANCE.DecksInGame)
                 {
                     Card c = d.FindCardInDeck(cardName);
                     if (c != null)
@@ -53,33 +53,37 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         else if(eventData.button == PointerEventData.InputButton.Left)
         {
-            if (GameStart.selectedCardGameObject == null && IsCard(eventData.pointerClick))
+            if (GameStart.INSTANCE.selectedCardGameObject == null && IsCard(eventData.pointerClick))
             {
                 CreateMark();
             }
             else
             {
-                if (GameStart.selectedCardGameObject == null)
+                if (GameStart.INSTANCE.selectedCardGameObject == null)
                 {
                     return;
                 }
-                if (eventData.pointerClick.name == GameStart.selectedCardGameObject.name)
+                if (eventData.pointerClick.name == GameStart.INSTANCE.selectedCardGameObject.name)
                 {
                     RemovePreviousMark();
                 }
                 else
                 {
-                    if(CardInHand(GameStart.selectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
+                    if(CardInHand(GameStart.INSTANCE.selectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
                     {
+                        GameObject movingCard = GameStart.INSTANCE.selectedCardGameObject;
+                        movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
+                        movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
                         RemovePreviousMark();
                         Debug.Log("Put card in field");
                     }
-                    else if(PlayerCardInGame(GameStart.selectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
+                    else if(PlayerCardInGame(GameStart.INSTANCE.selectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
                     {
+                        GameObject movingCard = GameStart.INSTANCE.selectedCardGameObject;
+                        movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                         RemovePreviousMark();
-                        Debug.Log("Card moves");
                     }
-                    else if (PlayerCardInGame(GameStart.selectedCardGameObject) && EnemyCardInGame(eventData.pointerClick))
+                    else if (PlayerCardInGame(GameStart.INSTANCE.selectedCardGameObject) && EnemyCardInGame(eventData.pointerClick))
                     {
                         Debug.Log("Attack");
                     }
@@ -144,9 +148,9 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void RemovePreviousMark()
     {
-        GameObject mark = GameStart.selectedCardGameObject.transform.Find("SelectionMark").gameObject;
+        GameObject mark = GameStart.INSTANCE.selectedCardGameObject.transform.Find("SelectionMark").gameObject;
         Destroy(mark);
-        GameStart.selectedCardGameObject = null;
+        GameStart.INSTANCE.selectedCardGameObject = null;
     }
 
     private void CreateMark()
@@ -158,6 +162,6 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Image image = go.AddComponent<Image>();
         image.sprite = sprite;
         go.transform.SetParent(this.transform, false);
-        GameStart.selectedCardGameObject = go.transform.parent.gameObject;
+        GameStart.INSTANCE.selectedCardGameObject = go.transform.parent.gameObject;
     }
 }

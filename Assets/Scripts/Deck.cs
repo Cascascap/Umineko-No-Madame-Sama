@@ -67,6 +67,7 @@ public class Deck
 
     public Stack<Card> Lambda()
     {
+        this.enemyLeaderCard = new Card(0, 36, 3, CardEffects.LambdaEffect, "Lambda", new List<string> { "Leader, Witch" });
         Stack<Card> deck = new Stack<Card>();
         for (int i = 0; i < 4; i++)
         {
