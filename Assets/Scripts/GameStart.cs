@@ -19,7 +19,7 @@ public class GameStart : MonoBehaviour
     public int MAX_CARDS_PER_DECK = 4;
     public int MAX_DECK_SIZE = 30;
 
-    public GameObject selectedCardGameObject;
+    public static GameObject selectedCardGameObject;
 
 
     // Start is called before the first frame update
@@ -42,12 +42,17 @@ public class GameStart : MonoBehaviour
 
     private void PrepareEnemyLeader(string leader)
     {
-        Sprite BeatriceSprite = (Sprite)Resources.Load("cards/" + leader, typeof(Sprite));
-        /*
-        Image twentyOneImage = CardSlot11.transform.Find("Image").GetComponent<Image>();
-        twentyOneImage.sprite = BeatriceSprite;
-        (twentyOneImage.gameObject).SetActive(true);
-        */
+        Sprite enemyLeaderSprite = (Sprite)Resources.Load("cards/" + leader, typeof(Sprite));
+        GameObject go = new GameObject(leader + "Card");
+
+        Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        RectTransform rectTransform = go.AddComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(112, 160);
+        Image image = go.AddComponent<Image>();
+        image.sprite = enemyLeaderSprite;
+        go.transform.SetParent(CardSlot11.transform, false);
+        CardZoom script = go.AddComponent<CardZoom>();
+        script.ZoomedCard = ZoomedCard;
     }
 
     private void PreparePlayerLeader(string leader)
@@ -62,11 +67,6 @@ public class GameStart : MonoBehaviour
         go.transform.SetParent(CardSlot21.transform, false);
         CardZoom script = go.AddComponent<CardZoom>();
         script.ZoomedCard = ZoomedCard;
-        /*
-        Image twentyOneImage = CardSlot21.transform.Find("Image").GetComponent<Image>();
-        twentyOneImage.sprite = BeatriceSprite;
-        (twentyOneImage.gameObject).SetActive(true);
-        */
     }
 
     private Deck CreateDeck(string leader)
