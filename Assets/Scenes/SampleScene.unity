@@ -225,11 +225,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 26689635}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 26689635}
 --- !u!1 &27777751 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7183040673365620532, guid: 37065ebba4fba1240ba9a7a6b252def8,
@@ -269,11 +268,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 74811532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 74811532}
 --- !u!1001 &75587983
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -863,6 +861,21 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
 --- !u!1001 &103908991
@@ -1012,6 +1025,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardSlot20
       objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
 --- !u!224 &103908992 stripped
@@ -1020,51 +1048,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 103908991}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &147689403 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4584311320646369622, guid: 37065ebba4fba1240ba9a7a6b252def8,
-    type: 3}
-  m_PrefabInstance: {fileID: 1439085559}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &147689407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 147689403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ZoomedCard: {fileID: 38186540}
---- !u!61 &147689408
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 147689403}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.6773758, y: -0.45157242}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 120.67087, y: 168.99081}
-  m_EdgeRadius: 0
 --- !u!1 &154369299 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7183040673365620532, guid: 81ee15c92646cd340a1a2edd45ead7a9,
@@ -1105,11 +1088,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 176475091}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 176475091}
 --- !u!1001 &298250251
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1256,6 +1238,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CardSlot12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
@@ -1421,6 +1418,8 @@ MonoBehaviour:
   EnemyDeckSlot: {fileID: 27777751}
   Cards:
   - {fileID: 7183040673365620532, guid: 0e671d522ee46294780225c9ab70a829, type: 3}
+  CardPrefab: {fileID: 8151410570973560199, guid: b2f15179a8fbfba44876c409bfc81b80,
+    type: 3}
   MAX_CARDS_PER_DECK: 4
   MAX_DECK_SIZE: 30
 --- !u!224 &352767453 stripped
@@ -1501,32 +1500,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1439085559}
   m_PrefabAsset: {fileID: 0}
---- !u!61 &478419055
-BoxCollider2D:
+--- !u!114 &478419055
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 478419052}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.013687134, y: 0.17466354}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 120.612015, y: 170.24329}
-  m_EdgeRadius: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ZoomedCard: {fileID: 38186540}
 --- !u!1001 &514752653
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1674,6 +1660,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardSlot10
       objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
 --- !u!224 &514752654 stripped
@@ -1805,37 +1806,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 584083243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 584083243}
---- !u!61 &584083247
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 584083243}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.36788177, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 121.17749, y: 168.9945}
-  m_EdgeRadius: 0
 --- !u!1 &593553922
 GameObject:
   m_ObjectHideFlags: 0
@@ -2059,6 +2033,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardSlot31
       objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
 --- !u!224 &615842438 stripped
@@ -2280,11 +2269,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 719795607}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 719795607}
 --- !u!1001 &735503015
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2431,6 +2419,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CardSlot01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
@@ -2587,6 +2590,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardSlot02
       objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
 --- !u!224 &736407597 stripped
@@ -2666,11 +2684,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 903216282}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 903216282}
 --- !u!1 &933436484 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7183040673365620532, guid: 37065ebba4fba1240ba9a7a6b252def8,
@@ -2686,11 +2703,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 933436484}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 933436484}
 --- !u!1 &980618190 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7183040673365620532, guid: 37065ebba4fba1240ba9a7a6b252def8,
@@ -2706,11 +2722,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 980618190}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 980618190}
 --- !u!1001 &1035215799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2873,6 +2888,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
@@ -3401,11 +3431,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1149506633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 1149506633}
 --- !u!1001 &1159126514
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3836,6 +3865,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardSlot11
       objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
 --- !u!224 &1326855897 stripped
@@ -3894,7 +3938,7 @@ PrefabInstance:
     - target: {fileID: 2290046628056563661, guid: 37065ebba4fba1240ba9a7a6b252def8,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0.37375036
       objectReference: {fileID: 0}
     - target: {fileID: 2290046628056563661, guid: 37065ebba4fba1240ba9a7a6b252def8,
         type: 3}
@@ -3904,7 +3948,7 @@ PrefabInstance:
     - target: {fileID: 2290046628056563661, guid: 37065ebba4fba1240ba9a7a6b252def8,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0.37375036
       objectReference: {fileID: 0}
     - target: {fileID: 2290046628056563661, guid: 37065ebba4fba1240ba9a7a6b252def8,
         type: 3}
@@ -3959,7 +4003,7 @@ PrefabInstance:
     - target: {fileID: 2290046628056563661, guid: 37065ebba4fba1240ba9a7a6b252def8,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -105.00001
+      value: -4.0000076
       objectReference: {fileID: 0}
     - target: {fileID: 2290046628056563661, guid: 37065ebba4fba1240ba9a7a6b252def8,
         type: 3}
@@ -4010,6 +4054,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CardSlot21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
@@ -4465,6 +4529,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardSlot32
       objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
 --- !u!224 &1499293128 stripped
@@ -4479,38 +4558,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 93627781}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1507482207 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4584311320646369622, guid: 37065ebba4fba1240ba9a7a6b252def8,
-    type: 3}
-  m_PrefabInstance: {fileID: 1857018950}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &1507482211
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1507482207}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.4675789}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 122.06496, y: 170.51233}
-  m_EdgeRadius: 0
 --- !u!1001 &1538343663
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4662,11 +4709,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1637404914}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 1637404914}
 --- !u!1001 &1733907703
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4813,6 +4859,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CardSlot00
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
@@ -4995,7 +5056,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -10, y: 434}
+  m_AnchoredPosition: {x: -13, y: 497}
   m_SizeDelta: {x: 852, y: 230}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1841760312
@@ -5314,6 +5375,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardSlot22
       objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}
 --- !u!224 &1857018951 stripped
@@ -5374,11 +5450,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1938034567}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53d85529cfc8fd548849addcaf8fc8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fc762e5b9c5bb24ab75c06f46a3a640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomedCard: {fileID: 38186540}
-  ThisCard: {fileID: 1938034567}
 --- !u!1001 &1955233139
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5665,6 +5740,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7538211895540222734, guid: 37065ebba4fba1240ba9a7a6b252def8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5764706
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37065ebba4fba1240ba9a7a6b252def8, type: 3}

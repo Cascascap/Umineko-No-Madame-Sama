@@ -12,13 +12,15 @@ public class GameStart : MonoBehaviour
     public GameObject EnemyHandCard1, EnemyHandCard2, EnemyHandCard3, EnemyHandCard4, EnemyHandCard5;
     public GameObject CardSlot00, CardSlot01, CardSlot02, CardSlot10, CardSlot11, CardSlot12, CardSlot20, CardSlot21, CardSlot22, CardSlot30, CardSlot31, CardSlot32;
     public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot;
-    public GameObject[] Cards;
+    public GameObject CardPrefab;
+    public static List<Deck> DecksInGame = new List<Deck>();
     public int[][] field;
 
     public int MAX_CARDS_PER_DECK = 4;
     public int MAX_DECK_SIZE = 30;
 
-    public static Dictionary<string, Card> cardList = Card.getAllCards();
+    public GameObject selectedCardGameObject;
+
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +29,7 @@ public class GameStart : MonoBehaviour
         PreparePlayerLeader("Beatrice");
         PrepareEnemyLeader("Lambda");
         Deck beatriceDeck = CreateDeck("Beatrice");
+        DecksInGame.Add(beatriceDeck);
         Hand playerHand = new Hand();
         playerHand.cards = DrawStartingHand(beatriceDeck);
     }
@@ -40,17 +43,30 @@ public class GameStart : MonoBehaviour
     private void PrepareEnemyLeader(string leader)
     {
         Sprite BeatriceSprite = (Sprite)Resources.Load("cards/" + leader, typeof(Sprite));
+        /*
         Image twentyOneImage = CardSlot11.transform.Find("Image").GetComponent<Image>();
         twentyOneImage.sprite = BeatriceSprite;
         (twentyOneImage.gameObject).SetActive(true);
+        */
     }
 
     private void PreparePlayerLeader(string leader)
     {
         Sprite BeatriceSprite = (Sprite)Resources.Load("cards/" + leader, typeof(Sprite));
+        GameObject go = new GameObject(leader+"Card");
+        Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        RectTransform rectTransform = go.AddComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(112, 160);
+        Image image = go.AddComponent<Image>();
+        image.sprite = BeatriceSprite;
+        go.transform.SetParent(CardSlot21.transform, false);
+        CardZoom script = go.AddComponent<CardZoom>();
+        script.ZoomedCard = ZoomedCard;
+        /*
         Image twentyOneImage = CardSlot21.transform.Find("Image").GetComponent<Image>();
         twentyOneImage.sprite = BeatriceSprite;
         (twentyOneImage.gameObject).SetActive(true);
+        */
     }
 
     private Deck CreateDeck(string leader)

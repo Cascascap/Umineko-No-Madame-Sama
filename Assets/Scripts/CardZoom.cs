@@ -4,15 +4,20 @@ using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 
-public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IDragHandler, IEndDragHandler
+public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public GameObject ZoomedCard;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Sprite sprite = this.GetComponent<Image>().sprite;
-        ZoomedCard.GetComponent<Image>().sprite = sprite;
-        ZoomedCard.SetActive(true);
+        //If theres a card in the hovered slot or its a card in hand
+        if(this.name.EndsWith("Card") || this.transform.parent.name == "PlayerHandArea")
+        {
+            Sprite sprite = this.GetComponent<Image>().sprite;
+            ZoomedCard.GetComponent<Image>().sprite = sprite;
+            ZoomedCard.SetActive(true);
+        }
+        
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -22,11 +27,22 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        Debug.Log(eventData.pointerClick.name);
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             try
             {
-                Card clickedCard = GameStart.cardList[this.GetComponent<Image>().sprite.name];
+                string cardName = this.GetComponent<Image>().sprite.name;
+                Card clickedCard = null;
+                foreach (Deck d in GameStart.DecksInGame)
+                {
+                    Card c = d.FindCardInDeck(cardName);
+                    if (c != null)
+                    {
+                        clickedCard = c;
+                        break;
+                    }
+                }
                 clickedCard.effect();
             }
             catch(UnassignedReferenceException)
@@ -34,35 +50,16 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 Debug.Log("No card");
             }
         }
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        this.transform.position = GetMousePos(); 
-        this.gameObject.transform.parent.transform.SetAsLastSibling();
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        List<GameObject> hoveredItems = eventData.hovered;
-        foreach(GameObject go in hoveredItems)
+        else if(eventData.button == PointerEventData.InputButton.Left)
         {
-            if(go.name == "Image")
-            {
-                Debug.Log("Hovering over " + go.transform.parent.name);
-            }
-            else
-            {
-                Debug.Log("Hovering over: " + go.name);
-            }
+            Sprite sprite = (Sprite)Resources.Load("SelectionMark", typeof(Sprite));
+            GameObject go = new GameObject("SelectionMark");
+            RectTransform rectTransform = go.AddComponent<RectTransform>();
+            rectTransform.sizeDelta = new Vector2(112, 160);
+            Image image = go.AddComponent<Image>();
+            image.sprite = sprite;
+            go.transform.SetParent(this.transform, false);
         }
     }
 
-
-    private Vector3 GetMousePos()
-    {
-        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0;
-        return mousePos;
-    }
 }

@@ -9,6 +9,8 @@ public class Deck
 {
     public int remainingCards = 0;
     public Stack<Card> cards = new Stack<Card>();
+    public Card playerLeaderCard;
+    public Card enemyLeaderCard;
 
     public void InitializeDeck(string leaderName)
     {
@@ -45,6 +47,7 @@ public class Deck
     //Default decks:
     public Stack<Card> Beatrice()
     {
+        this.playerLeaderCard = new Card(0, 36, 3, CardEffects.BeatriceEffect, "Beatrice", new List<string> { "Leader, Witch" });
         Stack<Card> deck = new Stack<Card>();
         for (int i = 0; i < 10; i++){
             deck.Push(new Card(1, 2, 2, CardEffects.GoatEffect, "Goat", new List<string>{"Summoned" }));
@@ -73,5 +76,26 @@ public class Deck
         deck.Push(new Card(1, 6, 2, CardEffects.LionEffect, "Lion", new List<string> { "Human" }));
         deck.Push(new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<string> { "Cat", "Pet" }));
         return deck;
+    }
+
+    public Card FindCardInDeck(string name)
+    {
+        List<Card> cardsList = this.cards.ToList(); 
+        if(name == playerLeaderCard.imageName)
+        {
+            return playerLeaderCard;
+        }
+        if(name == enemyLeaderCard.imageName)
+        {
+            return enemyLeaderCard;
+        }
+        foreach (Card c in cardsList)
+        {
+            if(c.imageName == name)
+            {
+                return c;
+            }
+        }
+        return null;
     }
 }
