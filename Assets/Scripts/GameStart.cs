@@ -17,7 +17,8 @@ public class GameStart : MonoBehaviour
     public Button EndTurnButton;
     public Button UndoButton;
     public List<Deck> DecksInGame = new List<Deck>();
-    public List<GameObject> CardsInGame = new List<GameObject>();
+    public List<Card> CardsInGame = new List<Card>();
+    public List<GameObject> CardGameObjectsInGame = new List<GameObject>();
     public List<GameObject> StatBoxes = new List<GameObject>();
     public int[][] field;
 
@@ -41,10 +42,9 @@ public class GameStart : MonoBehaviour
     public Card FindCard(string name)
     {
         Card card = null;
-        foreach (Deck d in GameStart.INSTANCE.DecksInGame)
+        foreach (Card c in CardsInGame)
         {
-            Card c = d.FindCardInDeck(name);
-            if (c != null)
+            if (c.imageName == name)
             {
                 card = c;
                 break;
@@ -69,8 +69,8 @@ public class GameStart : MonoBehaviour
         Deck lambdaDeck = CreateDeck("Lambda");
         DecksInGame.Add(beatriceDeck);
         DecksInGame.Add(lambdaDeck);
-        CardsInGame.Add(CreateCardInSlot("Beatrice", CardSlot21));
-        CardsInGame.Add(CreateCardInSlot("Lambda", CardSlot11));
+        CardGameObjectsInGame.Add(CreateCardInSlot("Beatrice", CardSlot21));
+        CardGameObjectsInGame.Add(CreateCardInSlot("Lambda", CardSlot11));
         Hand playerHand = new Hand();
         Hand enemyHand = new Hand();
         enemyHand.cards = DrawEnemyStartingHand(lambdaDeck);
@@ -98,7 +98,7 @@ public class GameStart : MonoBehaviour
             {
                 SaveGameObject(go);
             }
-            foreach (GameObject go in CardsInGame)
+            foreach (GameObject go in CardGameObjectsInGame)
             {
                 SaveGameObject(go);
             }
@@ -121,7 +121,7 @@ public class GameStart : MonoBehaviour
             {
                 LoadGameObject(go);
             }
-            foreach (GameObject go in CardsInGame)
+            foreach (GameObject go in CardGameObjectsInGame)
             {
                 LoadGameObject(go);
             }
@@ -143,9 +143,16 @@ public class GameStart : MonoBehaviour
         CardZoom script = go.AddComponent<CardZoom>();
         script.ZoomedCard = ZoomedCard;
 
+        UpdateStatBoxes(cardName, cardSlot);
+        
+        return go;
+    }
+
+    public void UpdateStatBoxes(string cardName, GameObject cardSlot)
+    {
         Card card = FindCard(cardName);
         string slotNumber = cardSlot.name.Substring(8, 2);
-        GameObject hpGODad = cardSlot.transform.Find("HPBlock"+slotNumber).gameObject;
+        GameObject hpGODad = cardSlot.transform.Find("HPBlock" + slotNumber).gameObject;
         GameObject hpGO = hpGODad.transform.GetChild(0).gameObject;
         GameObject atkGODad = cardSlot.transform.Find("ATKBlock" + slotNumber).gameObject;
         GameObject atkGO = atkGODad.transform.GetChild(0).gameObject;
@@ -157,7 +164,6 @@ public class GameStart : MonoBehaviour
         hpGODad.SetActive(true);
         atkGODad.SetActive(true);
         costGODad.SetActive(true);
-        return go;
     }
 
     private Deck CreateDeck(string leader)

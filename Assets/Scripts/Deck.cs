@@ -13,7 +13,8 @@ public class Deck
 
     public void InitializeDeck(string leaderName)
     {
-        this.cards = CallMethod(leaderName);
+        this.cards = new Stack<Card>();
+        CallMethod(leaderName);
         this.remainingCards = cards.Count;
         Debug.Log(this.remainingCards);
     }
@@ -42,40 +43,46 @@ public class Deck
         foreach (var value in values.OrderBy(x => rnd.Next()))
             this.cards.Push(value);
     }
-
-    //Default decks:
-    public Stack<Card> Beatrice()
+    private void AddCardRegister(Card card, bool leader = false, int times = 1)
     {
-        this.leaderCard = new Card(0, 36, 3, CardEffects.BeatriceEffect, "Beatrice", new List<string> { "Leader, Witch" });
-        Stack<Card> deck = new Stack<Card>();
-        for (int i = 0; i < 10; i++){
-            deck.Push(new Card(1, 2, 2, CardEffects.GoatEffect, "Goat", new List<string>{"Summoned" }));
+        GameStart.INSTANCE.CardsInGame.Add(card);
+        if (!leader)
+        {
+            for (int i = 0; i < times; i++)
+            {
+                this.cards.Push(card);
+            }
         }
-        deck.Push(new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<string> {"Summoned", "Stake"}));
-        deck.Push(new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<string> { "Summoned", "Stake" }));
-        deck.Push(new Card(1, 6, 2, CardEffects.LionEffect, "Belphegor", new List<string> { "Summoned", "Stake" }));
-        deck.Push(new Card(1, 4, 4, CardEffects.LeviathanEffect, "Leviathan", new List<string> { "Summoned", "Stake" }));
-        deck.Push(new Card(1, 4, 4, CardEffects.MammonEffect, "Mammon", new List<string> { "Summoned", "Stake" }));
-        deck.Push(new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<string> { "Summoned", "Stake" }));
-        deck.Push(new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<string> { "Summoned", "Stake" }));
-        deck.Push(new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<string> { "Summoned", "Demon" }));
-        deck.Push(new Card(2, 8, 4, CardEffects.RonoveEffect, "Ronove", new List<string> { "Summoned", "Demon" }));
-        deck.Push(new Card(3, 12, 6, CardEffects.VirgiliaEffect, "Virgilia", new List<string> { "Witch"}));
-        return deck;
     }
 
-    public Stack<Card> Lambda()
+    //Default decks:
+    public void Beatrice()
+    {
+        this.leaderCard = new Card(0, 36, 3, CardEffects.BeatriceEffect, "Beatrice", new List<string> { "Leader, Witch" });
+        AddCardRegister(this.leaderCard, true);
+        Card goat = new Card(1, 2, 2, CardEffects.GoatEffect, "Goat", new List<string> { "Summoned" });
+        AddCardRegister(goat, times:10);
+        AddCardRegister(new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<string> {"Summoned", "Stake"}));
+        AddCardRegister(new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<string> { "Summoned", "Stake" }));
+        AddCardRegister(new Card(1, 6, 2, CardEffects.LionEffect, "Belphegor", new List<string> { "Summoned", "Stake" }));
+        AddCardRegister(new Card(1, 4, 4, CardEffects.LeviathanEffect, "Leviathan", new List<string> { "Summoned", "Stake" }));
+        AddCardRegister(new Card(1, 4, 4, CardEffects.MammonEffect, "Mammon", new List<string> { "Summoned", "Stake" }));
+        AddCardRegister(new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<string> { "Summoned", "Stake" }));
+        AddCardRegister(new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<string> { "Summoned", "Stake" }));
+        AddCardRegister(new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<string> { "Summoned", "Demon" }));
+        AddCardRegister(new Card(2, 8, 4, CardEffects.RonoveEffect, "Ronove", new List<string> { "Summoned", "Demon" }));
+        AddCardRegister(new Card(3, 12, 6, CardEffects.VirgiliaEffect, "Virgilia", new List<string> { "Witch"}));
+    }
+
+    public void Lambda()
     {
         this.leaderCard = new Card(0, 36, 3, CardEffects.LambdaEffect, "Lambda", new List<string> { "Leader, Witch" });
-        Stack<Card> deck = new Stack<Card>();
-        for (int i = 0; i < 4; i++)
-        {
-            deck.Push(new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<string> { "Summoned", "Object" }));
-        }
-        deck.Push(new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<string> { "Human" }));
-        deck.Push(new Card(1, 6, 2, CardEffects.LionEffect, "Lion", new List<string> { "Human" }));
-        deck.Push(new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<string> { "Cat", "Pet" }));
-        return deck;
+        AddCardRegister(this.leaderCard, true);
+        Card Konpeitou = new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<string> { "Summoned", "Object" });
+        AddCardRegister(Konpeitou, times:4);
+        AddCardRegister(new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<string> { "Human" }));
+        AddCardRegister(new Card(1, 6, 2, CardEffects.LionEffect, "Lion", new List<string> { "Human" }));
+        AddCardRegister(new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<string> { "Cat", "Pet" }));
     }
 
     public Card FindCardInDeck(string name)

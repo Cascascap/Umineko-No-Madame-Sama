@@ -64,6 +64,8 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
                         movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                         movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
+                        string cardName = movingCard.GetComponent<Image>().sprite.name;
+                        GameStart.INSTANCE.UpdateStatBoxes(cardName, eventData.pointerClick.gameObject);
                         RemovePreviousMark();
                         Debug.Log("Put card in field");
                     }
