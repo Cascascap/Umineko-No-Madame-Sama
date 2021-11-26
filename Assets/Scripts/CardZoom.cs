@@ -34,19 +34,9 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             try
             {
                 string cardName = this.GetComponent<Image>().sprite.name;
-                Card clickedCard = null;
-                foreach (Deck d in GameStart.INSTANCE.DecksInGame)
-                {
-                    Card c = d.FindCardInDeck(cardName);
-                    if (c != null)
-                    {
-                        clickedCard = c;
-                        break;
-                    }
-                }
-                clickedCard.effect();
+                UseCardEffect(cardName);
             }
-            catch(UnassignedReferenceException)
+            catch (UnassignedReferenceException)
             {
                 Debug.Log("No card");
             }
@@ -91,6 +81,12 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             }
             
         }
+    }
+
+    private static void UseCardEffect(string cardName)
+    {
+        Card card = GameStart.INSTANCE.FindCard(cardName);
+        card.effect();
     }
 
     private bool IsAllyCard(GameObject card)
