@@ -2,27 +2,40 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameStart : MonoBehaviour
 {
-    public GameObject PlayerLeaderImage, EnemyLeaderImage;
+    public GameObject PlayerLeaderImage, EnemyLeaderImage, PlayerLifePoints, EnemyLifePoints;
     public GameObject PlayerHandCard1, PlayerHandCard2, PlayerHandCard3, PlayerHandCard4, PlayerHandCard5;
     public GameObject EnemyHandCard1, EnemyHandCard2, EnemyHandCard3, EnemyHandCard4, EnemyHandCard5;
     public GameObject CardSlot00, CardSlot01, CardSlot02, CardSlot10, CardSlot11, CardSlot12, CardSlot20, CardSlot21, CardSlot22, CardSlot30, CardSlot31, CardSlot32;
     public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot;
     public GameObject CardPrefab;
+    public Button EndTurnButton;
+    public Button UndoButton;
     public List<Deck> DecksInGame = new List<Deck>();
+    public List<GameObject> StatBoxes = new List<GameObject>();
     public int[][] field;
 
     public int MAX_CARDS_PER_DECK = 4;
     public int MIN_DECK_SIZE = 5;
     public int MAX_DECK_SIZE = 30;
 
-    public GameObject selectedCardGameObject;
+    public GameObject SelectedCardGameObject;
+    public State GameState = State.Summoning;
 
     public static GameStart INSTANCE = null;
+
+    public enum State
+    {
+        Summoning,
+        Moving,
+        Battle,
+        EnemyTurn
+    }
 
 
     // Start is called before the first frame update
@@ -32,18 +45,23 @@ public class GameStart : MonoBehaviour
         {
             INSTANCE = this;
         }
-        Debug.Log("Starting");
-        CreateCardInSlot("Beatrice", CardSlot11);
-        CreateCardInSlot("Lambda", CardSlot21);
+        Debug.Log("Starting"); 
+        Button EndTurnbtn = EndTurnButton.GetComponent<Button>();
+        Button UndoBtn = UndoButton.GetComponent<Button>();
+        EndTurnbtn.onClick.AddListener(OnEndTurn);
+        UndoBtn.onClick.AddListener(Undo);
+        CreateCardInSlot("Beatrice", CardSlot21);
+        CreateCardInSlot("Lambda", CardSlot11);
         Deck beatriceDeck = CreateDeck("Beatrice");
         Deck lambdaDeck = CreateDeck("Lambda");
         DecksInGame.Add(beatriceDeck);
         DecksInGame.Add(lambdaDeck);
         Hand playerHand = new Hand();
         Hand enemyHand = new Hand();
-        enemyHand.cards = DrawEnemyStartingHand(beatriceDeck);
-        playerHand.cards = DrawPlayerStartingHand(lambdaDeck);
+        enemyHand.cards = DrawEnemyStartingHand(lambdaDeck);
+        playerHand.cards = DrawPlayerStartingHand(beatriceDeck);
     }
+
 
     // Update is called once per frame
     void Update()
@@ -51,6 +69,35 @@ public class GameStart : MonoBehaviour
 
     }
 
+    private void OnEndTurn()
+    {
+        foreach(GameObject go in StatBoxes)
+        {
+            SaveStatBox(go);
+        }
+        List<GameObject> cardsInHand = new List<GameObject> { PlayerHandCard1, PlayerHandCard2, PlayerHandCard3, PlayerHandCard4, PlayerHandCard5 };
+        foreach(GameObject go in cardsInHand)
+        {
+            SaveGameObject(go);
+        }
+        PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
+        PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
+    }
+
+    private void Undo()
+    {
+        foreach (GameObject go in StatBoxes)
+        {
+            LoadStatBox(go.name);
+        }
+        List<GameObject> cardsInHand = new List<GameObject> { PlayerHandCard1, PlayerHandCard2, PlayerHandCard3, PlayerHandCard4, PlayerHandCard5 };
+        foreach (GameObject go in cardsInHand)
+        {
+            LoadGameObject(go);
+        }
+        PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
+        EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
+    }
 
     public void CreateCardInSlot(string cardName, GameObject cardSlot)
     {
@@ -145,4 +192,38 @@ public class GameStart : MonoBehaviour
         PlayerHandCard5.SetActive(true);
         return ret;
     }
+
+    private void SaveStatBox(GameObject go)
+    {
+        GameObject boxText = go.transform.GetChild(0).gameObject;
+        TextMeshProUGUI text = boxText.GetComponent<TextMeshProUGUI>();
+        PlayerPrefs.SetString(go.name, text.text);
+    }
+
+    private void LoadStatBox(string lifeBoxName)
+    {
+        GameObject go = GameObject.Find(lifeBoxName);
+        if(go != null)
+        {
+            go = go.transform.GetChild(0).gameObject;
+            TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
+            text.text = PlayerPrefs.GetString(lifeBoxName);
+        }
+    }
+    private void SaveGameObject(GameObject go)
+    {
+        PlayerPrefs.SetString(go.name, go.transform.parent.name);
+        PlayerPrefs.SetFloat(go.name + "x", go.transform.localPosition.x);
+        PlayerPrefs.SetFloat(go.name + "y", go.transform.localPosition.y);
+    }
+
+    private void LoadGameObject(GameObject go)
+    {
+        GameObject savedObjectParent = GameObject.Find(PlayerPrefs.GetString(go.name));
+        go.transform.SetParent(savedObjectParent.gameObject.transform, false);
+        float x = PlayerPrefs.GetFloat(go.name + "x");
+        float y = PlayerPrefs.GetFloat(go.name + "y");
+        go.GetComponent<RectTransform>().localPosition = new Vector2(x, y);
+    }
+
 }

@@ -53,37 +53,37 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         else if(eventData.button == PointerEventData.InputButton.Left)
         {
-            if (GameStart.INSTANCE.selectedCardGameObject == null && IsCard(eventData.pointerClick))
+            if (GameStart.INSTANCE.SelectedCardGameObject == null && IsAllyCard(eventData.pointerClick))
             {
                 CreateMark();
             }
             else
             {
-                if (GameStart.INSTANCE.selectedCardGameObject == null)
+                if (GameStart.INSTANCE.SelectedCardGameObject == null)
                 {
                     return;
                 }
-                if (eventData.pointerClick.name == GameStart.INSTANCE.selectedCardGameObject.name)
+                if (eventData.pointerClick.name == GameStart.INSTANCE.SelectedCardGameObject.name)
                 {
                     RemovePreviousMark();
                 }
                 else
                 {
-                    if(CardInHand(GameStart.INSTANCE.selectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
+                    if(CardInHand(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
                     {
-                        GameObject movingCard = GameStart.INSTANCE.selectedCardGameObject;
+                        GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
                         movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                         movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
                         RemovePreviousMark();
                         Debug.Log("Put card in field");
                     }
-                    else if(PlayerCardInGame(GameStart.INSTANCE.selectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
+                    else if(PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
                     {
-                        GameObject movingCard = GameStart.INSTANCE.selectedCardGameObject;
+                        GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
                         movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                         RemovePreviousMark();
                     }
-                    else if (PlayerCardInGame(GameStart.INSTANCE.selectedCardGameObject) && EnemyCardInGame(eventData.pointerClick))
+                    else if (PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && EnemyCardInGame(eventData.pointerClick))
                     {
                         Debug.Log("Attack");
                     }
@@ -91,6 +91,11 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             }
             
         }
+    }
+
+    private bool IsAllyCard(GameObject card)
+    {
+        return card.name.EndsWith("Card") && (card.transform.parent.parent.name == "PlayerField" || card.transform.parent.name == "PlayerHandArea");
     }
 
     private bool EnemyCardInGame(GameObject card)
@@ -148,9 +153,9 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void RemovePreviousMark()
     {
-        GameObject mark = GameStart.INSTANCE.selectedCardGameObject.transform.Find("SelectionMark").gameObject;
+        GameObject mark = GameStart.INSTANCE.SelectedCardGameObject.transform.Find("SelectionMark").gameObject;
         Destroy(mark);
-        GameStart.INSTANCE.selectedCardGameObject = null;
+        GameStart.INSTANCE.SelectedCardGameObject = null;
     }
 
     private void CreateMark()
@@ -162,6 +167,6 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Image image = go.AddComponent<Image>();
         image.sprite = sprite;
         go.transform.SetParent(this.transform, false);
-        GameStart.INSTANCE.selectedCardGameObject = go.transform.parent.gameObject;
+        GameStart.INSTANCE.SelectedCardGameObject = go.transform.parent.gameObject;
     }
 }
