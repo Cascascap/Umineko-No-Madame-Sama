@@ -17,6 +17,7 @@ public class GameStart : MonoBehaviour
     public Button EndTurnButton;
     public Button UndoButton;
     public List<Deck> DecksInGame = new List<Deck>();
+    public List<GameObject> CardsInGame = new List<GameObject>();
     public List<GameObject> StatBoxes = new List<GameObject>();
     public int[][] field;
 
@@ -50,8 +51,8 @@ public class GameStart : MonoBehaviour
         Button UndoBtn = UndoButton.GetComponent<Button>();
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
-        CreateCardInSlot("Beatrice", CardSlot21);
-        CreateCardInSlot("Lambda", CardSlot11);
+        CardsInGame.Add(CreateCardInSlot("Beatrice", CardSlot21));
+        CardsInGame.Add(CreateCardInSlot("Lambda", CardSlot11));
         Deck beatriceDeck = CreateDeck("Beatrice");
         Deck lambdaDeck = CreateDeck("Lambda");
         DecksInGame.Add(beatriceDeck);
@@ -60,6 +61,7 @@ public class GameStart : MonoBehaviour
         Hand enemyHand = new Hand();
         enemyHand.cards = DrawEnemyStartingHand(lambdaDeck);
         playerHand.cards = DrawPlayerStartingHand(beatriceDeck);
+        OnEndTurn();
     }
 
 
@@ -80,6 +82,10 @@ public class GameStart : MonoBehaviour
         {
             SaveGameObject(go);
         }
+        foreach (GameObject go in CardsInGame)
+        {
+            SaveGameObject(go);
+        }
         PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
         PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
     }
@@ -95,11 +101,15 @@ public class GameStart : MonoBehaviour
         {
             LoadGameObject(go);
         }
+        foreach (GameObject go in CardsInGame)
+        {
+            LoadGameObject(go);
+        }
         PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
         EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
     }
 
-    public void CreateCardInSlot(string cardName, GameObject cardSlot)
+    public GameObject CreateCardInSlot(string cardName, GameObject cardSlot)
     {
         Sprite enemyLeaderSprite = (Sprite)Resources.Load("cards/" + cardName, typeof(Sprite));
         GameObject go = new GameObject(cardName + "Card");
@@ -111,6 +121,7 @@ public class GameStart : MonoBehaviour
         go.transform.SetParent(cardSlot.transform, false);
         CardZoom script = go.AddComponent<CardZoom>();
         script.ZoomedCard = ZoomedCard;
+        return go;
     }
 
     private Deck CreateDeck(string leader)
