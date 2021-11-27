@@ -18,7 +18,7 @@ public class GameStart : MonoBehaviour
     public Button UndoButton;
     public List<Deck> DecksInGame = new List<Deck>();
     public List<Card> CardsInGame = new List<Card>();
-    public List<GameObject> CardGameObjectsInGame = new List<GameObject>();
+    public List<CardObject> CardGameObjectsInGame = new List<CardObject>();
     public List<GameObject> StatBoxes = new List<GameObject>();
     private Dictionary<string, GameObject> SlotMap = new Dictionary<string, GameObject>();
     public TextMeshProUGUI TurnStateDisplay;
@@ -55,6 +55,22 @@ public class GameStart : MonoBehaviour
         return card;
     }
 
+    public CardObject FindCardObject(GameObject go)
+    {
+        CardObject co = null;
+        foreach (CardObject c in CardGameObjectsInGame)
+        {
+            if (c.GameObject.GetInstanceID() == go.GetInstanceID())
+            {
+                co = c;
+                break;
+            }
+        }
+        return co;
+        
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,8 +89,8 @@ public class GameStart : MonoBehaviour
         Deck lambdaDeck = CreateDeck(EnemyLeader);
         DecksInGame.Add(beatriceDeck);
         DecksInGame.Add(lambdaDeck);
-        CardGameObjectsInGame.Add(CreateCardInSlot(PlayerLeader, CardSlot21));
-        CardGameObjectsInGame.Add(CreateCardInSlot(EnemyLeader, CardSlot11));
+        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot21)));
+        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot11)));
         Hand playerHand = new Hand();
         Hand enemyHand = new Hand();
         enemyHand.cards = DrawEnemyStartingHand(lambdaDeck);
@@ -259,9 +275,9 @@ public class GameStart : MonoBehaviour
             {
                 SaveGameObject(go);
             }
-            foreach (GameObject go in CardGameObjectsInGame)
+            foreach (CardObject go in CardGameObjectsInGame)
             {
-                SaveGameObject(go);
+                SaveGameObject(go.GameObject);
             }
             PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
             PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
@@ -272,13 +288,14 @@ public class GameStart : MonoBehaviour
 
     private void RestoreCards()
     {
-        foreach(GameObject go in CardGameObjectsInGame)
+        foreach(CardObject co in CardGameObjectsInGame)
         {
+            GameObject go = co.GameObject;
             Image goImage = go.GetComponent<Image>();
             goImage.color = new Color32(255, 255, 255, 255);
             Card card = FindCard(goImage.sprite.name);
-            card.acted = false;
-            card.usedEffect = false;
+            co.acted = false;
+            co.usedEffect = false;
         }
     }
 
@@ -295,9 +312,9 @@ public class GameStart : MonoBehaviour
             {
                 LoadGameObject(go);
             }
-            foreach (GameObject go in CardGameObjectsInGame)
+            foreach (CardObject go in CardGameObjectsInGame)
             {
-                LoadGameObject(go);
+                LoadGameObject(go.GameObject);
             }
             PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");

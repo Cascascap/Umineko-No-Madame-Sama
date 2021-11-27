@@ -35,11 +35,11 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             try
             {
                 string cardName = this.GetComponent<Image>().sprite.name;
-                Card card = GameStart.INSTANCE.FindCard(cardName);
-                if (!card.usedEffect)
+                CardObject cardObject = GameStart.INSTANCE.FindCardObject(this.gameObject);
+                if (!cardObject.usedEffect)
                 {
                     UseCardEffect(cardName);
-                    card.usedEffect = true;
+                    cardObject.usedEffect = true;
                     Debug.Log("Using effect");
                 }
                 else
@@ -87,7 +87,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             GameObject previousParent = movingCard.transform.parent.gameObject;
                             movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                             movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
-                            GameStart.INSTANCE.CardGameObjectsInGame.Add(movingCard);
+                            GameStart.INSTANCE.CardGameObjectsInGame.Add(new CardObject(movingCard));
                             GameStart.INSTANCE.UpdateStatBoxes(card, eventData.pointerClick.gameObject, previousParent);
                             RemovePreviousMark();
                             GameStart.INSTANCE.RecalculateCosts();
@@ -116,7 +116,8 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     {
                         string playerCardName = GameStart.INSTANCE.SelectedCardGameObject.GetComponent<Image>().sprite.name;
                         Card playerCard = GameStart.INSTANCE.FindCard(playerCardName);
-                        if (playerCard.acted)
+                        CardObject cardObject = GameStart.INSTANCE.FindCardObject(GameStart.INSTANCE.SelectedCardGameObject);
+                        if (cardObject.acted)
                         {
                             Debug.Log("Already attacked");
                             return; 
@@ -128,7 +129,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         if (destroysCard)
                         {
                             GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
-                            GameStart.INSTANCE.CardGameObjectsInGame.Remove(enemyCardGO);
+                            GameStart.INSTANCE.CardGameObjectsInGame.Remove(cardObject);
                             GameObject.Destroy(enemyCardGO);
                             if(enemyCardName == GameStart.INSTANCE.EnemyLeader)
                             {
@@ -137,7 +138,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         }
                         Image cardImage = GameStart.INSTANCE.SelectedCardGameObject.GetComponent<UnityEngine.UI.Image>();
                         cardImage.color = new Color32(40, 40, 40, 255);
-                        playerCard.acted = true;
+                        cardObject.acted = true;
                         RemovePreviousMark();
                         GameStart.INSTANCE.RecalculateCosts();
                         Debug.Log("Attack");

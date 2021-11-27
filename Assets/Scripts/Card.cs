@@ -19,11 +19,10 @@ public class Card
     public int cost { get; set; }
     public int hp { get; set; }
     public int attack { get; set; }
-    public bool acted { get; set; }
-    public bool usedEffect { get; set; }
     public int counters { get; set; }
     public Action effect { get; set; }
     public string imageName { get; set; }
     public List<string> tags { get; set; }
+
 
 }
