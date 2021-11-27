@@ -19,21 +19,11 @@ public class Card
     public int cost { get; set; }
     public int hp { get; set; }
     public int attack { get; set; }
-    public int positionX { get; set; }
-    public int positionY { get; set; }
     public bool acted { get; set; }
     public bool usedEffect { get; set; }
-    public Action effect { get; set; }
     public int counters { get; set; }
+    public Action effect { get; set; }
     public string imageName { get; set; }
     public List<string> tags { get; set; }
 
-    internal static Dictionary<string, Card> getAllCards()
-    {
-        Dictionary<string, Card> allCards = new Dictionary<string, Card>();
-
-        //allCards.Add("Beatrice", new Card(0, 36, 3, CardEffects.BeatriceEffect, "Beatrice"));
-
-        return allCards;
-    }
 }

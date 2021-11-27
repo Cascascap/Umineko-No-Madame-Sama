@@ -217,17 +217,26 @@ public class GameStart : MonoBehaviour
         GameObject hpbox = defenderSlot.transform.GetChild(0).GetChild(0).gameObject;
         TextMeshProUGUI hpText = hpbox.GetComponent<TextMeshProUGUI>();
         int newHP = (Int32.Parse(hpText.text) - damage);
+        //if attacking leader
         if(newHP <= 0)
         {
             GameObject atkbox = defenderSlot.transform.GetChild(1).GetChild(0).gameObject;
             TextMeshProUGUI atkText = atkbox.GetComponent<TextMeshProUGUI>();
             atkText.text = 0.ToString();
             hpText.text = 0.ToString();
+            if (EnemyLeader == defenderSlot.GetComponent<Image>().sprite.name)
+            {
+                EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = 0.ToString();
+            }
             return true;
         }
         else
         {
-            hpText.text = newHP.ToString();
+            hpText.text = newHP.ToString(); 
+            if (EnemyLeader == defenderSlot.transform.GetChild(3).GetComponent<Image>().sprite.name)
+            {
+                EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = newHP.ToString();
+            }
             return false;
         }
     }

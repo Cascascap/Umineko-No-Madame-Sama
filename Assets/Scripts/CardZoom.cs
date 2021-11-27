@@ -35,7 +35,17 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             try
             {
                 string cardName = this.GetComponent<Image>().sprite.name;
-                UseCardEffect(cardName);
+                Card card = GameStart.INSTANCE.FindCard(cardName);
+                if (!card.usedEffect)
+                {
+                    UseCardEffect(cardName);
+                    card.usedEffect = true;
+                    Debug.Log("Using effect");
+                }
+                else
+                {
+                    Debug.Log("Already used this effect");
+                }
             }
             catch (UnassignedReferenceException)
             {

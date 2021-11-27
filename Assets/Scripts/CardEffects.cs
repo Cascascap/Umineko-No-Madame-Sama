@@ -32,7 +32,7 @@ public class CardEffects
 
     internal static void GoatEffect()
     {
-        throw new NotImplementedException();
+        return;
     }
 
     internal static void VirgiliaEffect()
