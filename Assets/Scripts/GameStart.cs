@@ -29,14 +29,14 @@ public class GameStart : MonoBehaviour
     public int MAX_DECK_SIZE = 30;
 
     public GameObject SelectedCardGameObject;
-    public State GameState = State.Summoning;
+    public State GameState = State.Moving;
 
     public static GameStart INSTANCE = null;
 
     public enum State
     {
-        Summoning,
         Moving,
+        Summoning,
         Battle,
         EnemyTurn
     }
@@ -86,18 +86,19 @@ public class GameStart : MonoBehaviour
         EnemyLeader = "Lambda";
         PlayerLeader = "Beatrice";
         Deck beatriceDeck = CreateDeck(PlayerLeader);
-        Deck lambdaDeck = CreateDeck(EnemyLeader);
+        Deck enemyDeck = CreateDeck(EnemyLeader);
         DecksInGame.Add(beatriceDeck);
-        DecksInGame.Add(lambdaDeck);
+        DecksInGame.Add(enemyDeck);
+        AIFunctions.INSTANCE.deck = enemyDeck;
         CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot21)));
         CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot11)));
         Hand playerHand = new Hand();
         Hand enemyHand = new Hand();
-        enemyHand.cards = DrawEnemyStartingHand(lambdaDeck);
+        enemyHand.cards = DrawEnemyStartingHand(enemyDeck);
         playerHand.cards = DrawPlayerStartingHand(beatriceDeck);
         InitializeSlotMap();
         RecalculateCosts();
-        OnEndTurn();
+        SaveState();
     }
 
     private void InitializeSlotMap()
@@ -266,24 +267,35 @@ public class GameStart : MonoBehaviour
     {
         if (GameState != State.EnemyTurn)
         {
-            foreach (GameObject go in StatBoxes)
-            {
-                SaveStatBox(go);
-            }
-            List<GameObject> cardsInHand = new List<GameObject> { PlayerHandCard1, PlayerHandCard2, PlayerHandCard3, PlayerHandCard4, PlayerHandCard5 };
-            foreach (GameObject go in cardsInHand)
-            {
-                SaveGameObject(go);
-            }
-            foreach (CardObject go in CardGameObjectsInGame)
-            {
-                SaveGameObject(go.GameObject);
-            }
-            PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
-            PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
-            RestoreCards();
+            SaveState();
+            GameState = State.EnemyTurn;
         }
-        
+    }
+
+    private void SaveState()
+    {
+        foreach (GameObject go in StatBoxes)
+        {
+            SaveStatBox(go);
+        }
+        List<GameObject> cardsInHand = new List<GameObject> { PlayerHandCard1, PlayerHandCard2, PlayerHandCard3, PlayerHandCard4, PlayerHandCard5 };
+        foreach (GameObject go in cardsInHand)
+        {
+            SaveGameObject(go);
+        }
+        foreach (CardObject go in CardGameObjectsInGame)
+        {
+            SaveGameObject(go.GameObject);
+        }
+        PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
+        PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
+        AIFunctions.INSTANCE.TakeTurn();
+    }
+
+    public void OnTurnStart()
+    {
+        GameState = State.Moving;
+        RestoreCards();
     }
 
     private void RestoreCards()

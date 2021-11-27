@@ -36,7 +36,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 string cardName = this.GetComponent<Image>().sprite.name;
                 CardObject cardObject = GameStart.INSTANCE.FindCardObject(this.gameObject);
-                if (!cardObject.usedEffect)
+                if (!cardObject.usedEffect && (GameStart.INSTANCE.GameState == GameStart.State.Moving || GameStart.INSTANCE.GameState == GameStart.State.Summoning))
                 {
                     UseCardEffect(cardName);
                     cardObject.usedEffect = true;
@@ -75,8 +75,9 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 }
                 else
                 {
-                    if(CardInHand(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && GameStart.INSTANCE.GameState == GameStart.State.Summoning)
+                    if(CardInHand(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && (GameStart.INSTANCE.GameState == GameStart.State.Summoning || GameStart.INSTANCE.GameState == GameStart.State.Moving))
                     {
+                        GameStart.INSTANCE.GameState = GameStart.State.Summoning;
                         GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
                         string cardName = movingCard.GetComponent<Image>().sprite.name;
                         Card card = GameStart.INSTANCE.FindCard(cardName);
@@ -99,10 +100,16 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         }
                         
                     }
-                    else if(PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && (GameStart.INSTANCE.GameState == GameStart.State.Summoning || GameStart.INSTANCE.GameState == GameStart.State.Moving))
+                    else if(PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && GameStart.INSTANCE.GameState == GameStart.State.Moving)
                     {
-                        GameStart.INSTANCE.GameState = GameStart.State.Moving;
                         GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
+                        CardObject cardObject = GameStart.INSTANCE.FindCardObject(movingCard);
+                        if(cardObject.moved)
+                        {
+                            Debug.Log("Already moved");
+                            return;
+                        }
+                        cardObject.moved = true;
                         GameObject previousParent = movingCard.transform.parent.gameObject;
                         string cardName = movingCard.GetComponent<Image>().sprite.name;
                         movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);

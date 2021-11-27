@@ -3017,6 +3017,7 @@ GameObject:
   - component: {fileID: 352502997}
   - component: {fileID: 352502996}
   - component: {fileID: 352503000}
+  - component: {fileID: 352503001}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3152,7 +3153,6 @@ MonoBehaviour:
     type: 3}
   EndTurnButton: {fileID: 734725848}
   UndoButton: {fileID: 215018370}
-  CardGameObjectsInGame: []
   StatBoxes:
   - {fileID: 1138720412}
   - {fileID: 429924758}
@@ -3191,11 +3191,25 @@ MonoBehaviour:
   - {fileID: 48840974}
   - {fileID: 176894531}
   TurnStateDisplay: {fileID: 565015853}
+  EnemyLeader: 
+  PlayerLeader: 
   MAX_CARDS_PER_DECK: 4
   MIN_DECK_SIZE: 5
   MAX_DECK_SIZE: 30
   SelectedCardGameObject: {fileID: 0}
   GameState: 0
+--- !u!114 &352503001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352502995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0394c25f9872f834f906b2c90878b397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &352767453 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2290046628056563661, guid: 37065ebba4fba1240ba9a7a6b252def8,
