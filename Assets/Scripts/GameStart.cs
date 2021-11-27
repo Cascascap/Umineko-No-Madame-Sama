@@ -256,8 +256,21 @@ public class GameStart : MonoBehaviour
             }
             PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
             PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
+            RestoreCards();
         }
         
+    }
+
+    private void RestoreCards()
+    {
+        foreach(GameObject go in CardGameObjectsInGame)
+        {
+            Image goImage = go.GetComponent<Image>();
+            goImage.color = new Color32(255, 255, 255, 255);
+            Card card = FindCard(goImage.sprite.name);
+            card.acted = false;
+            card.usedEffect = false;
+        }
     }
 
     private void Undo()
