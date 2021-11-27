@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
@@ -47,6 +48,11 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 CreateMark();
             }
+            else if (IsAllyCard(eventData.pointerClick))
+            {
+                RemovePreviousMark(); 
+                CreateMark();
+            }
             else
             {
                 if (GameStart.INSTANCE.SelectedCardGameObject == null)
@@ -59,31 +65,63 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 }
                 else
                 {
-                    if(CardInHand(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
+                    if(CardInHand(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && GameStart.INSTANCE.GameState == GameStart.State.Summoning)
                     {
                         GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
-                        GameObject previousParent = movingCard.transform.parent.gameObject;
-                        movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
-                        movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
                         string cardName = movingCard.GetComponent<Image>().sprite.name;
-                        GameStart.INSTANCE.UpdateStatBoxes(cardName, eventData.pointerClick.gameObject, previousParent);
-                        RemovePreviousMark();
-                        GameStart.INSTANCE.RecalculateCosts();
-                        Debug.Log("Put card in field");
+                        Card card = GameStart.INSTANCE.FindCard(cardName);
+                        GameObject costBlock = eventData.pointerClick.transform.GetChild(2).GetChild(0).gameObject;
+                        int costInSlot = Int32.Parse(costBlock.GetComponent<TextMeshProUGUI>().text);
+                        if (card.cost <= costInSlot)
+                        {
+                            GameObject previousParent = movingCard.transform.parent.gameObject;
+                            movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
+                            movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
+                            GameStart.INSTANCE.UpdateStatBoxes(card, eventData.pointerClick.gameObject, previousParent);
+                            RemovePreviousMark();
+                            GameStart.INSTANCE.RecalculateCosts();
+                            Debug.Log("Put card in field");
+                        }
+                        else
+                        {
+                            Debug.Log("Cost too high for card");
+                        }
+                        
                     }
-                    else if(PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
+                    else if(PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && (GameStart.INSTANCE.GameState == GameStart.State.Summoning || GameStart.INSTANCE.GameState == GameStart.State.Moving))
                     {
+                        GameStart.INSTANCE.GameState = GameStart.State.Moving;
                         GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
                         GameObject previousParent = movingCard.transform.parent.gameObject;
                         string cardName = movingCard.GetComponent<Image>().sprite.name;
                         movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
-                        GameStart.INSTANCE.UpdateStatBoxes(cardName, eventData.pointerClick.gameObject, previousParent);
+                        Card card = GameStart.INSTANCE.FindCard(cardName);
+                        GameStart.INSTANCE.UpdateStatBoxes(card, eventData.pointerClick.gameObject, previousParent);
                         RemovePreviousMark();
                         GameStart.INSTANCE.RecalculateCosts();
                         Debug.Log("Card moves");
                     }
-                    else if (PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && EnemyCardInGame(eventData.pointerClick))
+                    else if (PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && EnemyCardInGame(eventData.pointerClick) && (GameStart.INSTANCE.GameState == GameStart.State.Summoning || GameStart.INSTANCE.GameState == GameStart.State.Moving || GameStart.INSTANCE.GameState == GameStart.State.Battle))
                     {
+                        GameStart.INSTANCE.GameState = GameStart.State.Battle;
+                        GameObject enemyCardSlot = eventData.pointerClick.transform.parent.gameObject;
+                        string playerCardName = GameStart.INSTANCE.SelectedCardGameObject.name.Substring(0, GameStart.INSTANCE.SelectedCardGameObject.name.Length-4);
+                        string enemyCardName = eventData.pointerClick.name.Substring(0, GameStart.INSTANCE.SelectedCardGameObject.name.Length - 4);
+                        Card playerCard = GameStart.INSTANCE.FindCard(playerCardName);
+                        bool destroysCard = GameStart.INSTANCE.Attack(enemyCardSlot, playerCard.attack);
+                        if (destroysCard)
+                        {
+                            GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
+                            GameObject.Destroy(enemyCardGO);
+                            if(enemyCardName == GameStart.INSTANCE.EnemyLeader)
+                            {
+                                GameStart.INSTANCE.Victory();
+                            }
+                        }
+
+
+                        RemovePreviousMark();
+                        GameStart.INSTANCE.RecalculateCosts();
                         Debug.Log("Attack");
                     }
                 }

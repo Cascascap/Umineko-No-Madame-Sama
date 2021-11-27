@@ -21,6 +21,8 @@ public class GameStart : MonoBehaviour
     public List<GameObject> CardGameObjectsInGame = new List<GameObject>();
     public List<GameObject> StatBoxes = new List<GameObject>();
     private Dictionary<string, GameObject> SlotMap = new Dictionary<string, GameObject>();
+    public TextMeshProUGUI TurnStateDisplay;
+    public string EnemyLeader, PlayerLeader;
 
     public int MAX_CARDS_PER_DECK = 4;
     public int MIN_DECK_SIZE = 5;
@@ -65,12 +67,14 @@ public class GameStart : MonoBehaviour
         Button UndoBtn = UndoButton.GetComponent<Button>();
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
-        Deck beatriceDeck = CreateDeck("Beatrice");
-        Deck lambdaDeck = CreateDeck("Lambda");
+        EnemyLeader = "Lambda";
+        PlayerLeader = "Beatrice";
+        Deck beatriceDeck = CreateDeck(PlayerLeader);
+        Deck lambdaDeck = CreateDeck(EnemyLeader);
         DecksInGame.Add(beatriceDeck);
         DecksInGame.Add(lambdaDeck);
-        CardGameObjectsInGame.Add(CreateCardInSlot("Beatrice", CardSlot21));
-        CardGameObjectsInGame.Add(CreateCardInSlot("Lambda", CardSlot11));
+        CardGameObjectsInGame.Add(CreateCardInSlot(PlayerLeader, CardSlot21));
+        CardGameObjectsInGame.Add(CreateCardInSlot(EnemyLeader, CardSlot11));
         Hand playerHand = new Hand();
         Hand enemyHand = new Hand();
         enemyHand.cards = DrawEnemyStartingHand(lambdaDeck);
@@ -204,7 +208,33 @@ public class GameStart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        TurnStateDisplay.text = GameState.ToString();
+    }
 
+    //Returns true if the attack destroys the card
+    public bool Attack(GameObject defenderSlot, int damage)
+    {
+        GameObject hpbox = defenderSlot.transform.GetChild(0).GetChild(0).gameObject;
+        TextMeshProUGUI hpText = hpbox.GetComponent<TextMeshProUGUI>();
+        int newHP = (Int32.Parse(hpText.text) - damage);
+        if(newHP <= 0)
+        {
+            GameObject atkbox = defenderSlot.transform.GetChild(1).GetChild(0).gameObject;
+            TextMeshProUGUI atkText = atkbox.GetComponent<TextMeshProUGUI>();
+            atkText.text = 0.ToString();
+            hpText.text = 0.ToString();
+            return true;
+        }
+        else
+        {
+            hpText.text = newHP.ToString();
+            return false;
+        }
+    }
+
+    internal void Victory()
+    {
+        Debug.Log("GG");
     }
 
     private void OnEndTurn()
@@ -249,6 +279,7 @@ public class GameStart : MonoBehaviour
             }
             PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
+            GameState = State.Summoning;
         }
     }
 
@@ -264,15 +295,14 @@ public class GameStart : MonoBehaviour
         go.transform.SetParent(cardSlot.transform, false);
         CardZoom script = go.AddComponent<CardZoom>();
         script.ZoomedCard = ZoomedCard;
-
-        UpdateStatBoxes(cardName, cardSlot:cardSlot);
+        Card card = FindCard(cardName);
+        UpdateStatBoxes(card, cardSlot:cardSlot);
         
         return go;
     }
 
-    public void UpdateStatBoxes(string cardName, GameObject cardSlot, GameObject previousParent = null)
+    public void UpdateStatBoxes(Card card, GameObject cardSlot, GameObject previousParent = null)
     {
-        Card card = FindCard(cardName);
         string slotNumber = cardSlot.name.Substring(8, 2);
         GameObject hpGODad = cardSlot.transform.Find("HPBlock" + slotNumber).gameObject;
         GameObject hpGO = hpGODad.transform.GetChild(0).gameObject;
@@ -405,11 +435,14 @@ public class GameStart : MonoBehaviour
 
     private void LoadGameObject(GameObject go)
     {
-        GameObject savedObjectParent = GameObject.Find(PlayerPrefs.GetString(go.name));
-        go.transform.SetParent(savedObjectParent.gameObject.transform, false);
-        float x = PlayerPrefs.GetFloat(go.name + "x");
-        float y = PlayerPrefs.GetFloat(go.name + "y");
-        go.GetComponent<RectTransform>().localPosition = new Vector2(x, y);
+        if(go != null)
+        {
+            GameObject savedObjectParent = GameObject.Find(PlayerPrefs.GetString(go.name));
+            go.transform.SetParent(savedObjectParent.gameObject.transform, false);
+            float x = PlayerPrefs.GetFloat(go.name + "x");
+            float y = PlayerPrefs.GetFloat(go.name + "y");
+            go.GetComponent<RectTransform>().localPosition = new Vector2(x, y);
+        }
     }
 
     private bool SlotWithCard(GameObject go)
