@@ -20,7 +20,7 @@ public class GameStart : MonoBehaviour
     public List<Card> CardsInGame = new List<Card>();
     public List<GameObject> CardGameObjectsInGame = new List<GameObject>();
     public List<GameObject> StatBoxes = new List<GameObject>();
-    public int[][] field;
+    private Dictionary<string, GameObject> SlotMap = new Dictionary<string, GameObject>();
 
     public int MAX_CARDS_PER_DECK = 4;
     public int MIN_DECK_SIZE = 5;
@@ -75,7 +75,129 @@ public class GameStart : MonoBehaviour
         Hand enemyHand = new Hand();
         enemyHand.cards = DrawEnemyStartingHand(lambdaDeck);
         playerHand.cards = DrawPlayerStartingHand(beatriceDeck);
+        InitializeSlotMap();
+        RecalculateCosts();
         OnEndTurn();
+    }
+
+    private void InitializeSlotMap()
+    {
+        SlotMap.Add("00", CardSlot00);
+        SlotMap.Add("01", CardSlot01);
+        SlotMap.Add("02", CardSlot02);
+        SlotMap.Add("10", CardSlot10);
+        SlotMap.Add("11", CardSlot11);
+        SlotMap.Add("12", CardSlot12);
+        SlotMap.Add("20", CardSlot20);
+        SlotMap.Add("21", CardSlot21);
+        SlotMap.Add("22", CardSlot22);
+        SlotMap.Add("30", CardSlot30);
+        SlotMap.Add("31", CardSlot31);
+        SlotMap.Add("32", CardSlot32);
+    }
+
+    public void RecalculateCosts()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                int cost = CheckCardsAround(i, j);
+                GameObject slot = SlotMap[i.ToString() + j.ToString()];
+                GameObject costBox = slot.transform.GetChild(2).gameObject;
+                costBox.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = cost.ToString();
+            }
+        }
+    }
+
+    private int CheckCardsAround(int i, int j)
+    {
+        int total = 0;
+        total += CheckLeft(i, j);
+        total += CheckRight(i, j);
+        total += CheckUp(i, j);
+        total += CheckDown(i, j);
+        return total;
+    }
+
+    private int CheckDown(int i, int j)
+    {
+        if(i == 1 || i == 3)
+        {
+            return 0;
+        }
+        else
+        {
+            GameObject slot = SlotMap[(i+1).ToString() + j.ToString()];
+            if (SlotWithCard(slot))
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
+    private int CheckUp(int i, int j)
+    {
+        if (i == 0 || i == 2)
+        {
+            return 0;
+        }
+        else
+        {
+            GameObject slot = SlotMap[(i-1).ToString() + j.ToString()];
+            if (SlotWithCard(slot))
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
+    private int CheckRight(int i, int j)
+    {
+        if (j == 2)
+        {
+            return 0;
+        }
+        else
+        {
+            GameObject slot = SlotMap[i.ToString() + (j+1).ToString()];
+            if (SlotWithCard(slot))
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
+    private int CheckLeft(int i, int j)
+    {
+        if (j == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            GameObject slot = SlotMap[i.ToString() + (j - 1).ToString()];
+            if (SlotWithCard(slot))
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
     }
 
 
@@ -143,12 +265,12 @@ public class GameStart : MonoBehaviour
         CardZoom script = go.AddComponent<CardZoom>();
         script.ZoomedCard = ZoomedCard;
 
-        UpdateStatBoxes(cardName, cardSlot);
+        UpdateStatBoxes(cardName, cardSlot:cardSlot);
         
         return go;
     }
 
-    public void UpdateStatBoxes(string cardName, GameObject cardSlot)
+    public void UpdateStatBoxes(string cardName, GameObject cardSlot, GameObject previousParent = null)
     {
         Card card = FindCard(cardName);
         string slotNumber = cardSlot.name.Substring(8, 2);
@@ -160,10 +282,23 @@ public class GameStart : MonoBehaviour
         GameObject costGO = costGODad.transform.GetChild(0).gameObject;
         hpGO.GetComponent<TextMeshProUGUI>().text = card.hp.ToString();
         atkGO.GetComponent<TextMeshProUGUI>().text = card.attack.ToString();
-        costGO.GetComponent<TextMeshProUGUI>().text = card.cost.ToString();
+        //costGO.GetComponent<TextMeshProUGUI>().text = card.cost.ToString();
         hpGODad.SetActive(true);
         atkGODad.SetActive(true);
-        costGODad.SetActive(true);
+        //costGODad.SetActive(true);
+
+        //If it was in another slot and not in the hand
+        if(previousParent != null && previousParent.name != "PlayerHandArea")
+        {
+            string ppslotNumber = previousParent.name.Substring(8, 2);
+            GameObject pphpGODad = previousParent.transform.Find("HPBlock" + ppslotNumber).gameObject;
+            GameObject ppatkGODad = previousParent.transform.Find("ATKBlock" + ppslotNumber).gameObject;
+            GameObject ppcostGODad = previousParent.transform.Find("CostBlock" + ppslotNumber).gameObject;
+            pphpGODad.SetActive(false);
+            ppatkGODad.SetActive(false);
+            //ppcostGODad.SetActive(false);
+        }
+
     }
 
     private Deck CreateDeck(string leader)
@@ -277,4 +412,8 @@ public class GameStart : MonoBehaviour
         go.GetComponent<RectTransform>().localPosition = new Vector2(x, y);
     }
 
+    private bool SlotWithCard(GameObject go)
+    {
+        return go.transform.childCount > 3;
+    }
 }

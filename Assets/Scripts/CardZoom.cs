@@ -62,18 +62,25 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     if(CardInHand(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
                     {
                         GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
+                        GameObject previousParent = movingCard.transform.parent.gameObject;
                         movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                         movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
                         string cardName = movingCard.GetComponent<Image>().sprite.name;
-                        GameStart.INSTANCE.UpdateStatBoxes(cardName, eventData.pointerClick.gameObject);
+                        GameStart.INSTANCE.UpdateStatBoxes(cardName, eventData.pointerClick.gameObject, previousParent);
                         RemovePreviousMark();
+                        GameStart.INSTANCE.RecalculateCosts();
                         Debug.Log("Put card in field");
                     }
                     else if(PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick))
                     {
                         GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
+                        GameObject previousParent = movingCard.transform.parent.gameObject;
+                        string cardName = movingCard.GetComponent<Image>().sprite.name;
                         movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
+                        GameStart.INSTANCE.UpdateStatBoxes(cardName, eventData.pointerClick.gameObject, previousParent);
                         RemovePreviousMark();
+                        GameStart.INSTANCE.RecalculateCosts();
+                        Debug.Log("Card moves");
                     }
                     else if (PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && EnemyCardInGame(eventData.pointerClick))
                     {
