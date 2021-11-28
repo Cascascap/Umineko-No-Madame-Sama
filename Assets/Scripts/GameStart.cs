@@ -92,14 +92,12 @@ public class GameStart : MonoBehaviour
         EnemyDeck = CreateDeck(EnemyLeader);
         DecksInGame.Add(PlayerDeck);
         DecksInGame.Add(EnemyDeck);
-        AIFunctions.INSTANCE.deck = EnemyDeck;
         CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot21)));
         CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot11)));
         PlayerHand = new Hand();
         EnemyHand = new Hand();
         EnemyHand.cards = Draw(EnemyDeck, 5);
         RearrangeHand(EnemyHand, false);
-        AIFunctions.INSTANCE.hand = EnemyHand;
         PlayerHand.cards = Draw(PlayerDeck, 5);
         RearrangeHand(PlayerHand, true);
         InitializeSlotMap();
@@ -275,7 +273,7 @@ public class GameStart : MonoBehaviour
         {
             SaveState();
             GameState = State.EnemyTurn;
-            AIFunctions.INSTANCE.TakeTurn();
+            AIFunctions.INSTANCE.TakeTurn(EnemyDeck);
         }
     }
 
@@ -516,10 +514,10 @@ public class GameStart : MonoBehaviour
         {
             handArea = EnemyHandArea;
         }
-        for(int i=handArea.transform.childCount; i>0; i++)
+        for(int i=handArea.transform.childCount; i>0; i--)
         {
             GameObject child = handArea.transform.GetChild(0).gameObject;
-            GameObject.Destroy(child);
+            GameObject.DestroyImmediate(child);
         }
     }
 
