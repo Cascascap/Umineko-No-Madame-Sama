@@ -77,7 +77,6 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 {
                     if(CardInHand(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && (GameStart.INSTANCE.GameState == GameStart.State.Summoning || GameStart.INSTANCE.GameState == GameStart.State.Moving))
                     {
-                        GameStart.INSTANCE.GameState = GameStart.State.Summoning;
                         GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
                         string cardName = movingCard.GetComponent<Image>().sprite.name;
                         Card card = GameStart.INSTANCE.FindCard(cardName);
@@ -85,6 +84,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         int costInSlot = Int32.Parse(costBlock.GetComponent<TextMeshProUGUI>().text);
                         if (card.cost <= costInSlot)
                         {
+                            GameStart.INSTANCE.GameState = GameStart.State.Summoning;
                             GameObject previousParent = movingCard.transform.parent.gameObject;
                             movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                             movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);

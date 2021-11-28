@@ -22,6 +22,6 @@ public class AIFunctions : MonoBehaviour
 
     public void TakeTurn()
     {
-
+        GameStart.INSTANCE.OnTurnStart();
     }
 }

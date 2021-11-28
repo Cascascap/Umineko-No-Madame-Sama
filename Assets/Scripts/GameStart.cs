@@ -9,8 +9,6 @@ using UnityEngine.UI;
 public class GameStart : MonoBehaviour
 {
     public GameObject PlayerLeaderImage, EnemyLeaderImage, PlayerLifePoints, EnemyLifePoints;
-    public GameObject PlayerHandCard1, PlayerHandCard2, PlayerHandCard3, PlayerHandCard4, PlayerHandCard5;
-    public GameObject EnemyHandCard1, EnemyHandCard2, EnemyHandCard3, EnemyHandCard4, EnemyHandCard5;
     public GameObject PlayerHandArea, EnemyHandArea;
     public GameObject CardSlot00, CardSlot01, CardSlot02, CardSlot10, CardSlot11, CardSlot12, CardSlot20, CardSlot21, CardSlot22, CardSlot30, CardSlot31, CardSlot32;
     public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot;
@@ -23,7 +21,6 @@ public class GameStart : MonoBehaviour
     public List<GameObject> StatBoxes = new List<GameObject>();
     private Dictionary<string, GameObject> SlotMap = new Dictionary<string, GameObject>();
     public TextMeshProUGUI TurnStateDisplay;
-    public string EnemyLeader, PlayerLeader;
 
     public int MAX_CARDS_PER_DECK = 4;
     public int MIN_DECK_SIZE = 5;
@@ -33,6 +30,11 @@ public class GameStart : MonoBehaviour
     public State GameState = State.Moving;
 
     public static GameStart INSTANCE = null;
+
+    //TODO: move to a leader class
+    public string EnemyLeader, PlayerLeader;
+    public Deck PlayerDeck, EnemyDeck;
+    public Hand PlayerHand, EnemyHand;
 
     public enum State
     {
@@ -86,18 +88,20 @@ public class GameStart : MonoBehaviour
         UndoBtn.onClick.AddListener(Undo);
         EnemyLeader = "Lambda";
         PlayerLeader = "Beatrice";
-        Deck beatriceDeck = CreateDeck(PlayerLeader);
-        Deck enemyDeck = CreateDeck(EnemyLeader);
-        DecksInGame.Add(beatriceDeck);
-        DecksInGame.Add(enemyDeck);
-        AIFunctions.INSTANCE.deck = enemyDeck;
-        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot31)));
-        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot01)));
-        Hand playerHand = new Hand();
-        Hand enemyHand = new Hand();
-        enemyHand.cards = DrawEnemyStartingHand(enemyDeck);
-        AIFunctions.INSTANCE.hand = enemyHand;
-        playerHand.cards = DrawPlayerStartingHand(beatriceDeck);
+        PlayerDeck = CreateDeck(PlayerLeader);
+        EnemyDeck = CreateDeck(EnemyLeader);
+        DecksInGame.Add(PlayerDeck);
+        DecksInGame.Add(EnemyDeck);
+        AIFunctions.INSTANCE.deck = EnemyDeck;
+        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot21)));
+        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot11)));
+        PlayerHand = new Hand();
+        EnemyHand = new Hand();
+        EnemyHand.cards = Draw(EnemyDeck, 5);
+        RearrangeHand(EnemyHand, false);
+        AIFunctions.INSTANCE.hand = EnemyHand;
+        PlayerHand.cards = Draw(PlayerDeck, 5);
+        RearrangeHand(PlayerHand, true);
         InitializeSlotMap();
         RecalculateCosts();
         SaveState();
@@ -271,6 +275,7 @@ public class GameStart : MonoBehaviour
         {
             SaveState();
             GameState = State.EnemyTurn;
+            AIFunctions.INSTANCE.TakeTurn();
         }
     }
 
@@ -280,9 +285,9 @@ public class GameStart : MonoBehaviour
         {
             SaveStatBox(go);
         }
-        List<GameObject> cardsInHand = new List<GameObject> { PlayerHandCard1, PlayerHandCard2, PlayerHandCard3, PlayerHandCard4, PlayerHandCard5 };
-        foreach (GameObject go in cardsInHand)
+        for(int i=0; i< PlayerHandArea.transform.childCount; i++)
         {
+            GameObject go = PlayerHandArea.transform.GetChild(i).gameObject;
             SaveGameObject(go);
         }
         foreach (CardObject go in CardGameObjectsInGame)
@@ -291,12 +296,14 @@ public class GameStart : MonoBehaviour
         }
         PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
         PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
-        AIFunctions.INSTANCE.TakeTurn();
     }
 
     public void OnTurnStart()
     {
         GameState = State.Moving;
+        Card drawnCard = Draw(PlayerDeck, 1)[0];
+        PlayerHand.cards.Add(drawnCard);
+        RearrangeHand(PlayerHand, true);
         RestoreCards();
     }
 
@@ -321,10 +328,10 @@ public class GameStart : MonoBehaviour
             {
                 LoadStatBox(go.name);
             }
-            List<GameObject> cardsInHand = new List<GameObject> { PlayerHandCard1, PlayerHandCard2, PlayerHandCard3, PlayerHandCard4, PlayerHandCard5 };
-            foreach (GameObject go in cardsInHand)
+            for (int i = 0; i < PlayerHandArea.transform.childCount; i++)
             {
-                LoadGameObject(go);
+                GameObject go = PlayerHandArea.transform.GetChild(i).gameObject;
+                LoadStatBox(go.name);
             }
             foreach (CardObject go in CardGameObjectsInGame)
             {
@@ -354,6 +361,28 @@ public class GameStart : MonoBehaviour
         return go;
     }
 
+    public GameObject CreateCard(string cardName, bool hideCard)
+    {
+        Sprite sprite;
+        if (hideCard)
+        {
+            sprite = (Sprite)Resources.Load("cards/" + "cardback", typeof(Sprite));
+        }
+        else
+        {
+            sprite = (Sprite)Resources.Load("cards/" + cardName, typeof(Sprite));
+        }
+        GameObject go = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        go.name = cardName + "Card";
+        RectTransform rectTransform = go.GetComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(112, 160);
+        Image image = go.GetComponent<Image>();
+        image.sprite = sprite;
+        CardZoom script = go.GetComponent<CardZoom>();
+        script.ZoomedCard = ZoomedCard;
+        return go;
+    }
+
     public void UpdateStatBoxes(Card card, GameObject cardSlot, GameObject previousParent = null)
     {
         string slotNumber = cardSlot.name.Substring(8, 2);
@@ -362,13 +391,10 @@ public class GameStart : MonoBehaviour
         GameObject atkGODad = cardSlot.transform.Find("ATKBlock" + slotNumber).gameObject;
         GameObject atkGO = atkGODad.transform.GetChild(0).gameObject;
         GameObject costGODad = cardSlot.transform.Find("CostBlock" + slotNumber).gameObject;
-        GameObject costGO = costGODad.transform.GetChild(0).gameObject;
         hpGO.GetComponent<TextMeshProUGUI>().text = card.hp.ToString();
         atkGO.GetComponent<TextMeshProUGUI>().text = card.attack.ToString();
-        //costGO.GetComponent<TextMeshProUGUI>().text = card.cost.ToString();
         hpGODad.SetActive(true);
         atkGODad.SetActive(true);
-        //costGODad.SetActive(true);
 
         //If it was in another slot and not in the hand
         if(previousParent != null && previousParent.name != "PlayerHandArea")
@@ -376,10 +402,8 @@ public class GameStart : MonoBehaviour
             string ppslotNumber = previousParent.name.Substring(8, 2);
             GameObject pphpGODad = previousParent.transform.Find("HPBlock" + ppslotNumber).gameObject;
             GameObject ppatkGODad = previousParent.transform.Find("ATKBlock" + ppslotNumber).gameObject;
-            GameObject ppcostGODad = previousParent.transform.Find("CostBlock" + ppslotNumber).gameObject;
             pphpGODad.SetActive(false);
             ppatkGODad.SetActive(false);
-            //ppcostGODad.SetActive(false);
         }
 
     }
@@ -393,72 +417,15 @@ public class GameStart : MonoBehaviour
     }
 
 
-    public Card DrawOne(Deck deck)
-    {
-        Card drawnCard = deck.cards.Pop();
-        return drawnCard;
-    }
 
-    public List<Card> DrawEnemyStartingHand(Deck startingdeck)
+    public List<Card> Draw(Deck startingdeck, int numberOfCards)
     {
         List<Card> ret = new List<Card>();
-        Card drawnCard = startingdeck.cards.Pop();
-        ret.Add(drawnCard);
-        Sprite sprite = GetCardSprite("cardback");
-        EnemyHandCard1.GetComponent<Image>().sprite = sprite;
-        EnemyHandCard1.SetActive(true);
-        drawnCard = startingdeck.cards.Pop();
-        ret.Add(drawnCard);
-        EnemyHandCard2.GetComponent<Image>().sprite = sprite;
-        EnemyHandCard2.SetActive(true);
-        drawnCard = startingdeck.cards.Pop();
-        ret.Add(drawnCard);
-        EnemyHandCard3.GetComponent<Image>().sprite = sprite;
-        EnemyHandCard3.SetActive(true);
-        drawnCard = startingdeck.cards.Pop();
-        ret.Add(drawnCard);
-        EnemyHandCard4.GetComponent<Image>().sprite = sprite;
-        EnemyHandCard4.SetActive(true);
-        drawnCard = startingdeck.cards.Pop();
-        ret.Add(drawnCard);
-        EnemyHandCard5.GetComponent<Image>().sprite = sprite;
-        EnemyHandCard5.SetActive(true);
-        return ret;
-    }
-
-    private Sprite GetCardSprite(string name)
-    {
-        return (Sprite)Resources.Load("cards/" + name, typeof(Sprite));
-    }
-
-    public List<Card> DrawPlayerStartingHand(Deck startingdeck)
-    {
-        List<Card> ret = new List<Card>();
-        Card drawnCard = startingdeck.cards.Pop();
-        ret.Add(drawnCard);
-        Sprite sprite1 = (Sprite)Resources.Load("cards/" + drawnCard.imageName, typeof(Sprite));
-        PlayerHandCard1.GetComponent<Image>().sprite = sprite1;
-        PlayerHandCard1.SetActive(true);
-        drawnCard = startingdeck.cards.Pop();
-        ret.Add(drawnCard);
-        Sprite sprite2 = (Sprite)Resources.Load("cards/" + drawnCard.imageName, typeof(Sprite));
-        PlayerHandCard2.GetComponent<Image>().sprite = sprite2;
-        PlayerHandCard2.SetActive(true);
-        drawnCard = startingdeck.cards.Pop();
-        ret.Add(drawnCard);
-        Sprite sprite3 = (Sprite)Resources.Load("cards/" + drawnCard.imageName, typeof(Sprite));
-        PlayerHandCard3.GetComponent<Image>().sprite = sprite3;
-        PlayerHandCard3.SetActive(true);
-        drawnCard = startingdeck.cards.Pop();
-        ret.Add(drawnCard);
-        Sprite sprite4 = (Sprite)Resources.Load("cards/" + drawnCard.imageName, typeof(Sprite));
-        PlayerHandCard4.GetComponent<Image>().sprite = sprite4;
-        PlayerHandCard4.SetActive(true);
-        drawnCard = startingdeck.cards.Pop();
-        ret.Add(drawnCard);
-        Sprite sprite5 = (Sprite)Resources.Load("cards/" + drawnCard.imageName, typeof(Sprite));
-        PlayerHandCard5.GetComponent<Image>().sprite = sprite5;
-        PlayerHandCard5.SetActive(true);
+        for(int i = 0; i< numberOfCards; i++)
+        {
+            Card drawnCard = startingdeck.cards.Pop();
+            ret.Add(drawnCard);
+        }
         return ret;
     }
 
@@ -505,7 +472,55 @@ public class GameStart : MonoBehaviour
 
     public void RearrangeHand(Hand hand, bool playerHand)
     {
+        DiscardHand(playerHand);
+        int i = 0;
+        int cardNumbers = hand.cards.Count;
+        GameObject parent;
+        float defaultSeparator = (PlayerHandArea.transform.GetComponent<RectTransform>().sizeDelta.x /5) + 2;
+        float xSeparator = defaultSeparator;
+        if (cardNumbers > 5)
+        {
+            xSeparator = defaultSeparator - (10 * (cardNumbers - 5));
+        }
+        foreach (Card c in hand.cards)
+        {
+            float x = -244 + (xSeparator * i);
+            float y;
+            GameObject go;
+            if (playerHand)
+            {
+                y = 201;
+                parent = PlayerHandArea;
+                go = CreateCard(c.imageName, false);
+            }
+            else
+            {
+                y = -195;
+                parent = EnemyHandArea;
+                go = CreateCard(c.imageName, true);
+            }
+            go.transform.SetParent(parent.transform, false);
+            go.transform.localPosition = new Vector3(x, y, 0);
+            i++;
+        }
+    }
 
+    private void DiscardHand(bool playerHand)
+    {
+        GameObject handArea;
+        if (playerHand)
+        {
+            handArea = PlayerHandArea;
+        }
+        else
+        {
+            handArea = EnemyHandArea;
+        }
+        for(int i=handArea.transform.childCount; i>0; i++)
+        {
+            GameObject child = handArea.transform.GetChild(0).gameObject;
+            GameObject.Destroy(child);
+        }
     }
 
 }
