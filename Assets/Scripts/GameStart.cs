@@ -11,6 +11,7 @@ public class GameStart : MonoBehaviour
     public GameObject PlayerLeaderImage, EnemyLeaderImage, PlayerLifePoints, EnemyLifePoints;
     public GameObject PlayerHandCard1, PlayerHandCard2, PlayerHandCard3, PlayerHandCard4, PlayerHandCard5;
     public GameObject EnemyHandCard1, EnemyHandCard2, EnemyHandCard3, EnemyHandCard4, EnemyHandCard5;
+    public GameObject PlayerHandArea, EnemyHandArea;
     public GameObject CardSlot00, CardSlot01, CardSlot02, CardSlot10, CardSlot11, CardSlot12, CardSlot20, CardSlot21, CardSlot22, CardSlot30, CardSlot31, CardSlot32;
     public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot;
     public GameObject CardPrefab;
@@ -90,11 +91,12 @@ public class GameStart : MonoBehaviour
         DecksInGame.Add(beatriceDeck);
         DecksInGame.Add(enemyDeck);
         AIFunctions.INSTANCE.deck = enemyDeck;
-        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot21)));
-        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot11)));
+        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot31)));
+        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot01)));
         Hand playerHand = new Hand();
         Hand enemyHand = new Hand();
         enemyHand.cards = DrawEnemyStartingHand(enemyDeck);
+        AIFunctions.INSTANCE.hand = enemyHand;
         playerHand.cards = DrawPlayerStartingHand(beatriceDeck);
         InitializeSlotMap();
         RecalculateCosts();
@@ -500,4 +502,10 @@ public class GameStart : MonoBehaviour
     {
         return go.transform.childCount > 3;
     }
+
+    public void RearrangeHand(Hand hand, bool playerHand)
+    {
+
+    }
+
 }
