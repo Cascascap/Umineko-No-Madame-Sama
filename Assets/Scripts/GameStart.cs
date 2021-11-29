@@ -25,6 +25,7 @@ public class GameStart : MonoBehaviour
     public int MAX_CARDS_PER_DECK = 4;
     public int MIN_DECK_SIZE = 5;
     public int MAX_DECK_SIZE = 30;
+    public int MAX_CARDS_HAND = 8;
 
     public GameObject SelectedCardGameObject;
     public State GameState = State.Moving;
@@ -35,6 +36,11 @@ public class GameStart : MonoBehaviour
     public string EnemyLeader, PlayerLeader;
     public Deck PlayerDeck, EnemyDeck;
     public Hand PlayerHand, EnemyHand;
+
+    public Dictionary<string, GameObject> GetSlotMap()
+    {
+        return this.SlotMap;
+    }
 
     public enum State
     {
@@ -49,7 +55,7 @@ public class GameStart : MonoBehaviour
         Card card = null;
         foreach (Card c in CardsInGame)
         {
-            if (c.imageName == name)
+            if (c.ImageName == name)
             {
                 card = c;
                 break;
@@ -93,13 +99,13 @@ public class GameStart : MonoBehaviour
         DecksInGame.Add(PlayerDeck);
         DecksInGame.Add(EnemyDeck);
         CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot21)));
-        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot11)));
+        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot10)));
         PlayerHand = new Hand();
         EnemyHand = new Hand();
         EnemyHand.cards = Draw(EnemyDeck, 5);
-        RearrangeHand(EnemyHand, false);
+        RearrangeHand(false);
         PlayerHand.cards = Draw(PlayerDeck, 5);
-        RearrangeHand(PlayerHand, true);
+        RearrangeHand(true);
         InitializeSlotMap();
         RecalculateCosts();
         SaveState();
@@ -271,7 +277,6 @@ public class GameStart : MonoBehaviour
     {
         if (GameState != State.EnemyTurn)
         {
-            SaveState();
             GameState = State.EnemyTurn;
             AIFunctions.INSTANCE.TakeTurn(EnemyDeck);
         }
@@ -299,10 +304,14 @@ public class GameStart : MonoBehaviour
     public void OnTurnStart()
     {
         GameState = State.Moving;
-        Card drawnCard = Draw(PlayerDeck, 1)[0];
-        PlayerHand.cards.Add(drawnCard);
-        RearrangeHand(PlayerHand, true);
+        if(PlayerHand.cards.Count < MAX_CARDS_HAND)
+        {
+            Card drawnCard = Draw(PlayerDeck, 1)[0];
+            PlayerHand.cards.Add(drawnCard);
+        }
         RestoreCards();
+        RearrangeHand(true);
+        SaveState();
     }
 
     private void RestoreCards()
@@ -329,7 +338,7 @@ public class GameStart : MonoBehaviour
             for (int i = 0; i < PlayerHandArea.transform.childCount; i++)
             {
                 GameObject go = PlayerHandArea.transform.GetChild(i).gameObject;
-                LoadStatBox(go.name);
+                LoadGameObject(go);
             }
             foreach (CardObject go in CardGameObjectsInGame)
             {
@@ -337,7 +346,7 @@ public class GameStart : MonoBehaviour
             }
             PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
-            GameState = State.Summoning;
+            GameState = State.Moving;
         }
     }
 
@@ -371,7 +380,7 @@ public class GameStart : MonoBehaviour
             sprite = (Sprite)Resources.Load("cards/" + cardName, typeof(Sprite));
         }
         GameObject go = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        go.name = cardName + "Card";
+        go.name = cardName + go.GetInstanceID() + "Card" ;
         RectTransform rectTransform = go.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(112, 160);
         Image image = go.GetComponent<Image>();
@@ -389,8 +398,8 @@ public class GameStart : MonoBehaviour
         GameObject atkGODad = cardSlot.transform.Find("ATKBlock" + slotNumber).gameObject;
         GameObject atkGO = atkGODad.transform.GetChild(0).gameObject;
         GameObject costGODad = cardSlot.transform.Find("CostBlock" + slotNumber).gameObject;
-        hpGO.GetComponent<TextMeshProUGUI>().text = card.hp.ToString();
-        atkGO.GetComponent<TextMeshProUGUI>().text = card.attack.ToString();
+        hpGO.GetComponent<TextMeshProUGUI>().text = card.HP.ToString();
+        atkGO.GetComponent<TextMeshProUGUI>().text = card.Attack.ToString();
         hpGODad.SetActive(true);
         atkGODad.SetActive(true);
 
@@ -418,11 +427,22 @@ public class GameStart : MonoBehaviour
 
     public List<Card> Draw(Deck startingdeck, int numberOfCards)
     {
+        bool playerDrawing = startingdeck.leaderCard.ImageName == "Beatrice";
         List<Card> ret = new List<Card>();
         for(int i = 0; i< numberOfCards; i++)
         {
             Card drawnCard = startingdeck.cards.Pop();
+            GameObject go = CreateCard(drawnCard.ImageName, false);
             ret.Add(drawnCard);
+            if (playerDrawing)
+            {
+                go.transform.SetParent(PlayerHandArea.transform, false);
+            }
+            else
+            {
+                go.transform.SetParent(EnemyHandArea.transform, false);
+
+            }
         }
         return ret;
     }
@@ -432,16 +452,18 @@ public class GameStart : MonoBehaviour
         GameObject boxText = go.transform.GetChild(0).gameObject;
         TextMeshProUGUI text = boxText.GetComponent<TextMeshProUGUI>();
         PlayerPrefs.SetString(go.name, text.text);
+        PlayerPrefs.SetInt(go.name + "Active", go.activeSelf?1:0);
     }
 
     private void LoadStatBox(string lifeBoxName)
     {
-        GameObject go = GameObject.Find(lifeBoxName);
-        if(go != null)
+        GameObject goDad = GameObject.Find(lifeBoxName);
+        if(goDad != null)
         {
-            go = go.transform.GetChild(0).gameObject;
+            GameObject go = goDad.transform.GetChild(0).gameObject;
             TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
             text.text = PlayerPrefs.GetString(lifeBoxName);
+            goDad.SetActive(PlayerPrefs.GetInt(goDad.name + "Active")==1);
         }
     }
     private void SaveGameObject(GameObject go)
@@ -459,7 +481,7 @@ public class GameStart : MonoBehaviour
             go.transform.SetParent(savedObjectParent.gameObject.transform, false);
             float x = PlayerPrefs.GetFloat(go.name + "x");
             float y = PlayerPrefs.GetFloat(go.name + "y");
-            go.GetComponent<RectTransform>().localPosition = new Vector2(x, y);
+            go.transform.localPosition = new Vector2(x, y);
         }
     }
 
@@ -468,34 +490,31 @@ public class GameStart : MonoBehaviour
         return go.transform.childCount > 3;
     }
 
-    public void RearrangeHand(Hand hand, bool playerHand)
+    public void RearrangeHand(bool playerHand)
     {
-        DiscardHand(playerHand);
         int i = 0;
-        int cardNumbers = hand.cards.Count;
+        int cardNumbers = PlayerHandArea.transform.childCount;
         GameObject parent;
         float defaultSeparator = (PlayerHandArea.transform.GetComponent<RectTransform>().sizeDelta.x /5) + 2;
         float xSeparator = defaultSeparator;
         if (cardNumbers > 5)
         {
-            xSeparator = defaultSeparator - (10 * (cardNumbers - 5));
+            xSeparator = defaultSeparator - (20 * (cardNumbers - 5));
         }
-        foreach (Card c in hand.cards)
+        for (int j = 0; j < PlayerHandArea.transform.childCount; j++)
         {
+            GameObject go = PlayerHandArea.transform.GetChild(j).gameObject;
             float x = -244 + (xSeparator * i);
             float y;
-            GameObject go;
             if (playerHand)
             {
                 y = 201;
                 parent = PlayerHandArea;
-                go = CreateCard(c.imageName, false);
             }
             else
             {
                 y = -195;
                 parent = EnemyHandArea;
-                go = CreateCard(c.imageName, true);
             }
             go.transform.SetParent(parent.transform, false);
             go.transform.localPosition = new Vector3(x, y, 0);
@@ -503,22 +522,46 @@ public class GameStart : MonoBehaviour
         }
     }
 
-    private void DiscardHand(bool playerHand)
+
+
+    public bool CanAttack(GameObject slot, GameObject defender)
     {
-        GameObject handArea;
-        if (playerHand)
+        int locationY = Int32.Parse(slot.name.Substring(8, 1));
+        int locationX = Int32.Parse(slot.name.Substring(9, 1));
+        int enemyLocationY = Int32.Parse(defender.name.Substring(8, 1));
+        int enemyLocationX = Int32.Parse(defender.name.Substring(9, 1));
+
+        //Enemy Card Attacking
+        if (locationY < 2)
         {
-            handArea = PlayerHandArea;
+            if(locationY == 0)
+            {
+                return false;
+            }
+            if(locationY == 1)
+            {
+                if (locationX - enemyLocationX < 2)
+                {
+                    return true;
+                }
+            }
         }
+        //Player Card Attacking
         else
         {
-            handArea = EnemyHandArea;
+            if(locationY == 2)
+            {
+                if(locationX - enemyLocationX < 2)
+                {
+                    return true;
+                }
+            }
+            if(locationY == 3)
+            {
+                return false;
+            }
         }
-        for(int i=handArea.transform.childCount; i>0; i--)
-        {
-            GameObject child = handArea.transform.GetChild(0).gameObject;
-            GameObject.DestroyImmediate(child);
-        }
+        return false;
     }
 
 }

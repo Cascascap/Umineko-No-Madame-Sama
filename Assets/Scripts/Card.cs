@@ -5,23 +5,24 @@ using UnityEngine;
 
 public class Card
 {
-
-    public Card(int cost, int hp, int attack, Action effect, string imageName, List<string> tags)
+    public Card(int cost, int hp, int attack, Action effect, string imageName, List<string> tags, int cooldown)
     {
-        this.cost = cost;
-        this.hp = hp;
-        this.attack = attack;
-        this.effect = effect;
-        this.imageName = imageName;
+        this.Cost = cost;
+        this.HP = hp;
+        this.Attack = attack;
+        this.Effect = effect;
+        this.ImageName = imageName;
         this.tags = tags;
+        this.Cooldown = cooldown;
     }
 
-    public int cost { get; set; }
-    public int hp { get; set; }
-    public int attack { get; set; }
-    public int counters { get; set; }
-    public Action effect { get; set; }
-    public string imageName { get; set; }
+    public int Cost { get; set; }
+    public int HP { get; set; }
+    public int Attack { get; set; }
+    public int Counters { get; set; }
+    public Action Effect { get; set; }
+    public string ImageName { get; set; }
+    public int Cooldown { get; set; }
     public List<string> tags { get; set; }
 
 

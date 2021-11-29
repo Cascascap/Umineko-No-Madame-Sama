@@ -82,7 +82,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         Card card = GameStart.INSTANCE.FindCard(cardName);
                         GameObject costBlock = eventData.pointerClick.transform.GetChild(2).GetChild(0).gameObject;
                         int costInSlot = Int32.Parse(costBlock.GetComponent<TextMeshProUGUI>().text);
-                        if (card.cost <= costInSlot)
+                        if (card.Cost <= costInSlot)
                         {
                             GameStart.INSTANCE.GameState = GameStart.State.Summoning;
                             GameObject previousParent = movingCard.transform.parent.gameObject;
@@ -124,6 +124,11 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         string playerCardName = GameStart.INSTANCE.SelectedCardGameObject.GetComponent<Image>().sprite.name;
                         Card playerCard = GameStart.INSTANCE.FindCard(playerCardName);
                         CardObject cardObject = GameStart.INSTANCE.FindCardObject(GameStart.INSTANCE.SelectedCardGameObject);
+                        if (!GameStart.INSTANCE.CanAttack(GameStart.INSTANCE.SelectedCardGameObject.transform.parent.gameObject, eventData.pointerClick.transform.parent.gameObject))
+                        {
+                            Debug.Log("Cant attack from position");
+                            return;
+                        }
                         if (cardObject.acted)
                         {
                             Debug.Log("Already attacked");
@@ -132,7 +137,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         GameStart.INSTANCE.GameState = GameStart.State.Battle;
                         GameObject enemyCardSlot = eventData.pointerClick.transform.parent.gameObject;
                         string enemyCardName = eventData.pointerClick.GetComponent<Image>().sprite.name;
-                        bool destroysCard = GameStart.INSTANCE.Attack(enemyCardSlot, playerCard.attack);
+                        bool destroysCard = GameStart.INSTANCE.Attack(enemyCardSlot, playerCard.Attack);
                         if (destroysCard)
                         {
                             GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
@@ -159,7 +164,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private static void UseCardEffect(string cardName)
     {
         Card card = GameStart.INSTANCE.FindCard(cardName);
-        card.effect();
+        card.Effect();
     }
 
     private bool IsAllyCard(GameObject card)
@@ -238,4 +243,6 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         go.transform.SetParent(this.transform, false);
         GameStart.INSTANCE.SelectedCardGameObject = go.transform.parent.gameObject;
     }
+
+    
 }

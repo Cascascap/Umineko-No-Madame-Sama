@@ -9,7 +9,6 @@ public class CardObject
         GameObject = gameObject;
     }
 
-    public GameObject cardObject { get; set; }
     public bool acted { get; set; }
     public bool usedEffect { get; set; }
     public bool moved { get; set; }

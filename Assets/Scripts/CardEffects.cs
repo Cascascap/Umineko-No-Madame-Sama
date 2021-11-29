@@ -84,4 +84,9 @@ public class CardEffects
     {
         throw new NotImplementedException();
     }
+
+    internal static void BelphegorEffect()
+    {
+        throw new NotImplementedException();
+    }
 }
