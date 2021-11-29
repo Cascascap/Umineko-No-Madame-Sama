@@ -99,8 +99,8 @@ public class GameStart : MonoBehaviour
         EnemyDeck = CreateDeck(EnemyLeader);
         DecksInGame.Add(PlayerDeck);
         DecksInGame.Add(EnemyDeck);
-        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot21)));
-        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot11)));
+        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot31)));
+        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot01)));
         PlayerHand = new Hand();
         EnemyHand = new Hand();
         EnemyHand.cards = Draw(EnemyDeck, STARTING_CARDS_HAND);
@@ -413,9 +413,10 @@ public class GameStart : MonoBehaviour
             GameObject go = co.GameObject;
             Image goImage = go.GetComponent<Image>();
             goImage.color = new Color32(255, 255, 255, 255);
-            Card card = FindCard(goImage.sprite.name);
+            //Card card = FindCard(goImage.sprite.name);
             co.acted = false;
             co.usedEffect = false;
+            co.moved = false;
         }
     }
 
@@ -585,21 +586,31 @@ public class GameStart : MonoBehaviour
         {
             if(locationY == 2)
             {
-                if(locationX - enemyLocationX < 2 && (enemyLocationY == 1 || NoEnemyFrontRow()))
+                if(locationX - enemyLocationX < 2 && (enemyLocationY == 1 || (enemyLocationY == 0 && NoEnemyFrontRow(1))))
                 {
                     return true;
                 }
             }
             if(locationY == 3)
             {
-                return false;
+                if (locationX - enemyLocationX < 2 && ((enemyLocationY == 1 && NoEnemyFrontRow(1)) || (enemyLocationY == 0 && NoEnemyFrontRow(1) && NoEnemyFrontRow(2))))
+                {
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    private bool NoEnemyFrontRow()
+    private bool NoEnemyFrontRow(int rowsNumber)
     {
-        return !SlotWithCard(CardSlot10) && !SlotWithCard(CardSlot11) && !SlotWithCard(CardSlot12);
+        if(rowsNumber == 1)
+        {
+            return !SlotWithCard(CardSlot10) && !SlotWithCard(CardSlot11) && !SlotWithCard(CardSlot12);
+        }
+        else
+        {
+            return !SlotWithCard(CardSlot20) && !SlotWithCard(CardSlot21) && !SlotWithCard(CardSlot22);
+        }
     }
 }

@@ -110,6 +110,12 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             Debug.Log("Already moved");
                             return;
                         }
+                        bool canMove = CanMoveToPosition(movingCard, eventData.pointerClick);
+                        if (!canMove)
+                        {
+                            Debug.Log("Cant move to this spot");
+                            return;
+                        }
                         cardObject.moved = true;
                         GameObject previousParent = movingCard.transform.parent.gameObject;
                         string cardName = movingCard.GetComponent<Image>().sprite.name;
@@ -160,6 +166,27 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             }
             
         }
+    }
+
+    private bool CanMoveToPosition(GameObject movingCard, GameObject objectiveSlot)
+    {
+        GameObject originalSlot = movingCard.transform.parent.gameObject;
+
+        int originalSlotY = Int32.Parse(originalSlot.name.Substring(8, 1));
+        int originalSlotX = Int32.Parse(originalSlot.name.Substring(9, 1));
+        int objectiveSlotY = Int32.Parse(objectiveSlot.name.Substring(8, 1));
+        int objectiveSlotX = Int32.Parse(objectiveSlot.name.Substring(9, 1));
+
+        if((originalSlotY == objectiveSlotY && originalSlotX - objectiveSlotX < 2 && (originalSlotX - objectiveSlotX > -2)) ||
+           (originalSlotX == objectiveSlotX && (originalSlotY - objectiveSlotY < 2) && (originalSlotY - objectiveSlotY > -2)))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     private static void UseCardEffect(string cardName)
