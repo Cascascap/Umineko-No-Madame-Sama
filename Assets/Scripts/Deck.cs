@@ -76,7 +76,7 @@ public class Deck
 
     public void Lambda()
     {
-        this.leaderCard = new Card(0, 1, 3, CardEffects.LambdaEffect, "Lambda", new List<string> { "Leader, Witch" }, 1);
+        this.leaderCard = new Card(0, 36, 3, CardEffects.LambdaEffect, "Lambda", new List<string> { "Leader, Witch" }, 1);
         AddCardRegister(this.leaderCard, true);
         Card Konpeitou = new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<string> { "Summoned", "Object" }, 0);
         AddCardRegister(Konpeitou, times:4);

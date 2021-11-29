@@ -295,12 +295,44 @@ public class GameStart : MonoBehaviour
             GameObject go = PlayerHandArea.transform.GetChild(i).gameObject;
             SaveGameObject(go);
         }
-        foreach (CardObject go in CardGameObjectsInGame)
+        foreach (CardObject co in CardGameObjectsInGame)
         {
-            SaveGameObject(go.GameObject);
+            SaveCardObject(co);
         }
         PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
         PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
+    }
+
+    private void SaveCardObject(CardObject co)
+    {
+        GameObject go = co.GameObject;
+        PlayerPrefs.SetString(go.name, go.transform.parent.name);
+        PlayerPrefs.SetFloat(go.name + "x", go.transform.localPosition.x);
+        PlayerPrefs.SetFloat(go.name + "y", go.transform.localPosition.y);
+        PlayerPrefs.SetInt(go.name + "Acted", co.acted ? 1 : 0);
+        PlayerPrefs.SetInt(go.name + "Moved", co.moved ? 1 : 0);
+        PlayerPrefs.SetInt(go.name + "EffectUsed", co.usedEffect ? 1 : 0);
+        PlayerPrefs.SetInt(go.name + "EffectUsed", co.usedEffect ? 1 : 0);
+        PlayerPrefs.SetFloat(go.name + "ColorR", go.GetComponent<Image>().color.r);
+        PlayerPrefs.SetFloat(go.name + "ColorG", go.GetComponent<Image>().color.g);
+        PlayerPrefs.SetFloat(go.name + "ColorB", go.GetComponent<Image>().color.b);
+    }
+    private void LoadCardObject(CardObject co)
+    {
+        GameObject go = co.GameObject;
+        GameObject savedObjectParent = GameObject.Find(PlayerPrefs.GetString(go.name));
+        Image image = go.GetComponent<Image>();
+        go.transform.SetParent(savedObjectParent.gameObject.transform, false);
+        float x = PlayerPrefs.GetFloat(go.name + "x");
+        float y = PlayerPrefs.GetFloat(go.name + "y");
+        go.transform.localPosition = new Vector2(x, y);
+        co.acted = PlayerPrefs.GetInt(go.name + "Acted") == 1;
+        co.moved = PlayerPrefs.GetInt(go.name + "Moved") == 1;
+        co.usedEffect = PlayerPrefs.GetInt(go.name + "EffectUsed") == 1;
+        byte r = (byte)PlayerPrefs.GetFloat(go.name + "ColorR");
+        byte g = (byte)PlayerPrefs.GetFloat(go.name + "ColorG");
+        byte b = (byte)PlayerPrefs.GetFloat(go.name + "ColorB");
+        image.color = new Color(r, g, b);
     }
 
     public void OnTurnStart()
@@ -344,7 +376,7 @@ public class GameStart : MonoBehaviour
             }
             foreach (CardObject go in CardGameObjectsInGame)
             {
-                LoadGameObject(go.GameObject);
+                LoadCardObject(go);
             }
             PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
