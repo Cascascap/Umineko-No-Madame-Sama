@@ -19,6 +19,8 @@ public class GameStart : MonoBehaviour
     public List<Card> CardsInGame = new List<Card>();
     public List<CardObject> CardGameObjectsInGame = new List<CardObject>();
     public List<GameObject> StatBoxes = new List<GameObject>();
+
+
     private Dictionary<string, GameObject> SlotMap = new Dictionary<string, GameObject>();
     public TextMeshProUGUI TurnStateDisplay;
 
@@ -77,8 +79,20 @@ public class GameStart : MonoBehaviour
             }
         }
         return co;
-        
+    }
 
+    public CardObject FindEnemyLeaderCardObject(string leaderName)
+    {
+        CardObject co = null;
+        foreach (CardObject c in CardGameObjectsInGame)
+        {
+            if (c.GameObject.name == leaderName + "Card")
+            {
+                co = c;
+                break;
+            }
+        }
+        return co;
     }
 
     // Start is called before the first frame update
@@ -99,8 +113,8 @@ public class GameStart : MonoBehaviour
         EnemyDeck = CreateDeck(EnemyLeader);
         DecksInGame.Add(PlayerDeck);
         DecksInGame.Add(EnemyDeck);
-        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot31)));
-        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot01)));
+        CardGameObjectsInGame.Add(CreateCardInSlot(PlayerLeader, CardSlot21));
+        CardGameObjectsInGame.Add(CreateCardInSlot(EnemyLeader, CardSlot11));
         PlayerHand = new Hand();
         EnemyHand = new Hand();
         EnemyHand.cards = Draw(EnemyDeck, STARTING_CARDS_HAND);
@@ -152,7 +166,7 @@ public class GameStart : MonoBehaviour
         return total;
     }
 
-    private int CheckDown(int i, int j)
+    public int CheckDown(int i, int j)
     {
         if(i == 1 || i == 3)
         {
@@ -172,7 +186,7 @@ public class GameStart : MonoBehaviour
         }
     }
 
-    private int CheckUp(int i, int j)
+    public int CheckUp(int i, int j)
     {
         if (i == 0 || i == 2)
         {
@@ -192,7 +206,7 @@ public class GameStart : MonoBehaviour
         }
     }
 
-    private int CheckRight(int i, int j)
+    public int CheckRight(int i, int j)
     {
         if (j == 2)
         {
@@ -212,7 +226,7 @@ public class GameStart : MonoBehaviour
         }
     }
 
-    private int CheckLeft(int i, int j)
+    public int CheckLeft(int i, int j)
     {
         if (j == 0)
         {
@@ -243,6 +257,7 @@ public class GameStart : MonoBehaviour
     public bool Attack(GameObject defenderSlot, int damage)
     {
         GameObject cardObject = defenderSlot.transform.GetChild(3).gameObject;
+        CardObject co = GameStart.INSTANCE.FindCardObject(cardObject);
         GameObject hpbox = defenderSlot.transform.GetChild(0).GetChild(0).gameObject;
         TextMeshProUGUI hpText = hpbox.GetComponent<TextMeshProUGUI>();
         int newHP = (Int32.Parse(hpText.text) - damage);
@@ -253,6 +268,7 @@ public class GameStart : MonoBehaviour
             TextMeshProUGUI atkText = atkbox.GetComponent<TextMeshProUGUI>();
             atkText.text = 0.ToString();
             hpText.text = 0.ToString();
+            co.currentHP = 0;
             if (EnemyLeader == cardObject.GetComponent<Image>().sprite.name)
             {
                 EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = 0.ToString();
@@ -261,7 +277,8 @@ public class GameStart : MonoBehaviour
         }
         else
         {
-            hpText.text = newHP.ToString(); 
+            hpText.text = newHP.ToString();
+            co.currentHP = newHP;
             if (EnemyLeader == defenderSlot.transform.GetChild(3).GetComponent<Image>().sprite.name)
             {
                 EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = newHP.ToString();
@@ -394,6 +411,7 @@ public class GameStart : MonoBehaviour
         PlayerPrefs.SetInt(go.name + "Acted", co.acted ? 1 : 0);
         PlayerPrefs.SetInt(go.name + "Moved", co.moved ? 1 : 0);
         PlayerPrefs.SetInt(go.name + "EffectUsed", co.usedEffect ? 1 : 0);
+        //PlayerPrefs.SetInt(go.name + "CurrentHP", co.currentHP);
         SaveGameObject(go);
     }
     private void LoadCardObject(CardObject co)
@@ -402,6 +420,7 @@ public class GameStart : MonoBehaviour
         co.acted = PlayerPrefs.GetInt(go.name + "Acted") == 1;
         co.moved = PlayerPrefs.GetInt(go.name + "Moved") == 1;
         co.usedEffect = PlayerPrefs.GetInt(go.name + "EffectUsed") == 1;
+        //co.currentHP = PlayerPrefs.GetInt(go.name + "CurrentHP");
         LoadGameObject(go);
     }
 
@@ -420,22 +439,24 @@ public class GameStart : MonoBehaviour
         }
     }
 
-    public GameObject CreateCardInSlot(string cardName, GameObject cardSlot)
+    public CardObject CreateCardInSlot(string cardName, GameObject cardSlot)
     {
         Sprite enemyLeaderSprite = (Sprite)Resources.Load("cards/" + cardName, typeof(Sprite));
-        GameObject go = new GameObject(cardName + "Card");
-        Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        RectTransform rectTransform = go.AddComponent<RectTransform>();
+        GameObject go = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        go.name = cardName + "Card";
+        RectTransform rectTransform = go.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(112, 160);
-        Image image = go.AddComponent<Image>();
+        Image image = go.GetComponent<Image>();
         image.sprite = enemyLeaderSprite;
         go.transform.SetParent(cardSlot.transform, false);
-        CardZoom script = go.AddComponent<CardZoom>();
+        CardZoom script = go.GetComponent<CardZoom>();
         script.ZoomedCard = ZoomedCard;
         Card card = FindCard(cardName);
-        UpdateStatBoxes(card, cardSlot:cardSlot);
-        
-        return go;
+        CardObject cardObject = new CardObject(go);
+        cardObject.card = card;
+        cardObject.currentHP = card.HP;
+        UpdateStatBoxes(cardObject, cardSlot: cardSlot);
+        return cardObject;
     }
 
     public GameObject CreateCard(string cardName, bool hideCard)
@@ -460,16 +481,15 @@ public class GameStart : MonoBehaviour
         return go;
     }
 
-    public void UpdateStatBoxes(Card card, GameObject cardSlot, GameObject previousParent = null)
+    public void UpdateStatBoxes(CardObject co, GameObject cardSlot, GameObject previousParent = null)
     {
         string slotNumber = cardSlot.name.Substring(8, 2);
         GameObject hpGODad = cardSlot.transform.Find("HPBlock" + slotNumber).gameObject;
         GameObject hpGO = hpGODad.transform.GetChild(0).gameObject;
         GameObject atkGODad = cardSlot.transform.Find("ATKBlock" + slotNumber).gameObject;
         GameObject atkGO = atkGODad.transform.GetChild(0).gameObject;
-        GameObject costGODad = cardSlot.transform.Find("CostBlock" + slotNumber).gameObject;
-        hpGO.GetComponent<TextMeshProUGUI>().text = card.HP.ToString();
-        atkGO.GetComponent<TextMeshProUGUI>().text = card.Attack.ToString();
+        hpGO.GetComponent<TextMeshProUGUI>().text = co.currentHP.ToString();
+        atkGO.GetComponent<TextMeshProUGUI>().text = co.card.Attack.ToString();
         hpGODad.SetActive(true);
         atkGODad.SetActive(true);
 

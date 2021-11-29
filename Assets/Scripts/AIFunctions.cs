@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AIFunctions : MonoBehaviour
 {
@@ -26,7 +28,30 @@ public class AIFunctions : MonoBehaviour
 
     private void MoveLeaderTop()
     {
-        //throw new NotImplementedException();
+        CardObject leaderCardObject = GameStart.INSTANCE.FindEnemyLeaderCardObject(GameStart.INSTANCE.EnemyLeader);
+        GameObject leaderGameObject = leaderCardObject.GameObject;
+        GameObject slot = leaderGameObject.transform.parent.gameObject;
+        int locationY = Int32.Parse(slot.name.Substring(8, 1));
+        int locationX = Int32.Parse(slot.name.Substring(9, 1));
+        bool cardUp = GameStart.INSTANCE.CheckUp(locationX, locationY) == 1;
+        if (!cardUp)
+        {
+            MoveCardUp(leaderCardObject, locationX, locationY, slot);
+        }
+
+    }
+
+    private void MoveCardUp(CardObject card, int currentX, int currentY, GameObject previousSlot)
+    {
+        GameObject upSlot = GameStart.INSTANCE.GetSlotMap()[(currentY-1).ToString() + currentX.ToString()];
+        GameObject newHPbox = upSlot.transform.GetChild(0).GetChild(0).gameObject;
+        TextMeshProUGUI newHPText = newHPbox.GetComponent<TextMeshProUGUI>();
+        newHPText.text = card.currentHP.ToString();
+
+        Card c = GameStart.INSTANCE.FindCard(card.GameObject.GetComponent<Image>().sprite.name);
+        card.GameObject.transform.SetParent(upSlot.transform, false);
+        GameStart.INSTANCE.RecalculateCosts();
+        GameStart.INSTANCE.UpdateStatBoxes(card, upSlot, previousSlot);
     }
 
     public bool IsLeaderOnTop()
@@ -35,6 +60,6 @@ public class AIFunctions : MonoBehaviour
         CardObject enemyLeader = allCards.Find(x => x.GameObject.name == GameStart.INSTANCE.EnemyLeader + "Card");
         string slotName = enemyLeader.GameObject.transform.parent.name;
         int yCoordinates = int.Parse(slotName.Substring(8, 1));
-        return yCoordinates == 1;
+        return yCoordinates == 0;
     }
 }

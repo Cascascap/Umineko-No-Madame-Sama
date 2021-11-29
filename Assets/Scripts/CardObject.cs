@@ -9,8 +9,10 @@ public class CardObject
         GameObject = gameObject;
     }
 
+    public Card card { get; set; }
     public bool acted { get; set; }
     public bool usedEffect { get; set; }
     public bool moved { get; set; }
+    public int currentHP { get; set; }
     public GameObject GameObject { get; }
 }

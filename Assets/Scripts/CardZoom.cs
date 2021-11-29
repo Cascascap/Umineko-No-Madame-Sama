@@ -89,8 +89,11 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             GameObject previousParent = movingCard.transform.parent.gameObject;
                             movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                             movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
-                            GameStart.INSTANCE.CardGameObjectsInGame.Add(new CardObject(movingCard));
-                            GameStart.INSTANCE.UpdateStatBoxes(card, eventData.pointerClick.gameObject, previousParent);
+                            CardObject co = new CardObject(movingCard);
+                            co.currentHP = card.HP;
+                            co.card = card;
+                            GameStart.INSTANCE.CardGameObjectsInGame.Add(co);
+                            GameStart.INSTANCE.UpdateStatBoxes(co, eventData.pointerClick.gameObject, previousParent);
                             RemovePreviousMark();
                             GameStart.INSTANCE.RecalculateCosts();
                             Debug.Log("Put card in field");
@@ -121,7 +124,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         string cardName = movingCard.GetComponent<Image>().sprite.name;
                         movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                         Card card = GameStart.INSTANCE.FindCard(cardName);
-                        GameStart.INSTANCE.UpdateStatBoxes(card, eventData.pointerClick.gameObject, previousParent);
+                        GameStart.INSTANCE.UpdateStatBoxes(cardObject, eventData.pointerClick.gameObject, previousParent);
                         RemovePreviousMark();
                         GameStart.INSTANCE.RecalculateCosts();
                         Debug.Log("Card moves");
