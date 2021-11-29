@@ -26,6 +26,7 @@ public class GameStart : MonoBehaviour
     public int MIN_DECK_SIZE = 5;
     public int MAX_DECK_SIZE = 30;
     public int MAX_CARDS_HAND = 8;
+    public int STARTING_CARDS_HAND = 5;
 
     public GameObject SelectedCardGameObject;
     public State GameState = State.Moving;
@@ -102,9 +103,9 @@ public class GameStart : MonoBehaviour
         CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot10)));
         PlayerHand = new Hand();
         EnemyHand = new Hand();
-        EnemyHand.cards = Draw(EnemyDeck, 5);
+        EnemyHand.cards = Draw(EnemyDeck, STARTING_CARDS_HAND);
         RearrangeHand(false);
-        PlayerHand.cards = Draw(PlayerDeck, 5);
+        PlayerHand.cards = Draw(PlayerDeck, STARTING_CARDS_HAND);
         RearrangeHand(true);
         InitializeSlotMap();
         RecalculateCosts();
@@ -494,17 +495,19 @@ public class GameStart : MonoBehaviour
     {
         int i = 0;
         int cardNumbers = PlayerHandArea.transform.childCount;
+        float playerHandWidth = PlayerHandArea.transform.GetComponent<RectTransform>().sizeDelta.x;
+        float cardWidth = CardPrefab.transform.GetComponent<RectTransform>().sizeDelta.x;
         GameObject parent;
-        float defaultSeparator = (PlayerHandArea.transform.GetComponent<RectTransform>().sizeDelta.x /5) + 2;
+        float defaultSeparator = (playerHandWidth - (cardWidth * STARTING_CARDS_HAND)) / STARTING_CARDS_HAND-1;
         float xSeparator = defaultSeparator;
-        if (cardNumbers > 5)
+        if (cardNumbers > STARTING_CARDS_HAND)
         {
-            xSeparator = defaultSeparator - (20 * (cardNumbers - 5));
+            xSeparator = (playerHandWidth - (cardWidth * cardNumbers)) / (cardNumbers -1);
         }
         for (int j = 0; j < PlayerHandArea.transform.childCount; j++)
         {
             GameObject go = PlayerHandArea.transform.GetChild(j).gameObject;
-            float x = -244 + (xSeparator * i);
+            float x = -244 + ((cardWidth + xSeparator) * i);
             float y;
             if (playerHand)
             {

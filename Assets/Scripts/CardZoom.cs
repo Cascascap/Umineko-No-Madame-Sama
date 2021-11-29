@@ -84,6 +84,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         int costInSlot = Int32.Parse(costBlock.GetComponent<TextMeshProUGUI>().text);
                         if (card.Cost <= costInSlot)
                         {
+                            GameStart.INSTANCE.PlayerHand.cards.Remove(card);
                             GameStart.INSTANCE.GameState = GameStart.State.Summoning;
                             GameObject previousParent = movingCard.transform.parent.gameObject;
                             movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
