@@ -11,7 +11,7 @@ public class GameStart : MonoBehaviour
     public GameObject PlayerLeaderImage, EnemyLeaderImage, PlayerLifePoints, EnemyLifePoints;
     public GameObject PlayerHandArea, EnemyHandArea;
     public GameObject CardSlot00, CardSlot01, CardSlot02, CardSlot10, CardSlot11, CardSlot12, CardSlot20, CardSlot21, CardSlot22, CardSlot30, CardSlot31, CardSlot32;
-    public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot;
+    public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot, PlayerGraveyard, EnemyGraveyard;
     public GameObject CardPrefab;
     public Button EndTurnButton;
     public Button UndoButton;
@@ -100,7 +100,7 @@ public class GameStart : MonoBehaviour
         DecksInGame.Add(PlayerDeck);
         DecksInGame.Add(EnemyDeck);
         CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(PlayerLeader, CardSlot21)));
-        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot10)));
+        CardGameObjectsInGame.Add(new CardObject(CreateCardInSlot(EnemyLeader, CardSlot11)));
         PlayerHand = new Hand();
         EnemyHand = new Hand();
         EnemyHand.cards = Draw(EnemyDeck, STARTING_CARDS_HAND);
@@ -242,6 +242,7 @@ public class GameStart : MonoBehaviour
     //Returns true if the attack destroys the card
     public bool Attack(GameObject defenderSlot, int damage)
     {
+        GameObject cardObject = defenderSlot.transform.GetChild(3).gameObject;
         GameObject hpbox = defenderSlot.transform.GetChild(0).GetChild(0).gameObject;
         TextMeshProUGUI hpText = hpbox.GetComponent<TextMeshProUGUI>();
         int newHP = (Int32.Parse(hpText.text) - damage);
@@ -252,7 +253,7 @@ public class GameStart : MonoBehaviour
             TextMeshProUGUI atkText = atkbox.GetComponent<TextMeshProUGUI>();
             atkText.text = 0.ToString();
             hpText.text = 0.ToString();
-            if (EnemyLeader == defenderSlot.GetComponent<Image>().sprite.name)
+            if (EnemyLeader == cardObject.GetComponent<Image>().sprite.name)
             {
                 EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = 0.ToString();
             }

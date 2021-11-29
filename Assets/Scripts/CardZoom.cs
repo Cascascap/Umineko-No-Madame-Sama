@@ -143,8 +143,8 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         {
                             GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
                             GameStart.INSTANCE.CardGameObjectsInGame.Remove(cardObject);
-                            GameObject.Destroy(enemyCardGO);
-                            if(enemyCardName == GameStart.INSTANCE.EnemyLeader)
+                            enemyCardGO.transform.SetParent(GameStart.INSTANCE.EnemyGraveyard.transform, false);
+                            if (enemyCardName == GameStart.INSTANCE.EnemyLeader)
                             {
                                 GameStart.INSTANCE.Victory();
                             }
