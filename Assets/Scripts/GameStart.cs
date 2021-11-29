@@ -284,6 +284,21 @@ public class GameStart : MonoBehaviour
         }
     }
 
+
+    public void OnTurnStart()
+    {
+        GameState = State.Moving;
+        if (PlayerHand.cards.Count < MAX_CARDS_HAND)
+        {
+            Card drawnCard = Draw(PlayerDeck, 1)[0];
+            PlayerHand.cards.Add(drawnCard);
+        }
+        RestoreCards();
+        RearrangeHand(true);
+        SaveState();
+    }
+
+
     private void SaveState()
     {
         foreach (GameObject go in StatBoxes)
@@ -303,67 +318,9 @@ public class GameStart : MonoBehaviour
         PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
     }
 
-    private void SaveCardObject(CardObject co)
-    {
-        GameObject go = co.GameObject;
-        PlayerPrefs.SetString(go.name, go.transform.parent.name);
-        PlayerPrefs.SetFloat(go.name + "x", go.transform.localPosition.x);
-        PlayerPrefs.SetFloat(go.name + "y", go.transform.localPosition.y);
-        PlayerPrefs.SetInt(go.name + "Acted", co.acted ? 1 : 0);
-        PlayerPrefs.SetInt(go.name + "Moved", co.moved ? 1 : 0);
-        PlayerPrefs.SetInt(go.name + "EffectUsed", co.usedEffect ? 1 : 0);
-        PlayerPrefs.SetInt(go.name + "EffectUsed", co.usedEffect ? 1 : 0);
-        PlayerPrefs.SetFloat(go.name + "ColorR", go.GetComponent<Image>().color.r);
-        PlayerPrefs.SetFloat(go.name + "ColorG", go.GetComponent<Image>().color.g);
-        PlayerPrefs.SetFloat(go.name + "ColorB", go.GetComponent<Image>().color.b);
-    }
-    private void LoadCardObject(CardObject co)
-    {
-        GameObject go = co.GameObject;
-        GameObject savedObjectParent = GameObject.Find(PlayerPrefs.GetString(go.name));
-        Image image = go.GetComponent<Image>();
-        go.transform.SetParent(savedObjectParent.gameObject.transform, false);
-        float x = PlayerPrefs.GetFloat(go.name + "x");
-        float y = PlayerPrefs.GetFloat(go.name + "y");
-        go.transform.localPosition = new Vector2(x, y);
-        co.acted = PlayerPrefs.GetInt(go.name + "Acted") == 1;
-        co.moved = PlayerPrefs.GetInt(go.name + "Moved") == 1;
-        co.usedEffect = PlayerPrefs.GetInt(go.name + "EffectUsed") == 1;
-        byte r = (byte)PlayerPrefs.GetFloat(go.name + "ColorR");
-        byte g = (byte)PlayerPrefs.GetFloat(go.name + "ColorG");
-        byte b = (byte)PlayerPrefs.GetFloat(go.name + "ColorB");
-        image.color = new Color(r, g, b);
-    }
-
-    public void OnTurnStart()
-    {
-        GameState = State.Moving;
-        if(PlayerHand.cards.Count < MAX_CARDS_HAND)
-        {
-            Card drawnCard = Draw(PlayerDeck, 1)[0];
-            PlayerHand.cards.Add(drawnCard);
-        }
-        RestoreCards();
-        RearrangeHand(true);
-        SaveState();
-    }
-
-    private void RestoreCards()
-    {
-        foreach(CardObject co in CardGameObjectsInGame)
-        {
-            GameObject go = co.GameObject;
-            Image goImage = go.GetComponent<Image>();
-            goImage.color = new Color32(255, 255, 255, 255);
-            Card card = FindCard(goImage.sprite.name);
-            co.acted = false;
-            co.usedEffect = false;
-        }
-    }
-
     private void Undo()
     {
-        if(GameState != State.EnemyTurn)
+        if (GameState != State.EnemyTurn)
         {
             foreach (GameObject go in StatBoxes)
             {
@@ -381,6 +338,84 @@ public class GameStart : MonoBehaviour
             PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
             GameState = State.Moving;
+        }
+    }
+
+    private void SaveStatBox(GameObject go)
+    {
+        GameObject boxText = go.transform.GetChild(0).gameObject;
+        TextMeshProUGUI text = boxText.GetComponent<TextMeshProUGUI>();
+        PlayerPrefs.SetString(go.name, text.text);
+        PlayerPrefs.SetInt(go.name + "Active", go.activeSelf ? 1 : 0);
+    }
+
+    private void LoadStatBox(string lifeBoxName)
+    {
+        GameObject goDad = GameObject.Find(lifeBoxName);
+        if (goDad != null)
+        {
+            GameObject go = goDad.transform.GetChild(0).gameObject;
+            TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
+            text.text = PlayerPrefs.GetString(lifeBoxName);
+            goDad.SetActive(PlayerPrefs.GetInt(goDad.name + "Active") == 1);
+        }
+    }
+    private void SaveGameObject(GameObject go)
+    {
+        PlayerPrefs.SetString(go.name, go.transform.parent.name);
+        PlayerPrefs.SetFloat(go.name + "x", go.transform.localPosition.x);
+        PlayerPrefs.SetFloat(go.name + "y", go.transform.localPosition.y);
+        PlayerPrefs.SetFloat(go.name + "ColorR", go.GetComponent<Image>().color.r);
+        PlayerPrefs.SetFloat(go.name + "ColorG", go.GetComponent<Image>().color.g);
+        PlayerPrefs.SetFloat(go.name + "ColorB", go.GetComponent<Image>().color.b);
+    }
+
+    private void LoadGameObject(GameObject go)
+    {
+        if (go != null)
+        {
+            GameObject savedObjectParent = GameObject.Find(PlayerPrefs.GetString(go.name));
+            Image image = go.GetComponent<Image>();
+            go.transform.SetParent(savedObjectParent.gameObject.transform, false);
+            float x = PlayerPrefs.GetFloat(go.name + "x");
+            float y = PlayerPrefs.GetFloat(go.name + "y");
+            go.transform.localPosition = new Vector2(x, y);
+            float r = PlayerPrefs.GetFloat(go.name + "ColorR");
+            float g = PlayerPrefs.GetFloat(go.name + "ColorG");
+            float b = PlayerPrefs.GetFloat(go.name + "ColorB");
+            image.color = new Color(r, g, b);
+        }
+    }
+
+
+    private void SaveCardObject(CardObject co)
+    {
+        GameObject go = co.GameObject;
+        PlayerPrefs.SetInt(go.name + "Acted", co.acted ? 1 : 0);
+        PlayerPrefs.SetInt(go.name + "Moved", co.moved ? 1 : 0);
+        PlayerPrefs.SetInt(go.name + "EffectUsed", co.usedEffect ? 1 : 0);
+        SaveGameObject(go);
+    }
+    private void LoadCardObject(CardObject co)
+    {
+        GameObject go = co.GameObject;
+        co.acted = PlayerPrefs.GetInt(go.name + "Acted") == 1;
+        co.moved = PlayerPrefs.GetInt(go.name + "Moved") == 1;
+        co.usedEffect = PlayerPrefs.GetInt(go.name + "EffectUsed") == 1;
+        LoadGameObject(go);
+    }
+
+
+    private void RestoreCards()
+    {
+        foreach (CardObject co in CardGameObjectsInGame)
+        {
+            GameObject go = co.GameObject;
+            Image goImage = go.GetComponent<Image>();
+            goImage.color = new Color32(255, 255, 255, 255);
+            Card card = FindCard(goImage.sprite.name);
+            co.acted = false;
+            co.usedEffect = false;
         }
     }
 
@@ -481,43 +516,6 @@ public class GameStart : MonoBehaviour
         return ret;
     }
 
-    private void SaveStatBox(GameObject go)
-    {
-        GameObject boxText = go.transform.GetChild(0).gameObject;
-        TextMeshProUGUI text = boxText.GetComponent<TextMeshProUGUI>();
-        PlayerPrefs.SetString(go.name, text.text);
-        PlayerPrefs.SetInt(go.name + "Active", go.activeSelf?1:0);
-    }
-
-    private void LoadStatBox(string lifeBoxName)
-    {
-        GameObject goDad = GameObject.Find(lifeBoxName);
-        if(goDad != null)
-        {
-            GameObject go = goDad.transform.GetChild(0).gameObject;
-            TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
-            text.text = PlayerPrefs.GetString(lifeBoxName);
-            goDad.SetActive(PlayerPrefs.GetInt(goDad.name + "Active")==1);
-        }
-    }
-    private void SaveGameObject(GameObject go)
-    {
-        PlayerPrefs.SetString(go.name, go.transform.parent.name);
-        PlayerPrefs.SetFloat(go.name + "x", go.transform.localPosition.x);
-        PlayerPrefs.SetFloat(go.name + "y", go.transform.localPosition.y);
-    }
-
-    private void LoadGameObject(GameObject go)
-    {
-        if(go != null)
-        {
-            GameObject savedObjectParent = GameObject.Find(PlayerPrefs.GetString(go.name));
-            go.transform.SetParent(savedObjectParent.gameObject.transform, false);
-            float x = PlayerPrefs.GetFloat(go.name + "x");
-            float y = PlayerPrefs.GetFloat(go.name + "y");
-            go.transform.localPosition = new Vector2(x, y);
-        }
-    }
 
     private bool SlotWithCard(GameObject go)
     {
@@ -587,7 +585,7 @@ public class GameStart : MonoBehaviour
         {
             if(locationY == 2)
             {
-                if(locationX - enemyLocationX < 2)
+                if(locationX - enemyLocationX < 2 && (enemyLocationY == 1 || NoEnemyFrontRow()))
                 {
                     return true;
                 }
@@ -600,4 +598,8 @@ public class GameStart : MonoBehaviour
         return false;
     }
 
+    private bool NoEnemyFrontRow()
+    {
+        return !SlotWithCard(CardSlot10) && !SlotWithCard(CardSlot11) && !SlotWithCard(CardSlot12);
+    }
 }
