@@ -52,7 +52,8 @@ public class CardEffects
 
     internal static void MammonEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        GameStart.INSTANCE.Draw(GameStart.INSTANCE.PlayerDeck, 1);
+        GameStart.INSTANCE.RearrangeHand(true);
     }
 
     internal static void SatanEffect(GameObject go)

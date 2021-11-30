@@ -32,6 +32,7 @@ public class GameStart : MonoBehaviour
 
     public GameObject SelectedCardGameObject;
     public State GameState = State.Moving;
+    public int Turn = 0;
 
     public static GameStart INSTANCE = null;
 
@@ -299,6 +300,7 @@ public class GameStart : MonoBehaviour
         {
             GameState = State.EnemyTurn;
             AIFunctions.INSTANCE.TakeTurn(EnemyDeck);
+            Turn++;
         }
     }
 
@@ -414,6 +416,7 @@ public class GameStart : MonoBehaviour
         PlayerPrefs.SetInt(go.name + "Acted", co.acted ? 1 : 0);
         PlayerPrefs.SetInt(go.name + "Moved", co.moved ? 1 : 0);
         PlayerPrefs.SetInt(go.name + "EffectUsed", co.usedEffect ? 1 : 0);
+        PlayerPrefs.SetInt(go.name + "TurnEffectWasUsedOn", co.TurnEffectWasUsedOn);
         //PlayerPrefs.SetInt(go.name + "CurrentHP", co.currentHP);
         SaveGameObject(go);
     }
@@ -423,6 +426,7 @@ public class GameStart : MonoBehaviour
         co.acted = PlayerPrefs.GetInt(go.name + "Acted") == 1;
         co.moved = PlayerPrefs.GetInt(go.name + "Moved") == 1;
         co.usedEffect = PlayerPrefs.GetInt(go.name + "EffectUsed") == 1;
+        co.TurnEffectWasUsedOn = PlayerPrefs.GetInt(go.name + "TurnEffectWasUsedOn");
         //co.currentHP = PlayerPrefs.GetInt(go.name + "CurrentHP");
         LoadGameObject(go);
     }
@@ -435,7 +439,6 @@ public class GameStart : MonoBehaviour
             GameObject go = co.GameObject;
             Image goImage = go.GetComponent<Image>();
             goImage.color = new Color32(255, 255, 255, 255);
-            //Card card = FindCard(goImage.sprite.name);
             co.acted = false;
             co.usedEffect = false;
             co.moved = false;

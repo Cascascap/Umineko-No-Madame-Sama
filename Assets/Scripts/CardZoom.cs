@@ -49,15 +49,23 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     }
                     if (!cardObject.usedEffect && (GameStart.INSTANCE.GameState == GameStart.State.Moving || GameStart.INSTANCE.GameState == GameStart.State.Summoning))
                     {
-                        if (cardObject.card.AutomaticEffect)
+                        if (cardObject.card.Cooldown == 0 || cardObject.TurnEffectWasUsedOn == 0 || (cardObject.TurnEffectWasUsedOn != 0 && (cardObject.card.Cooldown + cardObject.TurnEffectWasUsedOn <= GameStart.INSTANCE.Turn)))
                         {
-                            UseCardEffect(cardObject, null);
+                            if (cardObject.card.AutomaticEffect)
+                            {
+                                UseCardEffect(cardObject, null);
+                            }
+                            else
+                            {
+                                CreateMark();
+                                GameStart.INSTANCE.UsingEffect = true;
+                                Debug.Log("Using effect");
+                            }
                         }
                         else
                         {
-                            CreateMark();
-                            GameStart.INSTANCE.UsingEffect = true;
-                            Debug.Log("Using effect");
+                            Debug.Log("This card needs to wait " + cardObject.TurnEffectWasUsedOn);
+                            return;
                         }
                     }
                     else
@@ -249,6 +257,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private static void UseCardEffect(CardObject co, GameObject objective)
     {
+        co.TurnEffectWasUsedOn++;
         co.card.Effect(objective);
     }
 
