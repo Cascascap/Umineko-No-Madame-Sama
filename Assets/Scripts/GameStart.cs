@@ -19,6 +19,7 @@ public class GameStart : MonoBehaviour
     public List<Card> CardsInGame = new List<Card>();
     public List<CardObject> CardGameObjectsInGame = new List<CardObject>();
     public List<GameObject> StatBoxes = new List<GameObject>();
+    public GameObject CountersPrefab;
 
 
     private Dictionary<string, GameObject> SlotMap = new Dictionary<string, GameObject>();
@@ -115,7 +116,9 @@ public class GameStart : MonoBehaviour
         EnemyDeck = CreateDeck(EnemyLeader);
         DecksInGame.Add(PlayerDeck);
         DecksInGame.Add(EnemyDeck);
-        CardGameObjectsInGame.Add(CreateCardInSlot(PlayerLeader, CardSlot21));
+        CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
+        CardGameObjectsInGame.Add(leaderCardObject);
+        AddCounter(leaderCardObject, 10);
         CardGameObjectsInGame.Add(CreateCardInSlot(EnemyLeader, CardSlot11));
         PlayerHand = new Hand();
         EnemyHand = new Hand();
@@ -638,5 +641,28 @@ public class GameStart : MonoBehaviour
         {
             return !SlotWithCard(CardSlot20) && !SlotWithCard(CardSlot21) && !SlotWithCard(CardSlot22);
         }
+    }
+
+
+    public void AddCounter(CardObject co, int numberOfCounters)
+    {
+        GameObject cardCounterPanel = Instantiate(CountersPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        GameObject imageObject = cardCounterPanel.transform.GetChild(0).gameObject;
+        Image image = imageObject.GetComponent<Image>();
+        imageObject.transform.localPosition = new Vector3(-35, 55, 0);
+        imageObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(30, 30, 0);
+        GameObject plusObject = imageObject.transform.GetChild(0).gameObject;
+        GameObject counterObject = imageObject.transform.GetChild(1).gameObject;
+
+        plusObject.transform.localPosition = new Vector3((float)-8.5, (float)-0.1, 0);
+        plusObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(13, 30, 0);
+        counterObject.transform.localPosition = new Vector3(7, 0, 0);
+        counterObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(17, 30, 0);
+
+        TextMeshProUGUI plusText = plusObject.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI counterText = counterObject.GetComponent<TextMeshProUGUI>();
+        co.counters = +numberOfCounters;
+        counterText.text = co.counters.ToString();
+        cardCounterPanel.transform.SetParent(co.GameObject.transform, false);
     }
 }

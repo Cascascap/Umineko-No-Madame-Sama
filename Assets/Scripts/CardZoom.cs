@@ -356,5 +356,4 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         GameStart.INSTANCE.SelectedCardGameObject = go.transform.parent.gameObject;
     }
 
-    
 }
