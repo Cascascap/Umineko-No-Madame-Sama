@@ -90,7 +90,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         }
                         else
                         {
-                            Debug.Log("This card needs to wait " + cardObject.TurnEffectWasUsedOn);
+                            Debug.Log("This card needs to wait " + cardObject.card.Cooldown.ToString() + "+" + cardObject.TurnEffectWasUsedOn + "<=" + GameStart.INSTANCE.Turn);
                             return;
                         }
                     }
@@ -172,6 +172,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                                 movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
                                 CardObject co = new CardObject(movingCard);
                                 co.currentHP = card.HP;
+                                co.currentATK = card.Attack;
                                 co.card = card;
                                 GameStart.INSTANCE.CardGameObjectsInGame.Add(co);
                                 GameStart.INSTANCE.UpdateStatBoxes(co, eventData.pointerClick.gameObject, previousParent);
@@ -226,7 +227,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             GameStart.INSTANCE.GameState = GameStart.State.Battle;
                             GameObject enemyCardSlot = eventData.pointerClick.transform.parent.gameObject;
                             string enemyCardName = eventData.pointerClick.GetComponent<Image>().sprite.name;
-                            bool destroysCard = GameStart.INSTANCE.Attack(enemyCardSlot, playerCard.Attack);
+                            bool destroysCard = GameStart.INSTANCE.Attack(enemyCardSlot, playerCard.Attack + cardObject.counters);
                             if (destroysCard)
                             {
                                 GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
@@ -258,7 +259,6 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         GameObject go = GameStart.INSTANCE.SelectedCardGameObject;
         CardObject cardObject = GameStart.INSTANCE.FindCardObject(go);
         UseCardEffect(cardObject, eventData);
-        cardObject.usedEffect = true;
         GameStart.INSTANCE.CardUsingEffect = null;
         RemovePreviousMark();
         Debug.Log("Used effect");
@@ -287,7 +287,8 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private static void UseCardEffect(CardObject co, GameObject objective)
     {
-        co.TurnEffectWasUsedOn++;
+        co.usedEffect = true;
+        co.TurnEffectWasUsedOn = GameStart.INSTANCE.Turn;
         co.card.Effect(objective);
     }
 

@@ -47,8 +47,10 @@ public class AIFunctions : MonoBehaviour
         GameObject newHPbox = upSlot.transform.GetChild(0).GetChild(0).gameObject;
         TextMeshProUGUI newHPText = newHPbox.GetComponent<TextMeshProUGUI>();
         newHPText.text = card.currentHP.ToString();
+        GameObject newATKbox = upSlot.transform.GetChild(0).GetChild(0).gameObject;
+        TextMeshProUGUI newATKText = newATKbox.GetComponent<TextMeshProUGUI>();
+        newATKText.text = card.currentATK.ToString();
 
-        Card c = GameStart.INSTANCE.FindCard(card.GameObject.GetComponent<Image>().sprite.name);
         card.GameObject.transform.SetParent(upSlot.transform, false);
         GameStart.INSTANCE.RecalculateCosts();
         GameStart.INSTANCE.UpdateStatBoxes(card, upSlot, previousSlot);

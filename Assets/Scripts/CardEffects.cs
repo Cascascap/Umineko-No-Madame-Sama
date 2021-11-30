@@ -13,6 +13,8 @@ public class CardEffects
     internal static void AsmodeusEffect(GameObject go)
     {
         Debug.Log("Once per turn: Gives a summoned card a +1/+1 counter");
+        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(go);
+        GameStart.INSTANCE.AddCounter(targetCardObject,  1);
     }
 
     internal static void BeelzebubEffect(GameObject go)

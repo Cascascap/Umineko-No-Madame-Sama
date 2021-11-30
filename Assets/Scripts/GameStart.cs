@@ -118,7 +118,6 @@ public class GameStart : MonoBehaviour
         DecksInGame.Add(EnemyDeck);
         CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
         CardGameObjectsInGame.Add(leaderCardObject);
-        AddCounter(leaderCardObject, 10);
         CardGameObjectsInGame.Add(CreateCardInSlot(EnemyLeader, CardSlot11));
         PlayerHand = new Hand();
         EnemyHand = new Hand();
@@ -284,8 +283,6 @@ public class GameStart : MonoBehaviour
         if(newHP <= 0)
         {
             GameObject atkbox = defenderSlot.transform.GetChild(1).GetChild(0).gameObject;
-            TextMeshProUGUI atkText = atkbox.GetComponent<TextMeshProUGUI>();
-            atkText.text = 0.ToString();
             hpText.text = 0.ToString();
             co.currentHP = 0;
             if (EnemyLeader == cardObject.GetComponent<Image>().sprite.name)
@@ -361,7 +358,7 @@ public class GameStart : MonoBehaviour
         {
             foreach (GameObject go in StatBoxes)
             {
-                LoadStatBox(go.name);
+                LoadStatBox(go);
             }
             for (int i = 0; i < PlayerHandArea.transform.childCount; i++)
             {
@@ -388,16 +385,12 @@ public class GameStart : MonoBehaviour
         PlayerPrefs.SetInt(go.name + "Active", go.activeSelf ? 1 : 0);
     }
 
-    private void LoadStatBox(string lifeBoxName)
+    private void LoadStatBox(GameObject goDad)
     {
-        GameObject goDad = GameObject.Find(lifeBoxName);
-        if (goDad != null)
-        {
-            GameObject go = goDad.transform.GetChild(0).gameObject;
-            TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
-            text.text = PlayerPrefs.GetString(lifeBoxName);
-            goDad.SetActive(PlayerPrefs.GetInt(goDad.name + "Active") == 1);
-        }
+        GameObject go = goDad.transform.GetChild(0).gameObject;
+        TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
+        text.text = PlayerPrefs.GetString(goDad.name);
+        goDad.SetActive(PlayerPrefs.GetInt(goDad.name + "Active") == 1);
     }
     private void SaveGameObject(GameObject go)
     {
@@ -478,6 +471,7 @@ public class GameStart : MonoBehaviour
         CardObject cardObject = new CardObject(go);
         cardObject.card = card;
         cardObject.currentHP = card.HP;
+        cardObject.currentATK = card.Attack;
         UpdateStatBoxes(cardObject, cardSlot: cardSlot);
         return cardObject;
     }
@@ -512,7 +506,7 @@ public class GameStart : MonoBehaviour
         GameObject atkGODad = cardSlot.transform.Find("ATKBlock" + slotNumber).gameObject;
         GameObject atkGO = atkGODad.transform.GetChild(0).gameObject;
         hpGO.GetComponent<TextMeshProUGUI>().text = co.currentHP.ToString();
-        atkGO.GetComponent<TextMeshProUGUI>().text = co.card.Attack.ToString();
+        atkGO.GetComponent<TextMeshProUGUI>().text = co.currentATK.ToString();
         hpGODad.SetActive(true);
         atkGODad.SetActive(true);
 
@@ -673,14 +667,13 @@ public class GameStart : MonoBehaviour
         counterObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(17, 30, 0);
 
         TextMeshProUGUI counterText = counterObject.GetComponent<TextMeshProUGUI>();
-        co.counters = +numberOfCounters;
+        co.counters += numberOfCounters;
+        co.currentHP += numberOfCounters;
+        co.currentATK += numberOfCounters;
         counterText.text = co.counters.ToString();
         cardCounterPanel.transform.SetParent(co.GameObject.transform, false);
 
+        UpdateStatBoxes(co, co.GameObject.transform.parent.gameObject);
     }
 
-    public void HideCounterBox(CardObject co)
-    {
-
-    }
 }

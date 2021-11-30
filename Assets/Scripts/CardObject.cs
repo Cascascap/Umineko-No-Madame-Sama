@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CardObject
 {
+
     public CardObject(GameObject gameObject)
     {
         GameObject = gameObject;
@@ -15,6 +16,7 @@ public class CardObject
     public bool usedEffect { get; set; }
     public bool moved { get; set; }
     public int currentHP { get; set; }
+    public int currentATK { get; set; }
     public int counters { get; set; }
     public int TurnEffectWasUsedOn { get; set; }
     public GameObject GameObject { get; set; }
