@@ -39,6 +39,7 @@ public class GameStart : MonoBehaviour
     public string EnemyLeader, PlayerLeader;
     public Deck PlayerDeck, EnemyDeck;
     public Hand PlayerHand, EnemyHand;
+    public bool UsingEffect;
 
     public Dictionary<string, GameObject> GetSlotMap()
     {
@@ -355,6 +356,8 @@ public class GameStart : MonoBehaviour
             PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
             GameState = State.Moving;
+            UsingEffect = false;
+            CardZoom.RemovePreviousMark();
         }
     }
 

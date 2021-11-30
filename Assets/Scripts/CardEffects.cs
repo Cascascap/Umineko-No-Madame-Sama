@@ -5,87 +5,87 @@ using UnityEngine;
 
 public class CardEffects 
 {
-    public static void BeatriceEffect()
+    public static void BeatriceEffect(GameObject go)
     {
         Debug.Log("Draw stake");
     }
 
-    internal static void AsmodeusEffect()
+    internal static void AsmodeusEffect(GameObject go)
     {
         Debug.Log("Once per turn: Gives a summoned card a +1/+1 counter");
     }
 
-    internal static void BeelzebubEffect()
+    internal static void BeelzebubEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void LionEffect()
+    internal static void LionEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void GaapEffect()
+    internal static void GaapEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void GoatEffect()
+    internal static void GoatEffect(GameObject go)
     {
         return;
     }
 
-    internal static void VirgiliaEffect()
+    internal static void VirgiliaEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void LeviathanEffect()
+    internal static void LeviathanEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void LuciferEffect()
+    internal static void LuciferEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void MammonEffect()
+    internal static void MammonEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void SatanEffect()
+    internal static void SatanEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void RonoveEffect()
+    internal static void RonoveEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void WillEffect()
+    internal static void WillEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void DianaEffect()
+    internal static void DianaEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void KonpeitouEffect()
+    internal static void KonpeitouEffect(GameObject go)
     {
         throw new NotImplementedException();
     }
 
-    internal static void LambdaEffect()
+    internal static void LambdaEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("Lambda's Effect");
     }
 
-    internal static void BelphegorEffect()
+    internal static void BelphegorEffect(GameObject go)
     {
         throw new NotImplementedException();
     }

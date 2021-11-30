@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using static Deck;
 using Image = UnityEngine.UI.Image;
 
 public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
@@ -36,16 +37,39 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 string cardName = this.GetComponent<Image>().sprite.name;
                 CardObject cardObject = GameStart.INSTANCE.FindCardObject(this.gameObject);
-                if (!cardObject.usedEffect && (GameStart.INSTANCE.GameState == GameStart.State.Moving || GameStart.INSTANCE.GameState == GameStart.State.Summoning))
+                if (IsAllyCard(eventData.pointerClick))
                 {
-                    UseCardEffect(cardName);
-                    cardObject.usedEffect = true;
-                    Debug.Log("Using effect");
+                    if (GameStart.INSTANCE.UsingEffect || cardObject == null)
+                    {
+                        return;
+                    }
+                    if (IsCardInHand(cardObject))
+                    {
+                        return;
+                    }
+                    if (!cardObject.usedEffect && (GameStart.INSTANCE.GameState == GameStart.State.Moving || GameStart.INSTANCE.GameState == GameStart.State.Summoning))
+                    {
+                        if (cardObject.card.AutomaticEffect)
+                        {
+                            UseCardEffect(cardObject, null);
+                        }
+                        else
+                        {
+                            CreateMark();
+                            GameStart.INSTANCE.UsingEffect = true;
+                            Debug.Log("Using effect");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Already used this effect");
+                    }
                 }
                 else
                 {
-                    Debug.Log("Already used this effect");
+                    Debug.Log("Can't use enemy effects");
                 }
+                
             }
             catch (UnassignedReferenceException)
             {
@@ -54,13 +78,12 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         else if(eventData.button == PointerEventData.InputButton.Left)
         {
-            if (GameStart.INSTANCE.SelectedCardGameObject == null && IsAllyCard(eventData.pointerClick))
+            if (GameStart.INSTANCE.SelectedCardGameObject == null && IsAllyCard(eventData.pointerClick) && !GameStart.INSTANCE.UsingEffect)
             {
                 CreateMark();
             }
-            else if (IsAllyCard(eventData.pointerClick))
+            else if (IsAllyCard(eventData.pointerClick) && !GameStart.INSTANCE.UsingEffect)
             {
-                RemovePreviousMark(); 
                 CreateMark();
             }
             else
@@ -72,103 +95,135 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 if (eventData.pointerClick.name == GameStart.INSTANCE.SelectedCardGameObject.name)
                 {
                     RemovePreviousMark();
+                    GameStart.INSTANCE.UsingEffect = false;
                 }
                 else
                 {
-                    if(CardInHand(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && (GameStart.INSTANCE.GameState == GameStart.State.Summoning || GameStart.INSTANCE.GameState == GameStart.State.Moving))
+                    if (GameStart.INSTANCE.UsingEffect)
                     {
-                        GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
-                        string cardName = movingCard.GetComponent<Image>().sprite.name;
-                        Card card = GameStart.INSTANCE.FindCard(cardName);
-                        GameObject costBlock = eventData.pointerClick.transform.GetChild(2).GetChild(0).gameObject;
-                        int costInSlot = Int32.Parse(costBlock.GetComponent<TextMeshProUGUI>().text);
-                        if (card.Cost <= costInSlot)
+                        CardObject co = GameStart.INSTANCE.FindCardObject(eventData.pointerClick);
+                        TargetType effectType = co.card.TargetType;
+                        if((effectType == TargetType.Ally && IsAllyCard(co.GameObject))
+                         ||(effectType == TargetType.Enemy && IsEnemyCard(co.GameObject))
+                         || effectType == TargetType.Both && co.GameObject.transform.parent.name != "EnemyHandArea")
                         {
-                            GameStart.INSTANCE.PlayerHand.cards.Remove(card);
-                            GameStart.INSTANCE.GameState = GameStart.State.Summoning;
-                            GameObject previousParent = movingCard.transform.parent.gameObject;
-                            movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
-                            movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
-                            CardObject co = new CardObject(movingCard);
-                            co.currentHP = card.HP;
-                            co.card = card;
-                            GameStart.INSTANCE.CardGameObjectsInGame.Add(co);
-                            GameStart.INSTANCE.UpdateStatBoxes(co, eventData.pointerClick.gameObject, previousParent);
-                            RemovePreviousMark();
-                            GameStart.INSTANCE.RecalculateCosts();
-                            Debug.Log("Put card in field");
+                            UseEffect(eventData.pointerClick);
                         }
                         else
                         {
-                            Debug.Log("Cost too high for card");
+                            Debug.Log("Targeting wrong card to use the effect on");
                         }
-                        
                     }
-                    else if(PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && GameStart.INSTANCE.GameState == GameStart.State.Moving)
+                    else
                     {
-                        GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
-                        CardObject cardObject = GameStart.INSTANCE.FindCardObject(movingCard);
-                        if(cardObject.moved)
+                        if (CardInHand(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && (GameStart.INSTANCE.GameState == GameStart.State.Summoning || GameStart.INSTANCE.GameState == GameStart.State.Moving))
                         {
-                            Debug.Log("Already moved");
-                            return;
-                        }
-                        bool canMove = CanMoveToPosition(movingCard, eventData.pointerClick);
-                        if (!canMove)
-                        {
-                            Debug.Log("Cant move to this spot");
-                            return;
-                        }
-                        cardObject.moved = true;
-                        GameObject previousParent = movingCard.transform.parent.gameObject;
-                        string cardName = movingCard.GetComponent<Image>().sprite.name;
-                        movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
-                        Card card = GameStart.INSTANCE.FindCard(cardName);
-                        GameStart.INSTANCE.UpdateStatBoxes(cardObject, eventData.pointerClick.gameObject, previousParent);
-                        RemovePreviousMark();
-                        GameStart.INSTANCE.RecalculateCosts();
-                        Debug.Log("Card moves");
-                    }
-                    else if (PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && EnemyCardInGame(eventData.pointerClick) && (GameStart.INSTANCE.GameState == GameStart.State.Summoning || GameStart.INSTANCE.GameState == GameStart.State.Moving || GameStart.INSTANCE.GameState == GameStart.State.Battle))
-                    {
-                        string playerCardName = GameStart.INSTANCE.SelectedCardGameObject.GetComponent<Image>().sprite.name;
-                        Card playerCard = GameStart.INSTANCE.FindCard(playerCardName);
-                        CardObject cardObject = GameStart.INSTANCE.FindCardObject(GameStart.INSTANCE.SelectedCardGameObject);
-                        if (!GameStart.INSTANCE.CanAttack(GameStart.INSTANCE.SelectedCardGameObject.transform.parent.gameObject, eventData.pointerClick.transform.parent.gameObject))
-                        {
-                            Debug.Log("Cant attack from position");
-                            return;
-                        }
-                        if (cardObject.acted)
-                        {
-                            Debug.Log("Already attacked");
-                            return; 
-                        }
-                        GameStart.INSTANCE.GameState = GameStart.State.Battle;
-                        GameObject enemyCardSlot = eventData.pointerClick.transform.parent.gameObject;
-                        string enemyCardName = eventData.pointerClick.GetComponent<Image>().sprite.name;
-                        bool destroysCard = GameStart.INSTANCE.Attack(enemyCardSlot, playerCard.Attack);
-                        if (destroysCard)
-                        {
-                            GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
-                            GameStart.INSTANCE.CardGameObjectsInGame.Remove(cardObject);
-                            enemyCardGO.transform.SetParent(GameStart.INSTANCE.EnemyGraveyard.transform, false);
-                            if (enemyCardName == GameStart.INSTANCE.EnemyLeader)
+                            GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
+                            string cardName = movingCard.GetComponent<Image>().sprite.name;
+                            Card card = GameStart.INSTANCE.FindCard(cardName);
+                            GameObject costBlock = eventData.pointerClick.transform.GetChild(2).GetChild(0).gameObject;
+                            int costInSlot = Int32.Parse(costBlock.GetComponent<TextMeshProUGUI>().text);
+                            if (card.Cost <= costInSlot)
                             {
-                                GameStart.INSTANCE.Victory();
+                                GameStart.INSTANCE.PlayerHand.cards.Remove(card);
+                                GameStart.INSTANCE.GameState = GameStart.State.Summoning;
+                                GameObject previousParent = movingCard.transform.parent.gameObject;
+                                movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
+                                movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
+                                CardObject co = new CardObject(movingCard);
+                                co.currentHP = card.HP;
+                                co.card = card;
+                                GameStart.INSTANCE.CardGameObjectsInGame.Add(co);
+                                GameStart.INSTANCE.UpdateStatBoxes(co, eventData.pointerClick.gameObject, previousParent);
+                                RemovePreviousMark();
+                                GameStart.INSTANCE.RecalculateCosts();
+                                Debug.Log("Put card in field");
                             }
+                            else
+                            {
+                                Debug.Log("Cost too high for card");
+                            }
+
                         }
-                        Image cardImage = GameStart.INSTANCE.SelectedCardGameObject.GetComponent<UnityEngine.UI.Image>();
-                        cardImage.color = new Color32(40, 40, 40, 255);
-                        cardObject.acted = true;
-                        RemovePreviousMark();
-                        GameStart.INSTANCE.RecalculateCosts();
-                        Debug.Log("Attack");
+                        else if (PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && PlayerOpenSlot(eventData.pointerClick) && GameStart.INSTANCE.GameState == GameStart.State.Moving)
+                        {
+                            GameObject movingCard = GameStart.INSTANCE.SelectedCardGameObject;
+                            CardObject cardObject = GameStart.INSTANCE.FindCardObject(movingCard);
+                            if (cardObject.moved)
+                            {
+                                Debug.Log("Already moved");
+                                return;
+                            }
+                            bool canMove = CanMoveToPosition(movingCard, eventData.pointerClick);
+                            if (!canMove)
+                            {
+                                Debug.Log("Cant move to this spot");
+                                return;
+                            }
+                            cardObject.moved = true;
+                            GameObject previousParent = movingCard.transform.parent.gameObject;
+                            string cardName = movingCard.GetComponent<Image>().sprite.name;
+                            movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
+                            Card card = GameStart.INSTANCE.FindCard(cardName);
+                            GameStart.INSTANCE.UpdateStatBoxes(cardObject, eventData.pointerClick.gameObject, previousParent);
+                            RemovePreviousMark();
+                            GameStart.INSTANCE.RecalculateCosts();
+                            Debug.Log("Card moves");
+                        }
+                        else if (PlayerCardInGame(GameStart.INSTANCE.SelectedCardGameObject) && EnemyCardInGame(eventData.pointerClick) && (GameStart.INSTANCE.GameState == GameStart.State.Summoning || GameStart.INSTANCE.GameState == GameStart.State.Moving || GameStart.INSTANCE.GameState == GameStart.State.Battle))
+                        {
+                            string playerCardName = GameStart.INSTANCE.SelectedCardGameObject.GetComponent<Image>().sprite.name;
+                            Card playerCard = GameStart.INSTANCE.FindCard(playerCardName);
+                            CardObject cardObject = GameStart.INSTANCE.FindCardObject(GameStart.INSTANCE.SelectedCardGameObject);
+                            if (!GameStart.INSTANCE.CanAttack(GameStart.INSTANCE.SelectedCardGameObject.transform.parent.gameObject, eventData.pointerClick.transform.parent.gameObject))
+                            {
+                                Debug.Log("Cant attack from position");
+                                return;
+                            }
+                            if (cardObject.acted)
+                            {
+                                Debug.Log("Already attacked");
+                                return;
+                            }
+                            GameStart.INSTANCE.GameState = GameStart.State.Battle;
+                            GameObject enemyCardSlot = eventData.pointerClick.transform.parent.gameObject;
+                            string enemyCardName = eventData.pointerClick.GetComponent<Image>().sprite.name;
+                            bool destroysCard = GameStart.INSTANCE.Attack(enemyCardSlot, playerCard.Attack);
+                            if (destroysCard)
+                            {
+                                GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
+                                GameStart.INSTANCE.CardGameObjectsInGame.Remove(cardObject);
+                                enemyCardGO.transform.SetParent(GameStart.INSTANCE.EnemyGraveyard.transform, false);
+                                if (enemyCardName == GameStart.INSTANCE.EnemyLeader)
+                                {
+                                    GameStart.INSTANCE.Victory();
+                                }
+                            }
+                            Image cardImage = GameStart.INSTANCE.SelectedCardGameObject.GetComponent<UnityEngine.UI.Image>();
+                            cardImage.color = new Color32(40, 40, 40, 255);
+                            cardObject.acted = true;
+                            RemovePreviousMark();
+                            GameStart.INSTANCE.RecalculateCosts();
+                            Debug.Log("Attack");
+                        }
                     }
+                    
                 }
             }
             
         }
+    }
+
+
+    private static void UseEffect(GameObject eventData)
+    {
+        GameObject go = GameStart.INSTANCE.SelectedCardGameObject;
+        CardObject cardObject = GameStart.INSTANCE.FindCardObject(go);
+        UseCardEffect(cardObject, eventData);
+        cardObject.usedEffect = true;
+        GameStart.INSTANCE.UsingEffect = false;
+        RemovePreviousMark();
+        Debug.Log("Used effect");
     }
 
     private bool CanMoveToPosition(GameObject movingCard, GameObject objectiveSlot)
@@ -192,15 +247,24 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     }
 
-    private static void UseCardEffect(string cardName)
+    private static void UseCardEffect(CardObject co, GameObject objective)
     {
-        Card card = GameStart.INSTANCE.FindCard(cardName);
-        card.Effect();
+        co.card.Effect(objective);
     }
 
     private bool IsAllyCard(GameObject card)
     {
         return card.name.EndsWith("Card") && (card.transform.parent.parent.name == "PlayerField" || card.transform.parent.name == "PlayerHandArea");
+    }
+
+    private bool IsEnemyCard(GameObject card)
+    {
+        return card.name.EndsWith("Card") && (card.transform.parent.parent.name == "EnemyField" || card.transform.parent.name == "EnemyHandArea");
+    }
+
+    private bool IsCardInHand(CardObject cardObject)
+    {
+        return cardObject != null && cardObject.GameObject.name.EndsWith("Card")  && (cardObject.GameObject.transform.parent.name == "PlayerHandArea" || cardObject.GameObject.transform.parent.name == "EnemyHandArea");
     }
 
     private bool EnemyCardInGame(GameObject card)
@@ -256,15 +320,19 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    private void RemovePreviousMark()
+    public static void RemovePreviousMark()
     {
-        GameObject mark = GameStart.INSTANCE.SelectedCardGameObject.transform.Find("SelectionMark").gameObject;
-        Destroy(mark);
+        if (GameStart.INSTANCE.SelectedCardGameObject != null)
+        {
+            GameObject mark = GameStart.INSTANCE.SelectedCardGameObject.transform.Find("SelectionMark").gameObject;
+            Destroy(mark);
+        }
         GameStart.INSTANCE.SelectedCardGameObject = null;
     }
 
     private void CreateMark()
     {
+        RemovePreviousMark();
         Sprite sprite = (Sprite)Resources.Load("SelectionMark", typeof(Sprite));
         GameObject go = new GameObject("SelectionMark");
         RectTransform rectTransform = go.AddComponent<RectTransform>();

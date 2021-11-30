@@ -14,5 +14,6 @@ public class CardObject
     public bool usedEffect { get; set; }
     public bool moved { get; set; }
     public int currentHP { get; set; }
+    public int counters { get; set; }
     public GameObject GameObject { get; }
 }
