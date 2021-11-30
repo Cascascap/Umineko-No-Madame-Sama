@@ -256,6 +256,20 @@ public class GameStart : MonoBehaviour
     void Update()
     {
         TurnStateDisplay.text = GameState.ToString();
+        foreach(CardObject co in CardGameObjectsInGame)
+        {
+            if (co.counters == 0 && co.GameObject.transform.childCount > 0)
+            {
+                for (int i = 0; i < co.GameObject.transform.childCount; i++)
+                {
+                    GameObject child = co.GameObject.transform.GetChild(i).gameObject;
+                    if (child.name.Contains("CounterPanel"))
+                    {
+                        GameObject.Destroy(child);
+                    }
+                }
+            }
+        }
     }
 
     //Returns true if the attack destroys the card
@@ -648,7 +662,6 @@ public class GameStart : MonoBehaviour
     {
         GameObject cardCounterPanel = Instantiate(CountersPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         GameObject imageObject = cardCounterPanel.transform.GetChild(0).gameObject;
-        Image image = imageObject.GetComponent<Image>();
         imageObject.transform.localPosition = new Vector3(-35, 55, 0);
         imageObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(30, 30, 0);
         GameObject plusObject = imageObject.transform.GetChild(0).gameObject;
@@ -659,10 +672,15 @@ public class GameStart : MonoBehaviour
         counterObject.transform.localPosition = new Vector3(7, 0, 0);
         counterObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(17, 30, 0);
 
-        TextMeshProUGUI plusText = plusObject.GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI counterText = counterObject.GetComponent<TextMeshProUGUI>();
         co.counters = +numberOfCounters;
         counterText.text = co.counters.ToString();
         cardCounterPanel.transform.SetParent(co.GameObject.transform, false);
+
+    }
+
+    public void HideCounterBox(CardObject co)
+    {
+
     }
 }

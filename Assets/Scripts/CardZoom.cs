@@ -16,6 +16,27 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         //If theres a card in the hovered slot or its a card in hand
         if(IsCard(this.gameObject) || this.transform.parent.name == "PlayerHandArea")
         {
+            CardObject co = GameStart.INSTANCE.FindCardObject(this.gameObject);
+            if(co!=null && co.counters > 0)
+            {
+                GameObject cardCounterPanel = Instantiate(GameStart.INSTANCE.CountersPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                GameObject imageObject = cardCounterPanel.transform.GetChild(0).gameObject;
+                imageObject.transform.localPosition = new Vector3(-125, 205, 0);
+                imageObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(80, 80, 0);
+                GameObject plusObject = imageObject.transform.GetChild(0).gameObject;
+                GameObject counterObject = imageObject.transform.GetChild(1).gameObject;
+
+                plusObject.transform.localPosition = new Vector3(-27, (float)2.5, 0);
+                plusObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(25, 80, 0);
+                counterObject.transform.localPosition = new Vector3(13, (float)7.5, 0);
+                counterObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(55, 80, 0);
+
+                TextMeshProUGUI counterText = counterObject.GetComponent<TextMeshProUGUI>();
+                counterText.text = co.counters.ToString();
+                cardCounterPanel.transform.SetParent(ZoomedCard.transform, false);
+
+            }
+
             Sprite sprite = this.GetComponent<Image>().sprite;
             ZoomedCard.GetComponent<Image>().sprite = sprite;
             ZoomedCard.SetActive(true);
@@ -25,6 +46,11 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (ZoomedCard.transform.childCount > 0)
+        {
+            GameObject child = ZoomedCard.transform.GetChild(0).gameObject;
+            GameObject.Destroy(child);
+        }
         ZoomedCard.SetActive(false);
     }
 
