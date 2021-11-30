@@ -39,7 +39,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 CardObject cardObject = GameStart.INSTANCE.FindCardObject(this.gameObject);
                 if (IsAllyCard(eventData.pointerClick))
                 {
-                    if (GameStart.INSTANCE.UsingEffect || cardObject == null)
+                    if (GameStart.INSTANCE.CardUsingEffect!=null || cardObject == null)
                     {
                         return;
                     }
@@ -58,7 +58,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             else
                             {
                                 CreateMark();
-                                GameStart.INSTANCE.UsingEffect = true;
+                                GameStart.INSTANCE.CardUsingEffect = cardObject.card;
                                 Debug.Log("Using effect");
                             }
                         }
@@ -86,11 +86,11 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         else if(eventData.button == PointerEventData.InputButton.Left)
         {
-            if (GameStart.INSTANCE.SelectedCardGameObject == null && IsAllyCard(eventData.pointerClick) && !GameStart.INSTANCE.UsingEffect)
+            if (GameStart.INSTANCE.SelectedCardGameObject == null && IsAllyCard(eventData.pointerClick) && GameStart.INSTANCE.CardUsingEffect == null)
             {
                 CreateMark();
             }
-            else if (IsAllyCard(eventData.pointerClick) && !GameStart.INSTANCE.UsingEffect)
+            else if (IsAllyCard(eventData.pointerClick) && GameStart.INSTANCE.CardUsingEffect==null)
             {
                 CreateMark();
             }
@@ -103,17 +103,23 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 if (eventData.pointerClick.name == GameStart.INSTANCE.SelectedCardGameObject.name)
                 {
                     RemovePreviousMark();
-                    GameStart.INSTANCE.UsingEffect = false;
+                    GameStart.INSTANCE.CardUsingEffect = null;
                 }
                 else
                 {
-                    if (GameStart.INSTANCE.UsingEffect)
+                    if (GameStart.INSTANCE.CardUsingEffect != null)
                     {
                         CardObject co = GameStart.INSTANCE.FindCardObject(eventData.pointerClick);
+                        if(co == null)
+                        {
+                            return;
+                        }
                         TargetType effectType = co.card.TargetType;
+                        TagType targetTag = GameStart.INSTANCE.CardUsingEffect.TargetTag;
                         if((effectType == TargetType.Ally && IsAllyCard(co.GameObject))
                          ||(effectType == TargetType.Enemy && IsEnemyCard(co.GameObject))
-                         || effectType == TargetType.Both && co.GameObject.transform.parent.name != "EnemyHandArea")
+                         || effectType == TargetType.Both && co.GameObject.transform.parent.name != "EnemyHandArea"
+                         && (targetTag == TagType.All || co.card.tags.Contains(targetTag)))
                         {
                             UseEffect(eventData.pointerClick);
                         }
@@ -170,9 +176,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             }
                             cardObject.moved = true;
                             GameObject previousParent = movingCard.transform.parent.gameObject;
-                            string cardName = movingCard.GetComponent<Image>().sprite.name;
                             movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
-                            Card card = GameStart.INSTANCE.FindCard(cardName);
                             GameStart.INSTANCE.UpdateStatBoxes(cardObject, eventData.pointerClick.gameObject, previousParent);
                             RemovePreviousMark();
                             GameStart.INSTANCE.RecalculateCosts();
@@ -229,7 +233,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         CardObject cardObject = GameStart.INSTANCE.FindCardObject(go);
         UseCardEffect(cardObject, eventData);
         cardObject.usedEffect = true;
-        GameStart.INSTANCE.UsingEffect = false;
+        GameStart.INSTANCE.CardUsingEffect = null;
         RemovePreviousMark();
         Debug.Log("Used effect");
     }

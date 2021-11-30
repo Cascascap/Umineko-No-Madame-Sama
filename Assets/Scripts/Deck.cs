@@ -14,6 +14,20 @@ public class Deck
         Both
     }
 
+    public enum TagType
+    {
+        Leader,
+        Witch,
+        Human,
+        Demon,
+        Stake,
+        Summoned,
+        Cat,
+        Pet,
+        Object,
+        All
+    }
+
     public int remainingCards = 0;
     public Stack<Card> cards = new Stack<Card>();
     public Card leaderCard;
@@ -65,31 +79,31 @@ public class Deck
     //Default decks:
     public void Beatrice()
     {
-        this.leaderCard = new Card(0, 36, 3, CardEffects.BeatriceEffect, "Beatrice", new List<string> { "Leader, Witch" }, true, 1);
+        this.leaderCard = new Card(0, 36, 3, CardEffects.BeatriceEffect, "Beatrice", new List<TagType> { TagType.Leader, TagType.Witch }, true, 1);
         AddCardRegister(this.leaderCard, true);
-        Card goat = new Card(1, 2, 2, CardEffects.GoatEffect, "Goat", new List<string> { "Summoned" }, true, 0);
+        Card goat = new Card(1, 2, 2, CardEffects.GoatEffect, "Goat", new List<TagType> { TagType.Summoned }, true, 0);
         AddCardRegister(goat, times:10);
-        AddCardRegister(new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<string> {"Summoned", "Stake"}, false, 1, TargetType.Ally));
-        AddCardRegister(new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<string> { "Summoned", "Stake" }, true, 0));
-        AddCardRegister(new Card(1, 6, 2, CardEffects.BelphegorEffect, "Belphegor", new List<string> { "Summoned", "Stake" }, true, 0));
-        AddCardRegister(new Card(1, 4, 4, CardEffects.LeviathanEffect, "Leviathan", new List<string> { "Summoned", "Stake" }, false, 1, TargetType.Both));
-        AddCardRegister(new Card(1, 4, 4, CardEffects.MammonEffect, "Mammon", new List<string> { "Summoned", "Stake" }, true, 2));
-        AddCardRegister(new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<string> { "Summoned", "Stake" }, true, 0));
-        AddCardRegister(new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<string> { "Summoned", "Stake" }, true, 0));
-        AddCardRegister(new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<string> { "Summoned", "Demon" }, true, 0));
-        AddCardRegister(new Card(2, 8, 4, CardEffects.RonoveEffect, "Ronove", new List<string> { "Summoned", "Demon" }, false, 1, TargetType.Ally));
-        AddCardRegister(new Card(3, 12, 6, CardEffects.VirgiliaEffect, "Virgilia", new List<string> { "Witch" }, true, 1));
+        AddCardRegister(new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<TagType> {TagType.Summoned, TagType.Stake}, false, 1, TagType.Summoned, TargetType.Ally));
+        AddCardRegister(new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 0));
+        AddCardRegister(new Card(1, 6, 2, CardEffects.BelphegorEffect, "Belphegor", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 0));
+        AddCardRegister(new Card(1, 4, 4, CardEffects.LeviathanEffect, "Leviathan", new List<TagType> { TagType.Summoned, TagType.Stake }, false, 1, TagType.All, TargetType.Both));
+        AddCardRegister(new Card(1, 4, 4, CardEffects.MammonEffect, "Mammon", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 2));
+        AddCardRegister(new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 0));
+        AddCardRegister(new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 0));
+        AddCardRegister(new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<TagType> { TagType.Summoned, TagType.Demon }, true, 0));
+        AddCardRegister(new Card(2, 8, 4, CardEffects.RonoveEffect, "Ronove", new List<TagType> { TagType.Summoned, TagType.Demon }, false, 1, TagType.All, TargetType.Ally));
+        AddCardRegister(new Card(3, 12, 6, CardEffects.VirgiliaEffect, "Virgilia", new List<TagType> { TagType.Witch }, true, 1));
     }
 
     public void Lambda()
     {
-        this.leaderCard = new Card(0, 36, 3, CardEffects.LambdaEffect, "Lambda", new List<string> { "Leader, Witch" }, true, 1);
+        this.leaderCard = new Card(0, 36, 3, CardEffects.LambdaEffect, "Lambda", new List<TagType> { TagType.Leader, TagType.Witch}, true, 1);
         AddCardRegister(this.leaderCard, true);
-        Card Konpeitou = new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<string> { "Summoned", "Object" }, true, 0);
+        Card Konpeitou = new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summoned, TagType.Object }, true, 0);
         AddCardRegister(Konpeitou, times:4);
-        AddCardRegister(new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<string> { "Human" }, true, 0));
-        AddCardRegister(new Card(1, 6, 2, CardEffects.LionEffect, "Lion", new List<string> { "Human" }, true, 1));
-        AddCardRegister(new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<string> { "Cat", "Pet" }, true, 1));
+        AddCardRegister(new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<TagType> { TagType.Human }, true, 0));
+        AddCardRegister(new Card(1, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human }, true, 1));
+        AddCardRegister(new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<TagType> { TagType.Cat, TagType.Pet }, true, 1));
     }
 
     public Card FindCardInDeck(string name)
