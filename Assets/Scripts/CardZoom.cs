@@ -178,6 +178,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                                 GameStart.INSTANCE.UpdateStatBoxes(co, eventData.pointerClick.gameObject, previousParent);
                                 RemovePreviousMark();
                                 GameStart.INSTANCE.RecalculateCosts();
+                                GameStart.INSTANCE.RearrangeHand(true);
                                 Debug.Log("Put card in field");
                             }
                             else

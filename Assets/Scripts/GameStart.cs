@@ -532,10 +532,11 @@ public class GameStart : MonoBehaviour
 
 
 
-    public List<Card> Draw(Deck startingdeck, int numberOfCards)
+    public List<Card> Draw(Deck startingdeck, int numberOfCards, Deck.TagType tag = Deck.TagType.All, string cardName = null)
     {
-        bool playerDrawing = startingdeck.leaderCard.ImageName == "Beatrice";
+        bool playerDrawing = startingdeck.leaderCard.ImageName == PlayerDeck.leaderCard.ImageName;
         List<Card> ret = new List<Card>();
+
         for(int i = 0; i< numberOfCards; i++)
         {
             Card drawnCard = startingdeck.cards.Pop();
@@ -563,31 +564,32 @@ public class GameStart : MonoBehaviour
     public void RearrangeHand(bool playerHand)
     {
         int i = 0;
-        int cardNumbers = PlayerHandArea.transform.childCount;
-        float playerHandWidth = PlayerHandArea.transform.GetComponent<RectTransform>().sizeDelta.x;
         float cardWidth = CardPrefab.transform.GetComponent<RectTransform>().sizeDelta.x;
         GameObject parent;
-        float defaultSeparator = (playerHandWidth - (cardWidth * STARTING_CARDS_HAND)) / STARTING_CARDS_HAND-1;
+        float y;
+        if (playerHand)
+        {
+            y = 201;
+            parent = PlayerHandArea;
+        }
+        else
+        {
+            y = -195;
+            parent = EnemyHandArea;
+        }
+        int cardNumbers = parent.transform.childCount;
+        float handWidth = parent.transform.GetComponent<RectTransform>().sizeDelta.x;
+        float defaultSeparator = (handWidth - (cardWidth * STARTING_CARDS_HAND)) / STARTING_CARDS_HAND-1;
         float xSeparator = defaultSeparator;
         if (cardNumbers > STARTING_CARDS_HAND)
         {
-            xSeparator = (playerHandWidth - (cardWidth * cardNumbers)) / (cardNumbers -1);
+            xSeparator = (handWidth - (cardWidth * cardNumbers)) / (cardNumbers -1);
         }
-        for (int j = 0; j < PlayerHandArea.transform.childCount; j++)
+        for (int j = 0; j < parent.transform.childCount; j++)
         {
-            GameObject go = PlayerHandArea.transform.GetChild(j).gameObject;
+            GameObject go = parent.transform.GetChild(j).gameObject;
             float x = -244 + ((cardWidth + xSeparator) * i);
-            float y;
-            if (playerHand)
-            {
-                y = 201;
-                parent = PlayerHandArea;
-            }
-            else
-            {
-                y = -195;
-                parent = EnemyHandArea;
-            }
+            
             go.transform.SetParent(parent.transform, false);
             go.transform.localPosition = new Vector3(x, y, 0);
             i++;

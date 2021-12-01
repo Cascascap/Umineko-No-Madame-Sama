@@ -102,7 +102,7 @@ public class Deck
         Card Konpeitou = new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summoned, TagType.Object }, true, 0);
         AddCardRegister(Konpeitou, times:4);
         AddCardRegister(new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<TagType> { TagType.Human }, true, 0));
-        AddCardRegister(new Card(1, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human }, true, 1));
+        AddCardRegister(new Card(2, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human }, true, 1));
         AddCardRegister(new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<TagType> { TagType.Cat, TagType.Pet }, true, 1));
     }
 
