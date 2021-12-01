@@ -3062,6 +3062,8 @@ MonoBehaviour:
   EnemyDeckSlot: {fileID: 27777751}
   PlayerGraveyard: {fileID: 155700792}
   EnemyGraveyard: {fileID: 1233635908}
+  PlayerField: {fileID: 1974808173}
+  EnemyField: {fileID: 635710433}
   CardPrefab: {fileID: 8151410570973560199, guid: b2f15179a8fbfba44876c409bfc81b80,
     type: 3}
   EndTurnButton: {fileID: 734725848}
@@ -3130,7 +3132,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0394c25f9872f834f906b2c90878b397, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand: {fileID: 0}
 --- !u!224 &352767453 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2290046628056563661, guid: 37065ebba4fba1240ba9a7a6b252def8,

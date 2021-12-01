@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,4 +21,9 @@ public class CardObject
     public int counters { get; set; }
     public int TurnEffectWasUsedOn { get; set; }
     public GameObject GameObject { get; set; }
+
+    internal bool IsEnemyCard()
+    {
+        return GameObject.transform.parent.parent.name == GameStart.INSTANCE.EnemyField.name;
+    }
 }

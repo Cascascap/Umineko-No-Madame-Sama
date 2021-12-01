@@ -79,7 +79,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         {
                             if (cardObject.card.AutomaticEffect)
                             {
-                                UseCardEffect(cardObject, null);
+                                GameStart.INSTANCE.UseCardEffect(cardObject, null);
                             }
                             else
                             {
@@ -259,7 +259,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         GameObject go = GameStart.INSTANCE.SelectedCardGameObject;
         CardObject cardObject = GameStart.INSTANCE.FindCardObject(go);
-        UseCardEffect(cardObject, eventData);
+        GameStart.INSTANCE.UseCardEffect(cardObject, eventData);
         GameStart.INSTANCE.CardUsingEffect = null;
         RemovePreviousMark();
         Debug.Log("Used effect");
@@ -286,12 +286,6 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     }
 
-    private static void UseCardEffect(CardObject co, GameObject objective)
-    {
-        co.usedEffect = true;
-        co.TurnEffectWasUsedOn = GameStart.INSTANCE.Turn;
-        co.card.Effect(objective);
-    }
 
     private bool IsAllyCard(GameObject card)
     {

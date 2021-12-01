@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Deck;
 
 public class AIFunctions : MonoBehaviour
 {
@@ -46,10 +47,30 @@ public class AIFunctions : MonoBehaviour
 
     private void Attack()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     private void UseEffects()
+    {
+        foreach (CardObject co in GameStart.INSTANCE.CardGameObjectsInGame) 
+        {
+            if (co.IsEnemyCard())
+            {
+                if (co.card.AutomaticEffect)
+                {
+                    GameStart.INSTANCE.UseCardEffect(co, null);
+                }
+                else
+                {
+                    TagType targetTag = co.card.TargetTag;
+                    CardObject target = GetCardInFieldByTag(targetTag);
+                    GameStart.INSTANCE.UseCardEffect(co, target.GameObject);
+                }
+            }
+        }
+    }
+
+    private CardObject GetCardInFieldByTag(TagType targetTag)
     {
         throw new NotImplementedException();
     }

@@ -11,7 +11,7 @@ public class GameStart : MonoBehaviour
     public GameObject PlayerLeaderImage, EnemyLeaderImage, PlayerLifePoints, EnemyLifePoints;
     public GameObject PlayerHandArea, EnemyHandArea;
     public GameObject CardSlot00, CardSlot01, CardSlot02, CardSlot10, CardSlot11, CardSlot12, CardSlot20, CardSlot21, CardSlot22, CardSlot30, CardSlot31, CardSlot32;
-    public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot, PlayerGraveyard, EnemyGraveyard;
+    public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot, PlayerGraveyard, EnemyGraveyard, PlayerField, EnemyField;
     public GameObject CardPrefab;
     public Button EndTurnButton;
     public Button UndoButton;
@@ -377,6 +377,14 @@ public class GameStart : MonoBehaviour
         }
     }
 
+    public void UseCardEffect(CardObject co, GameObject objective)
+    {
+        Debug.Log("Using " + co.card.ImageName + "'s effect");
+        co.usedEffect = true;
+        co.TurnEffectWasUsedOn = GameStart.INSTANCE.Turn;
+        co.card.Effect(objective);
+    }
+
     private void SaveStatBox(GameObject go)
     {
         GameObject boxText = go.transform.GetChild(0).gameObject;
@@ -539,6 +547,10 @@ public class GameStart : MonoBehaviour
 
         for(int i = 0; i< numberOfCards; i++)
         {
+            if(startingdeck.cards.Count == 0)
+            {
+                return ret;
+            }
             Card drawnCard = startingdeck.cards.Pop();
             GameObject go = CreateCard(drawnCard.ImageName, false);
             ret.Add(drawnCard);

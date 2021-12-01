@@ -19,37 +19,37 @@ public class CardEffects
 
     internal static void BeelzebubEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 
     internal static void LionEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 
     internal static void GaapEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 
     internal static void GoatEffect(GameObject go)
     {
-        return;
+        Debug.Log("");
     }
 
     internal static void VirgiliaEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 
     internal static void LeviathanEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 
     internal static void LuciferEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 
     internal static void MammonEffect(GameObject go)
@@ -60,27 +60,27 @@ public class CardEffects
 
     internal static void SatanEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 
     internal static void RonoveEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 
     internal static void WillEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 
     internal static void DianaEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("Grants will 2 +1/+1 counter at the start of your turn");
     }
 
     internal static void KonpeitouEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 
     internal static void LambdaEffect(GameObject go)
@@ -90,6 +90,6 @@ public class CardEffects
 
     internal static void BelphegorEffect(GameObject go)
     {
-        throw new NotImplementedException();
+        Debug.Log("");
     }
 }
