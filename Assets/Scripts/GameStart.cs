@@ -282,7 +282,7 @@ public class GameStart : MonoBehaviour
     public bool Attack(GameObject defenderSlot, int damage)
     {
         GameObject cardObject = defenderSlot.transform.GetChild(3).gameObject;
-        CardObject co = GameStart.INSTANCE.FindCardObject(cardObject);
+        CardObject co = FindCardObject(cardObject);
         GameObject hpbox = defenderSlot.transform.GetChild(0).GetChild(0).gameObject;
         TextMeshProUGUI hpText = hpbox.GetComponent<TextMeshProUGUI>();
         int newHP = (Int32.Parse(hpText.text) - damage);
@@ -388,7 +388,7 @@ public class GameStart : MonoBehaviour
     {
         Debug.Log("Using " + co.card.ImageName + "'s effect");
         co.usedEffect = true;
-        co.TurnEffectWasUsedOn = GameStart.INSTANCE.Turn;
+        co.TurnEffectWasUsedOn = Turn;
         co.card.Effect(objective);
     }
 
@@ -470,11 +470,32 @@ public class GameStart : MonoBehaviour
         }
     }
 
+    public CardObject PlayCardInSlot(string cardName, GameObject cardSlot)
+    {
+        Card card = FindCard(cardName);
+        GameObject cardInHand = null;
+        for(int index = 0; index < EnemyHandArea.transform.childCount; index++)
+        {
+            if(EnemyHandArea.transform.GetChild(index).GetComponent<Image>().sprite.name == cardName)
+            {
+                cardInHand = EnemyHandArea.transform.GetChild(index).gameObject;
+                break;
+            }
+        }
+        CardObject cardObject = new CardObject(cardInHand);
+        cardObject.card = card;
+        cardObject.currentHP = card.HP;
+        cardObject.currentATK = card.Attack;
+        cardInHand.transform.SetParent(cardSlot.transform, false);
+        cardInHand.transform.localPosition = new Vector3(0, 0, 0);
+        UpdateStatBoxes(cardObject, cardSlot: cardSlot);
+        return cardObject;
+    }
+
     public CardObject CreateCardInSlot(string cardName, GameObject cardSlot)
     {
         Sprite enemyLeaderSprite = (Sprite)Resources.Load("cards/" + cardName, typeof(Sprite));
         GameObject go = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        go.name = cardName + "Card";
         RectTransform rectTransform = go.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(112, 160);
         Image image = go.GetComponent<Image>();
@@ -487,6 +508,14 @@ public class GameStart : MonoBehaviour
         cardObject.card = card;
         cardObject.currentHP = card.HP;
         cardObject.currentATK = card.Attack;
+        if (card.tags.Contains(Deck.TagType.Leader))
+        {
+            go.name = cardName + "Card";
+        }
+        else
+        {
+            go.name = cardName + go.GetInstanceID() + "Card";
+        }
         UpdateStatBoxes(cardObject, cardSlot: cardSlot);
         return cardObject;
     }
@@ -515,15 +544,26 @@ public class GameStart : MonoBehaviour
 
     public void UpdateStatBoxes(CardObject co, GameObject cardSlot, GameObject previousParent = null)
     {
-        string slotNumber = cardSlot.name.Substring(8, 2);
-        GameObject hpGODad = cardSlot.transform.Find("HPBlock" + slotNumber).gameObject;
-        GameObject hpGO = hpGODad.transform.GetChild(0).gameObject;
-        GameObject atkGODad = cardSlot.transform.Find("ATKBlock" + slotNumber).gameObject;
-        GameObject atkGO = atkGODad.transform.GetChild(0).gameObject;
-        hpGO.GetComponent<TextMeshProUGUI>().text = co.currentHP.ToString();
-        atkGO.GetComponent<TextMeshProUGUI>().text = co.currentATK.ToString();
-        hpGODad.SetActive(true);
-        atkGODad.SetActive(true);
+        if (!CardGameObjectsInGame.Contains(co) && previousParent != null)
+        {
+            string ppslotNumber = previousParent.name.Substring(8, 2);
+            GameObject pphpGODad = previousParent.transform.Find("HPBlock" + ppslotNumber).gameObject;
+            GameObject ppatkGODad = previousParent.transform.Find("ATKBlock" + ppslotNumber).gameObject;
+            pphpGODad.SetActive(false);
+            ppatkGODad.SetActive(false);
+        }
+        if (cardSlot != null)
+        {
+            string slotNumber = cardSlot.name.Substring(8, 2);
+            GameObject hpGODad = cardSlot.transform.Find("HPBlock" + slotNumber).gameObject;
+            GameObject atkGODad = cardSlot.transform.Find("ATKBlock" + slotNumber).gameObject;
+            GameObject hpGO = hpGODad.transform.GetChild(0).gameObject;
+            GameObject atkGO = atkGODad.transform.GetChild(0).gameObject;
+            hpGO.GetComponent<TextMeshProUGUI>().text = co.currentHP.ToString();
+            atkGO.GetComponent<TextMeshProUGUI>().text = co.currentATK.ToString();
+            hpGODad.SetActive(true);
+            atkGODad.SetActive(true);
+        }
 
         //If it was in another slot and not in the hand
         if(previousParent != null && previousParent.name != "PlayerHandArea")

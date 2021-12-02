@@ -26,29 +26,136 @@ public class AIFunctions : MonoBehaviour
         {
             TakeFirstTurn();
         }
+        else if(!IsLeaderOnRight())
+        {
+            TakeSecondTurn();
+        }
+        else
+        {
+            TakeTurn();
+        }
+        UseEffects();
+        AllAttack();
+        GameStart.INSTANCE.RearrangeHand(false);
         GameStart.INSTANCE.OnTurnStart();
+    }
+
+    private void TakeTurn()
+    {
+        PlayBiggestCostPosibleFromHand();
+    }
+
+    private void PlayBiggestCostPosibleFromHand()
+    {
+        for (int i = 0; i < GameStart.INSTANCE.EnemyField.transform.childCount; i++)
+        {
+            GameObject slot = GameStart.INSTANCE.EnemyField.transform.GetChild(i).gameObject;
+            if (!GameStart.INSTANCE.SlotWithCard(slot))
+            {
+                string slotCoordinates = slot.name.Substring(8, 2);
+                int cost = Int32.Parse(slot.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text);
+                Card succesfulSummon;
+                succesfulSummon = PlayCardByCost(cost, slotCoordinates);
+                if (succesfulSummon == null)
+                {
+                    succesfulSummon = PlayCardByCost(cost - 1, slotCoordinates);
+                }
+                else
+                {
+                    return;
+                }
+                if (succesfulSummon == null)
+                {
+                    succesfulSummon = PlayCardByCost(1, slotCoordinates);
+                }
+                else
+                {
+                    return;
+                }
+                if (succesfulSummon != null)
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+
+    private void TakeSecondTurn()
+    {
+        MoveLeaderRight();
+        Card succesfulSummon;
+        succesfulSummon = PlayCardByCost(2, "12");
+        if (succesfulSummon == null)
+        {
+            PlayCardByCost(1, "12");
+        }
+        succesfulSummon = PlayCardByCost(3, "01");
+        if (succesfulSummon == null)
+        {
+            succesfulSummon = PlayCardByCost(2, "01");
+            if (succesfulSummon == null)
+            {
+                PlayCardByCost(1, "01");
+            }
+        }
+    }
+
+    private void MoveLeaderRight()
+    {
+        CardObject leaderCardObject = GameStart.INSTANCE.FindEnemyLeaderCardObject(GameStart.INSTANCE.EnemyLeader);
+        GameObject leaderGameObject = leaderCardObject.GameObject;
+        GameObject slot = leaderGameObject.transform.parent.gameObject;
+        int locationY = Int32.Parse(slot.name.Substring(8, 1));
+        int locationX = Int32.Parse(slot.name.Substring(9, 1));
+        MoveCardRight(leaderCardObject, locationX, locationY, slot);
+    }
+
+    private void MoveCardRight(CardObject card, int locationX, int locationY, GameObject previousSlot)
+    {
+        GameObject rightSlot;
+        try
+        {
+            rightSlot = GameStart.INSTANCE.GetSlotMap()[locationY.ToString() + (locationX + 1).ToString()];
+        }
+        catch(KeyNotFoundException)
+        {
+            return;
+        }
+        if (rightSlot!=null && SlotOccupied(rightSlot))
+        {
+            return;
+        }
+        GameObject newHPbox = rightSlot.transform.GetChild(0).GetChild(0).gameObject;
+        TextMeshProUGUI newHPText = newHPbox.GetComponent<TextMeshProUGUI>();
+        newHPText.text = card.currentHP.ToString();
+        GameObject newATKbox = rightSlot.transform.GetChild(0).GetChild(0).gameObject;
+        TextMeshProUGUI newATKText = newATKbox.GetComponent<TextMeshProUGUI>();
+        newATKText.text = card.currentATK.ToString();
+
+        card.GameObject.transform.SetParent(rightSlot.transform, false);
+        GameStart.INSTANCE.RecalculateCosts();
+        GameStart.INSTANCE.UpdateStatBoxes(card, rightSlot, previousSlot);
     }
 
     private void TakeFirstTurn()
     {
         MoveLeaderTop();
-        bool succesfulSummon;
+        Card succesfulSummon;
         PlayCardByCost(1, "11");
         PlayCardByCost(1, "00");
         succesfulSummon = PlayCardByCost(2, "10");
-        if (!succesfulSummon)
+        if (succesfulSummon == null)
         {
             PlayCardByCost(1, "10");
         }
-        UseEffects();
-        AllAttack();
-        GameStart.INSTANCE.RearrangeHand(false);
     }
 
     private void AllAttack()
     {
-        foreach (CardObject co in GameStart.INSTANCE.CardGameObjectsInGame) 
+        for(int index = 0; index<GameStart.INSTANCE.CardGameObjectsInGame.Count; index++) 
         {
+            CardObject co = GameStart.INSTANCE.CardGameObjectsInGame[index];
             if (co.IsEnemyCard())
             {
                 CardObject bestTarget = GetBestTarget(co);
@@ -61,12 +168,13 @@ public class AIFunctions : MonoBehaviour
                 if (destroysCard)
                 {
                     GameObject enemyCardGO = targetCardSlot.transform.GetChild(3).gameObject;
-                    GameStart.INSTANCE.CardGameObjectsInGame.Remove(bestTarget);
-                    enemyCardGO.transform.SetParent(GameStart.INSTANCE.EnemyGraveyard.transform, false);
+                    GameStart.INSTANCE.CardGameObjectsInGame.RemoveAt(index);
+                    enemyCardGO.transform.SetParent(GameStart.INSTANCE.PlayerGraveyard.transform, false);
                     if (bestTarget.card.ImageName == GameStart.INSTANCE.PlayerLeader)
                     {
                         GameStart.INSTANCE.Defeat();
                     }
+                    GameStart.INSTANCE.UpdateStatBoxes(bestTarget, null, previousParent: targetCardSlot);
                 }
             }
         }
@@ -84,6 +192,10 @@ public class AIFunctions : MonoBehaviour
                 if (canAttack)
                 {
                     CardObject candidate = GameStart.INSTANCE.FindCardObject(slot.transform.GetChild(3).gameObject);
+                    if(candidate == null)
+                    {
+                        continue;
+                    }
                     if (bestTarget == null)
                     {
                         bestTarget = candidate;
@@ -157,38 +269,41 @@ public class AIFunctions : MonoBehaviour
         return null;
     }
 
-    private bool PlayCardByCost(int cost, string slotNumber)
+    private Card PlayCardByCost(int cost, string slotNumber)
     {
         Card card = GetCardByCostFromHand(cost);
         if (card != null)
         {
             return PlayCardInSlot(card, slotNumber);
         }
-        return false;
+        return null;
     }
 
-    private bool PlayCardInSlot(Card card, string slotNumber)
+    private Card PlayCardInSlot(Card card, string slotNumber)
     {
         GameObject slot = GameObject.Find("CardSlot" + slotNumber);
         if (SlotOccupied(slot))
         {
-            return false;
+            return null;
         }
         GameObject slotBox = slot.transform.GetChild(2).GetChild(0).gameObject;
         TextMeshProUGUI slotText = slotBox.GetComponent<TextMeshProUGUI>();
         if(card.Cost < Int32.Parse(slotText.text))
         {
-            return false;
+            return null;
         }
-        CardObject co = GameStart.INSTANCE.CreateCardInSlot(card.ImageName, slot);
+        CardObject co = GameStart.INSTANCE.PlayCardInSlot(card.ImageName, slot);
         GameStart.INSTANCE.CardGameObjectsInGame.Add(co);
-        return true;
+        return co.card;
     }
 
     private Card GetCardByCostFromHand(int cost)
     {
-        foreach (Card c in GameStart.INSTANCE.EnemyHand.cards)
+        for (int i = 0; i< GameStart.INSTANCE.EnemyHandArea.transform.childCount; i++)
         {
+            GameObject cardInHand = GameStart.INSTANCE.EnemyHandArea.transform.GetChild(i).gameObject;
+            string cardName = cardInHand.GetComponent<Image>().sprite.name;
+            Card c = GameStart.INSTANCE.FindCard(cardName);
             if (c.Cost == cost)
             {
                 return c;
@@ -204,11 +319,7 @@ public class AIFunctions : MonoBehaviour
         GameObject slot = leaderGameObject.transform.parent.gameObject;
         int locationY = Int32.Parse(slot.name.Substring(8, 1));
         int locationX = Int32.Parse(slot.name.Substring(9, 1));
-        bool cardUp = GameStart.INSTANCE.CheckUp(locationX, locationY) == 1;
-        if (!cardUp)
-        {
-            MoveCardUp(leaderCardObject, locationX, locationY, slot);
-        }
+        MoveCardUp(leaderCardObject, locationX, locationY, slot);
 
     }
 
@@ -244,6 +355,15 @@ public class AIFunctions : MonoBehaviour
         string slotName = enemyLeader.GameObject.transform.parent.name;
         int yCoordinates = int.Parse(slotName.Substring(8, 1));
         return yCoordinates == 0;
+    }
+
+    private bool IsLeaderOnRight()
+    {
+        List<CardObject> allCards = GameStart.INSTANCE.CardGameObjectsInGame;
+        CardObject enemyLeader = allCards.Find(x => x.GameObject.name == GameStart.INSTANCE.EnemyLeader + "Card");
+        string slotName = enemyLeader.GameObject.transform.parent.name;
+        int xCoordinates = int.Parse(slotName.Substring(9, 1));
+        return xCoordinates == 2;
     }
 
 }

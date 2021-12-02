@@ -215,6 +215,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             string playerCardName = GameStart.INSTANCE.SelectedCardGameObject.GetComponent<Image>().sprite.name;
                             Card playerCard = GameStart.INSTANCE.FindCard(playerCardName);
                             CardObject cardObject = GameStart.INSTANCE.FindCardObject(GameStart.INSTANCE.SelectedCardGameObject);
+                            CardObject enemyCardObject = GameStart.INSTANCE.FindCardObject(eventData.pointerClick);
                             if (!GameStart.INSTANCE.CanAttack(GameStart.INSTANCE.SelectedCardGameObject.transform.parent.gameObject, eventData.pointerClick.transform.parent.gameObject))
                             {
                                 Debug.Log("Cant attack from position");
@@ -232,12 +233,13 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             if (destroysCard)
                             {
                                 GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
-                                GameStart.INSTANCE.CardGameObjectsInGame.Remove(cardObject);
+                                GameStart.INSTANCE.CardGameObjectsInGame.Remove(enemyCardObject);
                                 enemyCardGO.transform.SetParent(GameStart.INSTANCE.EnemyGraveyard.transform, false);
                                 if (enemyCardName == GameStart.INSTANCE.EnemyLeader)
                                 {
                                     GameStart.INSTANCE.Victory();
                                 }
+                                GameStart.INSTANCE.UpdateStatBoxes(cardObject, enemyCardSlot, enemyCardSlot);
                             }
                             Image cardImage = GameStart.INSTANCE.SelectedCardGameObject.GetComponent<UnityEngine.UI.Image>();
                             cardImage.color = new Color32(40, 40, 40, 255);
