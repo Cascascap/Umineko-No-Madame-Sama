@@ -72,6 +72,8 @@ public class GameStart : MonoBehaviour
 
     internal void Defeat()
     {
+        EndTurnButton.gameObject.SetActive(false);
+        UndoButton.gameObject.SetActive(false);
         Debug.Log("Get rekt m8");
     }
 
@@ -312,6 +314,8 @@ public class GameStart : MonoBehaviour
 
     internal void Victory()
     {
+        EndTurnButton.gameObject.SetActive(false);
+        UndoButton.gameObject.SetActive(false);
         Debug.Log("GG");
     }
 
@@ -320,6 +324,7 @@ public class GameStart : MonoBehaviour
         if (GameState != State.EnemyTurn)
         {
             GameState = State.EnemyTurn;
+            CardZoom.RemovePreviousMark();
             AIFunctions.INSTANCE.TakeTurn(EnemyDeck);
             Turn++;
         }
@@ -667,13 +672,13 @@ public class GameStart : MonoBehaviour
         //Enemy Card Attacking
         if (locationY < 2)
         {
-            if (locationX - enemyLocationX < 2 && ((enemyLocationY == 2 && NoCardInRow(1)) || (enemyLocationY == 3 && NoCardInRow(2) && NoCardInRow(1))))
+            if ((locationX - enemyLocationX < 2) && (locationX - enemyLocationX > -2) && ((enemyLocationY == 2 && NoCardInRow(1)) || (enemyLocationY == 3 && NoCardInRow(2) && NoCardInRow(1))))
             {
                 return true;
             }
             if (locationY == 1)
             {
-                if (locationX - enemyLocationX < 2 && (enemyLocationY == 2|| (enemyLocationY == 3 && NoCardInRow(2))))
+                if ((locationX - enemyLocationX < 2) && (locationX - enemyLocationX > -2) && (enemyLocationY == 2|| (enemyLocationY == 3 && NoCardInRow(2))))
                 {
                     return true;
                 }
@@ -684,14 +689,14 @@ public class GameStart : MonoBehaviour
         {
             if(locationY == 2)
             {
-                if(locationX - enemyLocationX < 2 && (enemyLocationY == 1 || (enemyLocationY == 0 && NoCardInRow(1))))
+                if((locationX - enemyLocationX < 2) && (locationX - enemyLocationX > -2) && (enemyLocationY == 1 || (enemyLocationY == 0 && NoCardInRow(1))))
                 {
                     return true;
                 }
             }
             if(locationY == 3)
             {
-                if (locationX - enemyLocationX < 2 && ((enemyLocationY == 1 && NoCardInRow(1)) || (enemyLocationY == 0 && NoCardInRow(1) && NoCardInRow(2))))
+                if ((locationX - enemyLocationX < 2) && (locationX - enemyLocationX > -2) && ((enemyLocationY == 1 && NoCardInRow(2)) || (enemyLocationY == 0 && NoCardInRow(1) && NoCardInRow(2))))
                 {
                     return true;
                 }

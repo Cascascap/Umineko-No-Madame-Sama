@@ -168,7 +168,7 @@ public class AIFunctions : MonoBehaviour
                 if (destroysCard)
                 {
                     GameObject enemyCardGO = targetCardSlot.transform.GetChild(3).gameObject;
-                    GameStart.INSTANCE.CardGameObjectsInGame.RemoveAt(index);
+                    GameStart.INSTANCE.CardGameObjectsInGame.Remove(bestTarget);
                     enemyCardGO.transform.SetParent(GameStart.INSTANCE.PlayerGraveyard.transform, false);
                     if (bestTarget.card.ImageName == GameStart.INSTANCE.PlayerLeader)
                     {
@@ -274,7 +274,12 @@ public class AIFunctions : MonoBehaviour
         Card card = GetCardByCostFromHand(cost);
         if (card != null)
         {
-            return PlayCardInSlot(card, slotNumber);
+            Card ret = PlayCardInSlot(card, slotNumber);
+            if (ret!=null)
+            {
+                GameStart.INSTANCE.RecalculateCosts();
+            }
+            return ret;
         }
         return null;
     }
@@ -288,7 +293,7 @@ public class AIFunctions : MonoBehaviour
         }
         GameObject slotBox = slot.transform.GetChild(2).GetChild(0).gameObject;
         TextMeshProUGUI slotText = slotBox.GetComponent<TextMeshProUGUI>();
-        if(card.Cost < Int32.Parse(slotText.text))
+        if(card.Cost > Int32.Parse(slotText.text))
         {
             return null;
         }
