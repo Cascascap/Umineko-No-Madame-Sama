@@ -70,6 +70,11 @@ public class GameStart : MonoBehaviour
         return card;
     }
 
+    internal void Defeat()
+    {
+        Debug.Log("Get rekt m8");
+    }
+
     public CardObject FindCardObject(GameObject go)
     {
         CardObject co = null;
@@ -83,6 +88,7 @@ public class GameStart : MonoBehaviour
         }
         return co;
     }
+
 
     public CardObject FindEnemyLeaderCardObject(string leaderName)
     {
@@ -129,6 +135,7 @@ public class GameStart : MonoBehaviour
         RecalculateCosts();
         SaveState();
     }
+
 
     private void InitializeSlotMap()
     {
@@ -568,7 +575,7 @@ public class GameStart : MonoBehaviour
     }
 
 
-    private bool SlotWithCard(GameObject go)
+    public bool SlotWithCard(GameObject go)
     {
         return go.transform.childCount > 3;
     }
@@ -620,13 +627,13 @@ public class GameStart : MonoBehaviour
         //Enemy Card Attacking
         if (locationY < 2)
         {
-            if(locationY == 0)
+            if (locationX - enemyLocationX < 2 && ((enemyLocationY == 2 && NoCardInRow(1)) || (enemyLocationY == 3 && NoCardInRow(2) && NoCardInRow(1))))
             {
-                return false;
+                return true;
             }
-            if(locationY == 1)
+            if (locationY == 1)
             {
-                if (locationX - enemyLocationX < 2)
+                if (locationX - enemyLocationX < 2 && (enemyLocationY == 2|| (enemyLocationY == 3 && NoCardInRow(2))))
                 {
                     return true;
                 }
@@ -637,14 +644,14 @@ public class GameStart : MonoBehaviour
         {
             if(locationY == 2)
             {
-                if(locationX - enemyLocationX < 2 && (enemyLocationY == 1 || (enemyLocationY == 0 && NoEnemyFrontRow(1))))
+                if(locationX - enemyLocationX < 2 && (enemyLocationY == 1 || (enemyLocationY == 0 && NoCardInRow(1))))
                 {
                     return true;
                 }
             }
             if(locationY == 3)
             {
-                if (locationX - enemyLocationX < 2 && ((enemyLocationY == 1 && NoEnemyFrontRow(1)) || (enemyLocationY == 0 && NoEnemyFrontRow(1) && NoEnemyFrontRow(2))))
+                if (locationX - enemyLocationX < 2 && ((enemyLocationY == 1 && NoCardInRow(1)) || (enemyLocationY == 0 && NoCardInRow(1) && NoCardInRow(2))))
                 {
                     return true;
                 }
@@ -653,7 +660,7 @@ public class GameStart : MonoBehaviour
         return false;
     }
 
-    private bool NoEnemyFrontRow(int rowsNumber)
+    public bool NoCardInRow(int rowsNumber)
     {
         if(rowsNumber == 1)
         {

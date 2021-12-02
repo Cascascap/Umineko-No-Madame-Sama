@@ -41,13 +41,84 @@ public class AIFunctions : MonoBehaviour
             PlayCardByCost(1, "10");
         }
         UseEffects();
-        Attack();
+        AllAttack();
         GameStart.INSTANCE.RearrangeHand(false);
     }
 
-    private void Attack()
+    private void AllAttack()
     {
-        //throw new NotImplementedException();
+        foreach (CardObject co in GameStart.INSTANCE.CardGameObjectsInGame) 
+        {
+            if (co.IsEnemyCard())
+            {
+                CardObject bestTarget = GetBestTarget(co);
+                if(bestTarget == null)
+                {
+                    continue;
+                }
+                GameObject targetCardSlot = bestTarget.GameObject.transform.parent.gameObject;
+                bool destroysCard = GameStart.INSTANCE.Attack(targetCardSlot, co.card.Attack + co.counters);
+                if (destroysCard)
+                {
+                    GameObject enemyCardGO = targetCardSlot.transform.GetChild(3).gameObject;
+                    GameStart.INSTANCE.CardGameObjectsInGame.Remove(bestTarget);
+                    enemyCardGO.transform.SetParent(GameStart.INSTANCE.EnemyGraveyard.transform, false);
+                    if (bestTarget.card.ImageName == GameStart.INSTANCE.PlayerLeader)
+                    {
+                        GameStart.INSTANCE.Defeat();
+                    }
+                }
+            }
+        }
+    }
+
+    private CardObject GetBestTarget(CardObject co)
+    {
+        CardObject bestTarget = null;
+        List<GameObject> attackOptions = GetAttackOptions(co);
+        foreach(GameObject slot in attackOptions)
+        {
+            if (GameStart.INSTANCE.SlotWithCard(slot))
+            {
+                bool canAttack = GameStart.INSTANCE.CanAttack(co.GameObject.transform.parent.gameObject, slot);
+                if (canAttack)
+                {
+                    CardObject candidate = GameStart.INSTANCE.FindCardObject(slot.transform.GetChild(3).gameObject);
+                    if (bestTarget == null)
+                    {
+                        bestTarget = candidate;
+                    }
+                    if(candidate.card.ImageName == GameStart.INSTANCE.PlayerLeader)
+                    {
+                        bestTarget = candidate;
+                        return bestTarget;
+                    }
+                    if(bestTarget.currentHP > candidate.currentHP)
+                    {
+                        bestTarget = candidate;
+                    }
+                }
+            }
+        }
+        return bestTarget;
+    }
+
+    private List<GameObject> GetAttackOptions(CardObject co)
+    {
+        List<GameObject> attackOptions = new List<GameObject>();
+        GameObject cardSlot = co.GameObject.transform.parent.gameObject;
+        for(int i = 2; i<= 3; i++)
+        {
+            for(int j=0; j<=2; j++)
+            {
+                bool canAttack = GameStart.INSTANCE.CanAttack(cardSlot, GameStart.INSTANCE.GetSlotMap()[i.ToString()+j.ToString()]);
+                if (canAttack)
+                {
+                    attackOptions.Add(GameStart.INSTANCE.GetSlotMap()[i.ToString() + j.ToString()]);
+                }
+            }
+        }
+        return attackOptions;
     }
 
     private void UseEffects()
@@ -64,6 +135,10 @@ public class AIFunctions : MonoBehaviour
                 {
                     TagType targetTag = co.card.TargetTag;
                     CardObject target = GetCardInFieldByTag(targetTag);
+                    if(target == null)
+                    {
+                        return;
+                    }
                     GameStart.INSTANCE.UseCardEffect(co, target.GameObject);
                 }
             }
@@ -72,7 +147,14 @@ public class AIFunctions : MonoBehaviour
 
     private CardObject GetCardInFieldByTag(TagType targetTag)
     {
-        throw new NotImplementedException();
+        foreach (CardObject co in GameStart.INSTANCE.CardGameObjectsInGame)
+        {
+            if (co.card.tags.Contains(targetTag))
+            {
+                return co;
+            }
+        }
+        return null;
     }
 
     private bool PlayCardByCost(int cost, string slotNumber)
