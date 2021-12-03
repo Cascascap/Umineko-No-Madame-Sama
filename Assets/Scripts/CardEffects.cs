@@ -85,7 +85,11 @@ public class CardEffects
 
     internal static void LambdaEffect(GameObject go)
     {
-        Debug.Log("Lambda's Effect");
+        GameObject gameSlot = GameStart.INSTANCE.FindFreeSlot(true);
+        if (gameSlot != null)
+        {
+            GameStart.INSTANCE.CreateCardInSlot("Konpeitou", gameSlot);
+        }
     }
 
     internal static void BelphegorEffect(GameObject go)

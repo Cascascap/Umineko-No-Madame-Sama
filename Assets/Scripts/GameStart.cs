@@ -742,4 +742,20 @@ public class GameStart : MonoBehaviour
         UpdateStatBoxes(co, co.GameObject.transform.parent.gameObject);
     }
 
+    public GameObject FindFreeSlot(bool enemyField)
+    {
+        if (enemyField)
+        {
+            for(int i = 0; i < EnemyField.transform.childCount; i++)
+            {
+                GameObject slot = EnemyField.transform.GetChild(i).gameObject;
+                bool hasCard = SlotWithCard(slot);
+                if (!hasCard)
+                {
+                    return slot;
+                }
+            }
+        }
+        return null;
+    }
 }
