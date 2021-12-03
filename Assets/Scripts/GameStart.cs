@@ -288,15 +288,31 @@ public class GameStart : MonoBehaviour
         GameObject hpbox = defenderSlot.transform.GetChild(0).GetChild(0).gameObject;
         TextMeshProUGUI hpText = hpbox.GetComponent<TextMeshProUGUI>();
         int newHP = (Int32.Parse(hpText.text) - damage);
-        //if attacking leader
         if(newHP <= 0)
         {
             GameObject atkbox = defenderSlot.transform.GetChild(1).GetChild(0).gameObject;
             hpText.text = 0.ToString();
             co.currentHP = 0;
+            //if attacking leader
             if (EnemyLeader == cardObject.GetComponent<Image>().sprite.name)
             {
                 EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = 0.ToString();
+                Image playerLeaderImage = PlayerLeaderImage.transform.GetChild(1).GetComponent<Image>();
+                Image enemyLeaderImage = EnemyLeaderImage.transform.GetChild(1).GetComponent<Image>();
+                Sprite playerLeaderSprite = (Sprite)Resources.Load("Leaders/" + PlayerLeader + "3", typeof(Sprite));
+                playerLeaderImage.sprite = playerLeaderSprite;
+                Sprite enemyLeaderSprite = (Sprite)Resources.Load("Leaders/" + EnemyLeader + "1", typeof(Sprite));
+                enemyLeaderImage.sprite = enemyLeaderSprite;
+            }
+            else if (PlayerLeader == cardObject.GetComponent<Image>().sprite.name)
+            {
+                PlayerLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = 0.ToString();
+                Image playerLeaderImage = PlayerLeaderImage.transform.GetChild(1).GetComponent<Image>();
+                Image enemyLeaderImage = EnemyLeaderImage.transform.GetChild(1).GetComponent<Image>();
+                Sprite playerLeaderSprite = (Sprite)Resources.Load("Leaders/" + PlayerLeader + "1", typeof(Sprite));
+                playerLeaderImage.sprite = playerLeaderSprite;
+                Sprite enemyLeaderSprite = (Sprite)Resources.Load("Leaders/" + EnemyLeader + "3", typeof(Sprite));
+                enemyLeaderImage.sprite = enemyLeaderSprite;
             }
             return true;
         }
@@ -307,6 +323,29 @@ public class GameStart : MonoBehaviour
             if (EnemyLeader == defenderSlot.transform.GetChild(3).GetComponent<Image>().sprite.name)
             {
                 EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = newHP.ToString();
+                if (newHP < EnemyDeck.leaderCard.HP / 3)
+                {
+                    Image playerLeaderImage = PlayerLeaderImage.transform.GetChild(1).GetComponent<Image>();
+                    Image enemyLeaderImage = EnemyLeaderImage.transform.GetChild(1).GetComponent<Image>();
+                    Sprite playerLeaderSprite = (Sprite)Resources.Load("Leaders/" + PlayerLeader + "3", typeof(Sprite));
+                    playerLeaderImage.sprite = playerLeaderSprite;
+                    Sprite enemyLeaderSprite = (Sprite)Resources.Load("Leaders/" + EnemyLeader + "1", typeof(Sprite));
+                    enemyLeaderImage.sprite = enemyLeaderSprite;
+                }
+            }
+            else if (PlayerLeader == cardObject.GetComponent<Image>().sprite.name)
+            {
+                PlayerLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = newHP.ToString();
+                if(newHP < PlayerDeck.leaderCard.HP/3)
+                {
+                    Image playerLeaderImage = PlayerLeaderImage.transform.GetChild(1).GetComponent<Image>();
+                    Image enemyLeaderImage = EnemyLeaderImage.transform.GetChild(1).GetComponent<Image>();
+                    Sprite playerLeaderSprite = (Sprite)Resources.Load("Leaders/" + PlayerLeader + "1", typeof(Sprite));
+                    playerLeaderImage.sprite = playerLeaderSprite;
+                    Sprite enemyLeaderSprite = (Sprite)Resources.Load("Leaders/" + EnemyLeader + "3", typeof(Sprite));
+                    enemyLeaderImage.sprite = enemyLeaderSprite;
+                }
+                
             }
             return false;
         }
@@ -484,6 +523,8 @@ public class GameStart : MonoBehaviour
             if(EnemyHandArea.transform.GetChild(index).GetComponent<Image>().sprite.name == cardName)
             {
                 cardInHand = EnemyHandArea.transform.GetChild(index).gameObject;
+                GameObject cardBackInEnemyCards = cardInHand.transform.GetChild(0).gameObject;
+                GameObject.Destroy(cardBackInEnemyCards);
                 break;
             }
         }
@@ -612,7 +653,14 @@ public class GameStart : MonoBehaviour
             }
             else
             {
+                GameObject cardBack = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                Sprite cardBackSprite = (Sprite)Resources.Load("cards/" + "cardback", typeof(Sprite));
+                Image image = cardBack.GetComponent<Image>();
+                image.sprite = cardBackSprite;
                 go.transform.SetParent(EnemyHandArea.transform, false);
+                CardZoom script = cardBack.GetComponent<CardZoom>();
+                script.ZoomedCard = ZoomedCard;
+                cardBack.transform.SetParent(go.transform, false);
 
             }
         }

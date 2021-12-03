@@ -14,7 +14,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         //If theres a card in the hovered slot or its a card in hand
-        if(IsCard(this.gameObject) || this.transform.parent.name == "PlayerHandArea")
+        if((IsCard(this.gameObject) && this.transform.parent.name != "EnemyHandArea") || this.transform.parent.name == "PlayerHandArea")
         {
             CardObject co = GameStart.INSTANCE.FindCardObject(this.gameObject);
             if(co!=null && co.counters > 0)
@@ -46,7 +46,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (ZoomedCard.transform.childCount > 0)
+        if (ZoomedCard!=null && ZoomedCard.transform.childCount > 0)
         {
             GameObject child = ZoomedCard.transform.GetChild(0).gameObject;
             GameObject.Destroy(child);
@@ -229,7 +229,8 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             GameStart.INSTANCE.GameState = GameStart.State.Battle;
                             GameObject enemyCardSlot = eventData.pointerClick.transform.parent.gameObject;
                             string enemyCardName = eventData.pointerClick.GetComponent<Image>().sprite.name;
-                            bool destroysCard = GameStart.INSTANCE.Attack(enemyCardSlot, playerCard.Attack + cardObject.counters);
+                            int damage = playerCard.Attack + cardObject.counters;
+                            bool destroysCard = GameStart.INSTANCE.Attack(enemyCardSlot, damage);
                             if (destroysCard)
                             {
                                 GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
