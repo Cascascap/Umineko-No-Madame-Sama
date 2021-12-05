@@ -5,102 +5,127 @@ using UnityEngine;
 
 public class CardEffects
 {
-    public static void BeatriceEffect(Card c)
+    internal static bool BeatriceEffect(Card c)
     {
         Debug.Log("Draw stake");
-        GameStart.INSTANCE.Draw(GameStart.INSTANCE.PlayerDeck, 1, Deck.TagType.Stake);
+        List<Card> drawnCards =  GameStart.INSTANCE.Draw(GameStart.INSTANCE.PlayerDeck, 1, Deck.TagType.Stake);
+        if(drawnCards.Count == 0)
+        {
+            return false;
+        }
         GameStart.INSTANCE.RearrangeHand(true);
+        return true;
     }
 
-    internal static void AsmodeusEffect(Card c)
+    internal static bool AsmodeusEffect(Card c)
     {
         Debug.Log("Once per turn: Gives a summoned card a +1/+1 counter");
         CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(c.GetTargetCard());
         GameStart.INSTANCE.AddCounterEffect(targetCardObject, 1);
+        return true;
     }
 
-    internal static void BeelzebubEffect(Card c)
+    internal static bool BeelzebubEffect(Card c)
     {
         GameObject target = c.GetTargetCard();
         CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(target);
         GameStart.INSTANCE.AddCounter(targetCardObject, 1);
+        return true;
     }
 
-    internal static void LionEffect(Card c)
+    internal static bool LionEffect(Card c)
     {
         Debug.Log("");
+        return true;
     }
 
-    internal static void GaapEffect(Card c)
+    internal static bool GaapEffect(Card c)
     {
         Debug.Log("");
+        return true;
     }
 
-    internal static void GoatEffect(Card c)
+    internal static bool GoatEffect(Card c)
     {
         Debug.Log("");
+        return true;
     }
 
-    internal static void VirgiliaEffect(Card c)
+    internal static bool VirgiliaEffect(Card c)
     {
         Debug.Log("");
+        return true;
     }
 
-    internal static void LeviathanEffect(Card c)
+    internal static bool LeviathanEffect(Card c)
     {
         Debug.Log("");
+        return true;
     }
 
-    internal static void LuciferEffect(Card c)
+    internal static bool LuciferEffect(Card c)
     {
         Debug.Log("");
+        return true;
     }
 
-    internal static void MammonEffect(Card c)
+    internal static bool MammonEffect(Card c)
     {
         GameStart.INSTANCE.Draw(GameStart.INSTANCE.PlayerDeck, 1);
         GameStart.INSTANCE.RearrangeHand(true);
+        return true;
     }
 
-    internal static void SatanEffect(Card c)
+    internal static bool SatanEffect(Card c)
     {
         Debug.Log("");
+        return true;
     }
 
-    internal static void RonoveEffect(Card c)
+    internal static bool RonoveEffect(Card c)
     {
         Debug.Log("");
+        return true;
     }
 
-    internal static void WillEffect(Card c)
+    internal static bool WillEffect(Card c)
     {
         Debug.Log("");
+        return true;
     }
 
-    internal static void DianaEffect(Card c)
+    internal static bool DianaEffect(Card c)
     {
         Debug.Log("Grants will 2 +1/+1 counter at the start of your turn");
+        return true;
     }
 
-    internal static void KonpeitouEffect(Card c)
+    internal static bool KonpeitouEffect(Card c)
     {
         Debug.Log("");
+        return true;
     }
 
-    internal static void LambdaEffect(Card c)
+    internal static bool LambdaEffect(Card c)
     {
         GameObject gameSlot = GameStart.INSTANCE.FindFreeSlot(true);
         if (gameSlot != null)
         {
             CardObject co = GameStart.INSTANCE.CreateCardInSlot("Konpeitou", gameSlot);
             GameStart.INSTANCE.CardGameObjectsInGame.Add(co);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
-    internal static void BelphegorEffect(Card c)
+    internal static bool BelphegorEffect(Card c)
     {
         GameObject target = c.GetTargetCard();
         CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(target);
         targetCardObject.currentHP = targetCardObject.card.HP + targetCardObject.counters;
+        return true;
     }
 }

@@ -433,12 +433,15 @@ public class GameStart : MonoBehaviour
     public void UseCardEffect(CardObject co, GameObject objective)
     {
         Debug.Log("Using " + co.card.ImageName + "'s effect");
-        co.usedEffect = true;
-        co.TurnEffectWasUsedOn = Turn;
         Card c = co.card;
         c.InitializeEffectParametrs();
         c.SetTargetCard(objective);
-        co.card.Effect(c);
+        bool effectSuccess = co.card.Effect(c);
+        if (effectSuccess)
+        {
+            co.usedEffect = true;
+            co.TurnEffectWasUsedOn = Turn;
+        }
     }
 
     private void SaveStatBox(GameObject go)

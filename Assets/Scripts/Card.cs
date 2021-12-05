@@ -6,7 +6,7 @@ using static Deck;
 
 public class Card
 {
-    public Card(int cost, int hp, int attack, Action<Card> effect, string imageName, List<TagType> tags, bool passiveEffect, bool usesTarget, int cooldown, TagType targetTag = TagType.All, TargetType targetTpe = TargetType.Both)
+    public Card(int cost, int hp, int attack, Func<Card, bool> effect, string imageName, List<TagType> tags, bool passiveEffect, bool usesTarget, int cooldown, TagType targetTag = TagType.All, TargetType targetTpe = TargetType.Both)
     {
         this.Cost = cost;
         this.HP = hp;
@@ -26,7 +26,7 @@ public class Card
     public int HP { get; set; }
     public int Attack { get; set; }
     public int Counters { get; set; }
-    public Action<Card> Effect { get; set; }
+    public Func<Card, bool> Effect { get; set; }
     private Dictionary<int, object> EffectParameters { get; set; }
     public string ImageName { get; set; }
     public TagType TargetTag { get; set; }
