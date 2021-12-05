@@ -3,88 +3,91 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardEffects 
+public class CardEffects
 {
-    public static void BeatriceEffect(GameObject go)
+    public static void BeatriceEffect(Card c)
     {
         Debug.Log("Draw stake");
+        GameStart.INSTANCE.Draw(GameStart.INSTANCE.PlayerDeck, 1, Deck.TagType.Stake);
+        GameStart.INSTANCE.RearrangeHand(true);
     }
 
-    internal static void AsmodeusEffect(GameObject go)
+    internal static void AsmodeusEffect(Card c)
     {
         Debug.Log("Once per turn: Gives a summoned card a +1/+1 counter");
-        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(go);
-        GameStart.INSTANCE.AddCounterEffect(targetCardObject,  1);
+        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(c.GetTargetCard());
+        GameStart.INSTANCE.AddCounterEffect(targetCardObject, 1);
     }
 
-    internal static void BeelzebubEffect(GameObject go)
+    internal static void BeelzebubEffect(Card c)
     {
-        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(go);
+        GameObject target = c.GetTargetCard();
+        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(target);
         GameStart.INSTANCE.AddCounter(targetCardObject, 1);
     }
 
-    internal static void LionEffect(GameObject go)
+    internal static void LionEffect(Card c)
     {
         Debug.Log("");
     }
 
-    internal static void GaapEffect(GameObject go)
+    internal static void GaapEffect(Card c)
     {
         Debug.Log("");
     }
 
-    internal static void GoatEffect(GameObject go)
+    internal static void GoatEffect(Card c)
     {
         Debug.Log("");
     }
 
-    internal static void VirgiliaEffect(GameObject go)
+    internal static void VirgiliaEffect(Card c)
     {
         Debug.Log("");
     }
 
-    internal static void LeviathanEffect(GameObject go)
+    internal static void LeviathanEffect(Card c)
     {
         Debug.Log("");
     }
 
-    internal static void LuciferEffect(GameObject go)
+    internal static void LuciferEffect(Card c)
     {
         Debug.Log("");
     }
 
-    internal static void MammonEffect(GameObject go)
+    internal static void MammonEffect(Card c)
     {
         GameStart.INSTANCE.Draw(GameStart.INSTANCE.PlayerDeck, 1);
         GameStart.INSTANCE.RearrangeHand(true);
     }
 
-    internal static void SatanEffect(GameObject go)
+    internal static void SatanEffect(Card c)
     {
         Debug.Log("");
     }
 
-    internal static void RonoveEffect(GameObject go)
+    internal static void RonoveEffect(Card c)
     {
         Debug.Log("");
     }
 
-    internal static void WillEffect(GameObject go)
+    internal static void WillEffect(Card c)
     {
         Debug.Log("");
     }
 
-    internal static void DianaEffect(GameObject go)
+    internal static void DianaEffect(Card c)
     {
         Debug.Log("Grants will 2 +1/+1 counter at the start of your turn");
     }
 
-    internal static void KonpeitouEffect(GameObject go)
+    internal static void KonpeitouEffect(Card c)
     {
         Debug.Log("");
     }
 
-    internal static void LambdaEffect(GameObject go)
+    internal static void LambdaEffect(Card c)
     {
         GameObject gameSlot = GameStart.INSTANCE.FindFreeSlot(true);
         if (gameSlot != null)
@@ -94,8 +97,10 @@ public class CardEffects
         }
     }
 
-    internal static void BelphegorEffect(GameObject go)
+    internal static void BelphegorEffect(Card c)
     {
-        Debug.Log("");
+        GameObject target = c.GetTargetCard();
+        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(target);
+        targetCardObject.currentHP = targetCardObject.card.HP + targetCardObject.counters;
     }
 }

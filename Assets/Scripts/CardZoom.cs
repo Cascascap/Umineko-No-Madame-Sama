@@ -65,7 +65,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 CardObject cardObject = GameStart.INSTANCE.FindCardObject(this.gameObject);
                 if (IsAllyCard(eventData.pointerClick))
                 {
-                    if (GameStart.INSTANCE.CardUsingEffect!=null || cardObject == null)
+                    if (cardObject == null || (GameStart.INSTANCE.CardUsingEffect!=null && cardObject.card.PassiveEffect))
                     {
                         return;
                     }
@@ -77,9 +77,10 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     {
                         if (cardObject.card.Cooldown == 0 || cardObject.TurnEffectWasUsedOn == 0 || (cardObject.TurnEffectWasUsedOn != 0 && (cardObject.card.Cooldown + cardObject.TurnEffectWasUsedOn <= GameStart.INSTANCE.Turn)))
                         {
-                            if (cardObject.card.AutomaticEffect)
+                            if (!cardObject.card.UsesTarget)
                             {
                                 GameStart.INSTANCE.UseCardEffect(cardObject, null);
+                                Debug.Log("Using effect");
                             }
                             else
                             {
@@ -145,7 +146,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         if((effectType == TargetType.Ally && IsAllyCard(co.GameObject))
                          ||(effectType == TargetType.Enemy && IsEnemyCard(co.GameObject))
                          || effectType == TargetType.Both && co.GameObject.transform.parent.name != "EnemyHandArea"
-                         && (targetTag == TagType.All || co.card.tags.Contains(targetTag)))
+                         && (targetTag == TagType.All || co.card.Tags.Contains(targetTag)))
                         {
                             UseEffect(eventData.pointerClick);
                         }

@@ -365,6 +365,7 @@ public class GameStart : MonoBehaviour
         {
             GameState = State.EnemyTurn;
             CardZoom.RemovePreviousMark();
+            EffectListener.INSTANCE.OnTrunEnd();
             AIFunctions.INSTANCE.TakeTurn(EnemyDeck);
             Turn++;
         }
@@ -434,7 +435,10 @@ public class GameStart : MonoBehaviour
         Debug.Log("Using " + co.card.ImageName + "'s effect");
         co.usedEffect = true;
         co.TurnEffectWasUsedOn = Turn;
-        co.card.Effect(objective);
+        Card c = co.card;
+        c.InitializeEffectParametrs();
+        c.SetTargetCard(objective);
+        co.card.Effect(c);
     }
 
     private void SaveStatBox(GameObject go)
@@ -555,7 +559,7 @@ public class GameStart : MonoBehaviour
         cardObject.card = card;
         cardObject.currentHP = card.HP;
         cardObject.currentATK = card.Attack;
-        if (card.tags.Contains(Deck.TagType.Leader))
+        if (card.Tags.Contains(Deck.TagType.Leader))
         {
             go.name = cardName + "Card";
         }
@@ -645,7 +649,19 @@ public class GameStart : MonoBehaviour
             {
                 return ret;
             }
-            Card drawnCard = startingdeck.cards.Pop();
+            Card drawnCard;
+            if (tag != Deck.TagType.All)
+            {
+                drawnCard = GetCardInDeckByTag(tag);
+                if(drawnCard == null)
+                {
+                    return new List<Card>();
+                }
+            }
+            else
+            {
+                drawnCard = startingdeck.cards.Pop();
+            }
             GameObject go = CreateCard(drawnCard.ImageName, false);
             ret.Add(drawnCard);
             if (playerDrawing)
@@ -668,6 +684,26 @@ public class GameStart : MonoBehaviour
         return ret;
     }
 
+    private Card GetCardInDeckByTag(Deck.TagType tag)
+    {
+        Card drawnCard = null;
+        Stack<Card> newStack = new Stack<Card>();
+        Deck deck = GameStart.INSTANCE.PlayerDeck;
+        while (deck.cards.Count != 0)
+        {
+            Card card = deck.cards.Pop();
+            if (card.Tags.Contains(Deck.TagType.Stake) && drawnCard == null)
+            {
+                drawnCard = card;
+            }
+            else
+            {
+                newStack.Push(card);
+            }
+        }
+        deck.cards = newStack;
+        return drawnCard;
+    }
 
     public bool SlotWithCard(GameObject go)
     {

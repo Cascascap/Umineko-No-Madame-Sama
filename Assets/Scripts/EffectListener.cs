@@ -6,11 +6,21 @@ public class EffectListener
 {
 
     public static EffectListener INSTANCE = null;
-    public List<Card> GettingCountersList = new List<Card>(); 
+    public List<Card> GettingCountersList = new List<Card>();
+    public List<Card> TurnEndingList = new List<Card>();
 
     public EffectListener()
     {
         INSTANCE = this;
+    }
+
+    public bool OnTrunEnd()
+    {
+        foreach (Card c in TurnEndingList)
+        {
+            //c.Effect.Invoke(null, c);
+        }
+        return true;
     }
 
     public bool OnGettingCounters(GameObject go, int countersAdded)
@@ -19,7 +29,9 @@ public class EffectListener
         {
             if (go.name.StartsWith(c.ImageName))
             {
-                c.Effect.Invoke(go);
+                c.InitializeEffectParametrs();
+                c.SetTargetCard(go);
+                c.Effect.Invoke(c);
             }
         }
         return true;

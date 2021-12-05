@@ -241,7 +241,7 @@ public class AIFunctions : MonoBehaviour
         {
             if (co.IsEnemyCard())
             {
-                if (co.card.AutomaticEffect)
+                if (co.card.PassiveEffect)
                 {
                     GameStart.INSTANCE.UseCardEffect(co, null);
                 }
@@ -263,7 +263,7 @@ public class AIFunctions : MonoBehaviour
     {
         foreach (CardObject co in GameStart.INSTANCE.CardGameObjectsInGame)
         {
-            if (co.card.tags.Contains(targetTag))
+            if (co.card.Tags.Contains(targetTag))
             {
                 return co;
             }
