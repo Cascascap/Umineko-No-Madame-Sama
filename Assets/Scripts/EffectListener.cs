@@ -8,7 +8,8 @@ public class EffectListener
     public static EffectListener INSTANCE = null;
     public List<Card> GettingCountersList = new List<Card>();
     public List<Card> TurnEndingList = new List<Card>();
-    public List<Card> CanAttackFromAnywhere = new List<Card>();
+    public List<Card> CanAttackFromAnywhereList = new List<Card>();
+    public List<Card> DestroysCardsList = new List<Card>();
 
     public EffectListener()
     {
@@ -19,7 +20,25 @@ public class EffectListener
     {
         foreach (Card c in TurnEndingList)
         {
-            //c.Effect.Invoke(null, c);
+            List<CardObject> co = GameStart.INSTANCE.FindCardObject(c);
+            foreach(CardObject cin in co)
+            {
+                c.InitializeEffectParametrs();
+                c.SetTargetCard(cin.GameObject);
+                c.Effect.Invoke(c);
+            }
+        }
+        return true;
+    }
+
+    public bool OnDestroyedCard(CardObject destroyer)
+    {
+        if (DestroysCardsList.Contains(destroyer.card))
+        {
+            Card c = destroyer.card;
+            c.InitializeEffectParametrs();
+            c.SetTargetCard(destroyer.GameObject);
+            c.Effect.Invoke(c);
         }
         return true;
     }

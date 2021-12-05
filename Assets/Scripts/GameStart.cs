@@ -12,6 +12,8 @@ public class GameStart : MonoBehaviour
     public GameObject PlayerHandArea, EnemyHandArea;
     public GameObject CardSlot00, CardSlot01, CardSlot02, CardSlot10, CardSlot11, CardSlot12, CardSlot20, CardSlot21, CardSlot22, CardSlot30, CardSlot31, CardSlot32;
     public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot, PlayerGraveyard, EnemyGraveyard, PlayerField, EnemyField;
+
+
     public GameObject CardPrefab;
     public Button EndTurnButton;
     public Button UndoButton;
@@ -75,6 +77,19 @@ public class GameStart : MonoBehaviour
         EndTurnButton.gameObject.SetActive(false);
         UndoButton.gameObject.SetActive(false);
         Debug.Log("Get rekt m8");
+    }
+
+    internal List<CardObject> FindCardObject(Card c)
+    {
+        List<CardObject> co = new List<CardObject>();
+        foreach (CardObject coin in CardGameObjectsInGame)
+        {
+            if (coin.card.ImageName == c.ImageName)
+            {
+                co.Add(coin);
+            }
+        }
+        return co;
     }
 
     public CardObject FindCardObject(GameObject go)
@@ -764,7 +779,7 @@ public class GameStart : MonoBehaviour
     {
         GameObject go = slot.transform.GetChild(3).gameObject;
         CardObject co = GameStart.INSTANCE.FindCardObject(go);
-        if (EffectListener.INSTANCE.CanAttackFromAnywhere.Contains(co.card))
+        if (EffectListener.INSTANCE.CanAttackFromAnywhereList.Contains(co.card))
         {
             return true;
         }

@@ -93,7 +93,9 @@ public class CardEffects
 
     internal static bool SatanEffect(Card c)
     {
-        Debug.Log("");
+        GameObject target = c.GetTargetCard();
+        CardObject satanCO = GameStart.INSTANCE.FindCardObject(target);
+        GameStart.INSTANCE.AddCounter(satanCO, 1);
         return true;
     }
 
@@ -141,6 +143,7 @@ public class CardEffects
         GameObject target = c.GetTargetCard();
         CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(target);
         targetCardObject.currentHP = targetCardObject.card.HP + targetCardObject.counters;
+        GameStart.INSTANCE.UpdateStatBoxes(targetCardObject, target.transform.parent.gameObject);
         return true;
     }
 }
