@@ -752,6 +752,12 @@ public class GameStart : MonoBehaviour
 
     public bool CanAttack(GameObject slot, GameObject defender)
     {
+        GameObject go = slot.transform.GetChild(3).gameObject;
+        CardObject co = GameStart.INSTANCE.FindCardObject(go);
+        if (EffectListener.INSTANCE.CanAttackFromAnywhere.Contains(co.card))
+        {
+            return true;
+        }
         int locationY = Int32.Parse(slot.name.Substring(8, 1));
         int locationX = Int32.Parse(slot.name.Substring(9, 1));
         int enemyLocationY = Int32.Parse(defender.name.Substring(8, 1));

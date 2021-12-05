@@ -95,7 +95,9 @@ public class Deck
         AddCardRegister(new Card(1, 4, 4, CardEffects.MammonEffect, "Mammon", new List<TagType> { TagType.Summoned, TagType.Stake }, false, false, 2));
         AddCardRegister(new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<TagType> { TagType.Summoned, TagType.Stake }, true, false, 0));
         AddCardRegister(new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<TagType> { TagType.Summoned, TagType.Stake }, true, false, 0));
-        AddCardRegister(new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<TagType> { TagType.Summoned, TagType.Demon }, true, false, 0));
+        Card gaap = new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<TagType> { TagType.Summoned, TagType.Demon }, true, false, 0);
+        AddCardRegister(gaap);
+        EffectListener.INSTANCE.CanAttackFromAnywhere.Add(gaap);
         AddCardRegister(new Card(2, 8, 4, CardEffects.RonoveEffect, "Ronove", new List<TagType> { TagType.Summoned, TagType.Demon }, false, true, 1, TagType.All, TargetType.Ally));
         AddCardRegister(new Card(3, 12, 6, CardEffects.VirgiliaEffect, "Virgilia", new List<TagType> { TagType.Witch }, false, false, 1));
     }

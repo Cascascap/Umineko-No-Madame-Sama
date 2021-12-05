@@ -41,7 +41,6 @@ public class CardEffects
 
     internal static bool GaapEffect(Card c)
     {
-        Debug.Log("");
         return true;
     }
 

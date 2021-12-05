@@ -8,6 +8,7 @@ public class EffectListener
     public static EffectListener INSTANCE = null;
     public List<Card> GettingCountersList = new List<Card>();
     public List<Card> TurnEndingList = new List<Card>();
+    public List<Card> CanAttackFromAnywhere = new List<Card>();
 
     public EffectListener()
     {
