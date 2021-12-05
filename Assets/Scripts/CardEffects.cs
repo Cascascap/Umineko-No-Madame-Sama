@@ -142,8 +142,15 @@ public class CardEffects
     {
         GameObject target = c.GetTargetCard();
         CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(target);
-        targetCardObject.currentHP = targetCardObject.card.HP + targetCardObject.counters;
-        GameStart.INSTANCE.UpdateStatBoxes(targetCardObject, target.transform.parent.gameObject);
-        return true;
+        if (!targetCardObject.acted)
+        {
+            targetCardObject.currentHP = targetCardObject.card.HP + targetCardObject.counters;
+            GameStart.INSTANCE.UpdateStatBoxes(targetCardObject, target.transform.parent.gameObject);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

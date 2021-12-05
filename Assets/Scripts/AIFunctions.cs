@@ -172,7 +172,14 @@ public class AIFunctions : MonoBehaviour
                     goImage.color = new Color32(255, 255, 255, 255);
                     GameStart.INSTANCE.CardGameObjectsInGame.Remove(bestTarget);
                     enemyCardGO.transform.SetParent(GameStart.INSTANCE.PlayerGraveyard.transform, false);
-                    
+                    for(int i=0; i< bestTarget.GameObject.transform.childCount; i++)
+                    {
+                        GameObject child = bestTarget.GameObject.transform.GetChild(i).gameObject;
+                        if (child.name.StartsWith("CounterPanel"))
+                        {
+                            GameObject.Destroy(child);
+                        }
+                    }
                     if (bestTarget.card.ImageName == GameStart.INSTANCE.PlayerLeader)
                     {
                         GameStart.INSTANCE.Defeat();

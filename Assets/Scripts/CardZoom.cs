@@ -246,6 +246,14 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                                 EffectListener.INSTANCE.OnDestroyedCard(cardObject);
                                 GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
                                 GameStart.INSTANCE.CardGameObjectsInGame.Remove(enemyCardObject);
+                                for (int i = 0; i < eventData.pointerClick.transform.childCount; i++)
+                                {
+                                    GameObject child = eventData.pointerClick.transform.GetChild(i).gameObject;
+                                    if (child.name.StartsWith("CounterPanel"))
+                                    {
+                                        GameObject.Destroy(child);
+                                    }
+                                }
                                 enemyCardGO.transform.SetParent(GameStart.INSTANCE.EnemyGraveyard.transform, false);
                                 if (enemyCardName == GameStart.INSTANCE.EnemyLeader)
                                 {
