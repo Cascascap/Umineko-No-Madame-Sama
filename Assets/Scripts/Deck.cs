@@ -83,9 +83,13 @@ public class Deck
         AddCardRegister(this.leaderCard, true);
         Card goat = new Card(1, 2, 2, CardEffects.GoatEffect, "Goat", new List<TagType> { TagType.Summoned }, true, 0);
         AddCardRegister(goat, times:10);
-        AddCardRegister(new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<TagType> {TagType.Summoned, TagType.Stake}, false, 1, TagType.Summoned, TargetType.Ally));
-        AddCardRegister(new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 0));
-        AddCardRegister(new Card(1, 6, 2, CardEffects.BelphegorEffect, "Belphegor", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 0));
+        Card asmodeus = new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<TagType> { TagType.Summoned, TagType.Stake }, false, 1, TagType.Summoned, TargetType.Ally);
+        AddCardRegister(asmodeus);
+        Card beelzebub = new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 0);
+        AddCardRegister(beelzebub);
+        EffectListener.INSTANCE.GettingCountersList.Add(beelzebub);
+        Card belphegor = new Card(1, 6, 2, CardEffects.BelphegorEffect, "Belphegor", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 0);
+        AddCardRegister(belphegor);
         AddCardRegister(new Card(1, 4, 4, CardEffects.LeviathanEffect, "Leviathan", new List<TagType> { TagType.Summoned, TagType.Stake }, false, 1, TagType.All, TargetType.Both));
         AddCardRegister(new Card(1, 4, 4, CardEffects.MammonEffect, "Mammon", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 2));
         AddCardRegister(new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<TagType> { TagType.Summoned, TagType.Stake }, true, 0));

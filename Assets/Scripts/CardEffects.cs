@@ -14,12 +14,13 @@ public class CardEffects
     {
         Debug.Log("Once per turn: Gives a summoned card a +1/+1 counter");
         CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(go);
-        GameStart.INSTANCE.AddCounter(targetCardObject,  1);
+        GameStart.INSTANCE.AddCounterEffect(targetCardObject,  1);
     }
 
     internal static void BeelzebubEffect(GameObject go)
     {
-        Debug.Log("");
+        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(go);
+        GameStart.INSTANCE.AddCounter(targetCardObject, 1);
     }
 
     internal static void LionEffect(GameObject go)
@@ -88,7 +89,8 @@ public class CardEffects
         GameObject gameSlot = GameStart.INSTANCE.FindFreeSlot(true);
         if (gameSlot != null)
         {
-            GameStart.INSTANCE.CreateCardInSlot("Konpeitou", gameSlot);
+            CardObject co = GameStart.INSTANCE.CreateCardInSlot("Konpeitou", gameSlot);
+            GameStart.INSTANCE.CardGameObjectsInGame.Add(co);
         }
     }
 

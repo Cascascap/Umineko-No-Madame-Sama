@@ -175,6 +175,7 @@ public class AIFunctions : MonoBehaviour
                         GameStart.INSTANCE.Defeat();
                     }
                     GameStart.INSTANCE.UpdateStatBoxes(bestTarget, null, previousParent: targetCardSlot);
+                    GameStart.INSTANCE.RecalculateCosts();
                 }
             }
         }
@@ -235,7 +236,8 @@ public class AIFunctions : MonoBehaviour
 
     private void UseEffects()
     {
-        foreach (CardObject co in GameStart.INSTANCE.CardGameObjectsInGame) 
+        List<CardObject> cin = new List<CardObject>(GameStart.INSTANCE.CardGameObjectsInGame);
+        foreach (CardObject co in cin) 
         {
             if (co.IsEnemyCard())
             {

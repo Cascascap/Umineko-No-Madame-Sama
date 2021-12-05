@@ -113,7 +113,8 @@ public class GameStart : MonoBehaviour
         {
             INSTANCE = this;
         }
-        Debug.Log("Starting"); 
+        Debug.Log("Starting");
+        EffectListener effectListener = new EffectListener();
         Button EndTurnbtn = EndTurnButton.GetComponent<Button>();
         Button UndoBtn = UndoButton.GetComponent<Button>();
         EndTurnbtn.onClick.AddListener(OnEndTurn);
@@ -765,6 +766,11 @@ public class GameStart : MonoBehaviour
         }
     }
 
+    public void AddCounterEffect(CardObject co, int numberOfCounters)
+    {
+        AddCounter(co, numberOfCounters);
+        EffectListener.INSTANCE.OnGettingCounters(co.GameObject, 1);
+    }
 
     public void AddCounter(CardObject co, int numberOfCounters)
     {
@@ -786,7 +792,6 @@ public class GameStart : MonoBehaviour
         co.currentATK += numberOfCounters;
         counterText.text = co.counters.ToString();
         cardCounterPanel.transform.SetParent(co.GameObject.transform, false);
-
         UpdateStatBoxes(co, co.GameObject.transform.parent.gameObject);
     }
 
