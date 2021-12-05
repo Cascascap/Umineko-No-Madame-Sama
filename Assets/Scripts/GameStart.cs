@@ -377,21 +377,21 @@ public class GameStart : MonoBehaviour
         GameState = State.Moving;
         if (PlayerHand.cards.Count < MAX_CARDS_HAND)
         {
-            Card drawnCard = Draw(PlayerDeck, 1)[0];
-            PlayerHand.cards.Add(drawnCard);
+            List<Card> cardsDrawn = Draw(PlayerDeck, 1);
+            if(cardsDrawn.Count != 0)
+            {
+                Card drawnCard = cardsDrawn[0];
+                PlayerHand.cards.Add(drawnCard);
+                RearrangeHand(true);
+            }
         }
         RestoreCards();
-        RearrangeHand(true);
         SaveState();
     }
 
 
     private void SaveState()
     {
-        foreach (GameObject go in StatBoxes)
-        {
-            SaveStatBox(go);
-        }
         for(int i=0; i< PlayerHandArea.transform.childCount; i++)
         {
             GameObject go = PlayerHandArea.transform.GetChild(i).gameObject;
@@ -400,6 +400,10 @@ public class GameStart : MonoBehaviour
         foreach (CardObject co in CardGameObjectsInGame)
         {
             SaveCardObject(co);
+        }
+        foreach (GameObject go in StatBoxes)
+        {
+            SaveStatBox(go);
         }
         PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
         PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
@@ -494,7 +498,8 @@ public class GameStart : MonoBehaviour
         PlayerPrefs.SetInt(go.name + "Moved", co.moved ? 1 : 0);
         PlayerPrefs.SetInt(go.name + "EffectUsed", co.usedEffect ? 1 : 0);
         PlayerPrefs.SetInt(go.name + "TurnEffectWasUsedOn", co.TurnEffectWasUsedOn);
-        //PlayerPrefs.SetInt(go.name + "CurrentHP", co.currentHP);
+        PlayerPrefs.SetInt(go.name + "Counters", co.counters);
+        PlayerPrefs.SetInt(go.name + "CurrentHP", co.currentHP);
         SaveGameObject(go);
     }
     private void LoadCardObject(CardObject co)
@@ -504,7 +509,8 @@ public class GameStart : MonoBehaviour
         co.moved = PlayerPrefs.GetInt(go.name + "Moved") == 1;
         co.usedEffect = PlayerPrefs.GetInt(go.name + "EffectUsed") == 1;
         co.TurnEffectWasUsedOn = PlayerPrefs.GetInt(go.name + "TurnEffectWasUsedOn");
-        //co.currentHP = PlayerPrefs.GetInt(go.name + "CurrentHP");
+        co.currentHP = PlayerPrefs.GetInt(go.name + "CurrentHP");
+        co.counters = PlayerPrefs.GetInt(go.name + "Counters");
         LoadGameObject(go);
     }
 
@@ -614,7 +620,7 @@ public class GameStart : MonoBehaviour
             GameObject hpGO = hpGODad.transform.GetChild(0).gameObject;
             GameObject atkGO = atkGODad.transform.GetChild(0).gameObject;
             hpGO.GetComponent<TextMeshProUGUI>().text = co.currentHP.ToString();
-            atkGO.GetComponent<TextMeshProUGUI>().text = co.currentATK.ToString();
+            atkGO.GetComponent<TextMeshProUGUI>().text = (co.counters + co.card.Attack).ToString();
             hpGODad.SetActive(true);
             atkGODad.SetActive(true);
         }
@@ -663,6 +669,10 @@ public class GameStart : MonoBehaviour
             }
             else
             {
+                if(startingdeck.cards.Count == 0)
+                {
+                    return new List<Card>();
+                }
                 drawnCard = startingdeck.cards.Pop();
             }
             GameObject go = CreateCard(drawnCard.ImageName, false);
@@ -816,6 +826,28 @@ public class GameStart : MonoBehaviour
         AddCounter(co, numberOfCounters);
         EffectListener.INSTANCE.OnGettingCounters(co.GameObject, 1);
     }
+
+    internal void RemoveCounter(CardObject co, int numberOfCounters)
+    {
+        GameObject cardCounterPanel = co.GameObject.transform.GetChild(0).gameObject;
+        GameObject imageObject = cardCounterPanel.transform.GetChild(0).gameObject;
+        GameObject counterObject = imageObject.transform.GetChild(1).gameObject;
+
+        TextMeshProUGUI counterText = counterObject.GetComponent<TextMeshProUGUI>();
+        co.counters -= numberOfCounters;
+        if(co.counters == 0)
+        {
+            GameObject.DestroyImmediate(cardCounterPanel);
+        }
+        else
+        {
+            counterText.text = co.counters.ToString();
+        }
+        co.currentHP -= numberOfCounters;
+        co.currentATK -= numberOfCounters;
+        UpdateStatBoxes(co, co.GameObject.transform.parent.gameObject);
+    }
+
 
     public void AddCounter(CardObject co, int numberOfCounters)
     {

@@ -168,8 +168,11 @@ public class AIFunctions : MonoBehaviour
                 if (destroysCard)
                 {
                     GameObject enemyCardGO = targetCardSlot.transform.GetChild(3).gameObject;
+                    Image goImage = enemyCardGO.GetComponent<Image>();
+                    goImage.color = new Color32(255, 255, 255, 255);
                     GameStart.INSTANCE.CardGameObjectsInGame.Remove(bestTarget);
                     enemyCardGO.transform.SetParent(GameStart.INSTANCE.PlayerGraveyard.transform, false);
+                    
                     if (bestTarget.card.ImageName == GameStart.INSTANCE.PlayerLeader)
                     {
                         GameStart.INSTANCE.Defeat();
@@ -242,6 +245,10 @@ public class AIFunctions : MonoBehaviour
             if (co.IsEnemyCard())
             {
                 if (co.card.PassiveEffect)
+                {
+                    return;
+                }
+                if (!co.card.UsesTarget)
                 {
                     GameStart.INSTANCE.UseCardEffect(co, null);
                 }

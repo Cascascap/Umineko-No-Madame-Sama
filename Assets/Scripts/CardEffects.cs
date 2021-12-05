@@ -29,7 +29,12 @@ public class CardEffects
     {
         GameObject target = c.GetTargetCard();
         CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(target);
-        GameStart.INSTANCE.AddCounter(targetCardObject, 1);
+        int countersToRemove = targetCardObject.counters;
+        if(countersToRemove >= 2) 
+        {
+            countersToRemove = 2;
+        }
+        GameStart.INSTANCE.AddCounter(targetCardObject, countersToRemove);
         return true;
     }
 
@@ -46,7 +51,6 @@ public class CardEffects
 
     internal static bool GoatEffect(Card c)
     {
-        Debug.Log("");
         return true;
     }
 
@@ -59,7 +63,19 @@ public class CardEffects
     internal static bool LeviathanEffect(Card c)
     {
         Debug.Log("");
-        return true;
+        GameObject target = c.GetTargetCard();
+        CardObject co = GameStart.INSTANCE.FindCardObject(target);
+        if(co.counters == 0)
+        {
+            return false;
+        }
+        else
+        {
+            GameStart.INSTANCE.RemoveCounter(co, 1);
+            CardObject leviathanCO = GameStart.INSTANCE.FindCardObject(GameStart.INSTANCE.SelectedCardGameObject);
+            GameStart.INSTANCE.AddCounter(leviathanCO, 1);
+            return true;
+        }
     }
 
     internal static bool LuciferEffect(Card c)

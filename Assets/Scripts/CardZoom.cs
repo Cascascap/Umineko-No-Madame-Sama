@@ -13,10 +13,19 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        //In case the game is minimized and you hover over something
+        if(this == null)
+        {
+            return;
+        }
         //If theres a card in the hovered slot or its a card in hand
         if((IsCard(this.gameObject) && this.transform.parent.name != "EnemyHandArea") || this.transform.parent.name == "PlayerHandArea")
         {
             CardObject co = GameStart.INSTANCE.FindCardObject(this.gameObject);
+            if (co == null)
+            {
+                return;
+            }
             if(co!=null && co.counters > 0)
             {
                 GameObject cardCounterPanel = Instantiate(GameStart.INSTANCE.CountersPrefab, new Vector3(0, 0, 0), Quaternion.identity);
