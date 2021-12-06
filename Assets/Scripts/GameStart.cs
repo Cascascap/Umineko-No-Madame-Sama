@@ -413,6 +413,11 @@ public class GameStart : MonoBehaviour
     public bool Attack(GameObject defenderSlot, int damage)
     {
         GameObject cardObject = defenderSlot.transform.GetChild(3).gameObject;
+        if (HasShield(cardObject))
+        {
+            RemoveShield(cardObject);
+            return false;
+        }
         CardObject co = FindCardObject(cardObject);
         GameObject hpbox = defenderSlot.transform.GetChild(0).GetChild(0).gameObject;
         TextMeshProUGUI hpText = hpbox.GetComponent<TextMeshProUGUI>();
