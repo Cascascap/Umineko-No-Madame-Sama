@@ -83,6 +83,49 @@ public class GameStart : MonoBehaviour
         }
     }
 
+    public void CreateShield(GameObject go)
+    {
+        Sprite shieldSprite = (Sprite)Resources.Load("RonoveShield", typeof(Sprite));
+        GameObject gos = new GameObject("Shield");
+        RectTransform rectTransform = gos.AddComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(112, 160);
+        Image shieldImage = gos.AddComponent<Image>();
+        shieldImage.sprite = shieldSprite;
+        gos.transform.SetParent(go.transform, false);
+
+    }
+
+    public void RemoveShield(GameObject go)
+    {
+        GameObject shield = null;
+        for(int i=0; i<go.transform.childCount; i++)
+        {
+            GameObject child = go.transform.GetChild(i).gameObject;
+            if (child.name == "Shield")
+            {
+                shield = child;
+                break;
+            }
+        }
+        GameObject.DestroyImmediate(shield);
+    }
+
+    public bool HasShield(GameObject go)
+    {
+        GameObject shield = null;
+        for (int i = 0; i < go.transform.childCount; i++)
+        {
+            GameObject child = go.transform.GetChild(i).gameObject;
+            if (child.name == "Shield")
+            {
+                shield = child;
+                break;
+            }
+        }
+        return shield != null;
+    }
+
+
     private void DestroyCard(CardObject co)
     {
         CardObjectsInGame.Remove(co);
@@ -212,7 +255,8 @@ public class GameStart : MonoBehaviour
         DecksInGame.Add(EnemyDeck);
         CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
         CardObjectsInGame.Add(leaderCardObject);
-        CardObjectsInGame.Add(CreateCardInSlot(EnemyLeader, CardSlot11));
+        CardObject enemyLeaderCardObject = CreateCardInSlot(EnemyLeader, CardSlot11);
+        CardObjectsInGame.Add(enemyLeaderCardObject);
         PlayerHand = new Hand();
         EnemyHand = new Hand();
         EnemyHand.cards = Draw(EnemyDeck, STARTING_CARDS_HAND);
@@ -223,7 +267,6 @@ public class GameStart : MonoBehaviour
         RecalculateCosts();
         SaveState();
     }
-
 
     private void InitializeSlotMap()
     {

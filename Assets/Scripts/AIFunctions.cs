@@ -175,7 +175,7 @@ public class AIFunctions : MonoBehaviour
                     for(int i=0; i< bestTarget.GameObject.transform.childCount; i++)
                     {
                         GameObject child = bestTarget.GameObject.transform.GetChild(i).gameObject;
-                        if (child.name.StartsWith("CounterPanel"))
+                        if (child.name.StartsWith("CounterPanel") || child.name == "Shield")
                         {
                             GameObject.Destroy(child);
                         }

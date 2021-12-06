@@ -19,7 +19,6 @@ public class CardEffects
 
     internal static bool AsmodeusEffect(Card c)
     {
-        Debug.Log("Once per turn: Gives a summoned card a +1/+1 counter");
         CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(c.GetTargetCard());
         GameStart.INSTANCE.AddCounterEffect(targetCardObject, 1);
         return true;
@@ -105,7 +104,8 @@ public class CardEffects
 
     internal static bool RonoveEffect(Card c)
     {
-        Debug.Log("Gives ally card a shield");
+        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(c.GetTargetCard());
+        GameStart.INSTANCE.CreateShield(targetCardObject.GameObject);
         return true;
     }
 

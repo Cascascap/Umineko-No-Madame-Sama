@@ -250,7 +250,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                                 for (int i = 0; i < eventData.pointerClick.transform.childCount; i++)
                                 {
                                     GameObject child = eventData.pointerClick.transform.GetChild(i).gameObject;
-                                    if (child.name.StartsWith("CounterPanel"))
+                                    if (child.name.StartsWith("CounterPanel") || child.name == "Shield")
                                     {
                                         GameObject.Destroy(child);
                                     }
