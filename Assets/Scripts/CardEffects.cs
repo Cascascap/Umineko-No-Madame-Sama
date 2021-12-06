@@ -56,7 +56,8 @@ public class CardEffects
 
     internal static bool VirgiliaEffect(Card c)
     {
-        Debug.Log("");
+        GameStart.INSTANCE.DamageAllEnemyCards(4);
+        GameStart.INSTANCE.UpdateAllStatBoxes();
         return true;
     }
 
@@ -132,7 +133,7 @@ public class CardEffects
         if (gameSlot != null)
         {
             CardObject co = GameStart.INSTANCE.CreateCardInSlot("Konpeitou", gameSlot);
-            GameStart.INSTANCE.CardGameObjectsInGame.Add(co);
+            GameStart.INSTANCE.CardObjectsInGame.Add(co);
             return true;
         }
         else

@@ -184,7 +184,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                                 co.currentHP = card.HP;
                                 co.currentATK = card.Attack;
                                 co.card = card;
-                                GameStart.INSTANCE.CardGameObjectsInGame.Add(co);
+                                GameStart.INSTANCE.CardObjectsInGame.Add(co);
                                 EffectListener.INSTANCE.OnCardPlayed(co);
                                 GameStart.INSTANCE.UpdateStatBoxes(co, eventData.pointerClick.gameObject, previousParent);
                                 RemovePreviousMark();
@@ -246,7 +246,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             {
                                 EffectListener.INSTANCE.OnDestroyedCard(cardObject);
                                 GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
-                                GameStart.INSTANCE.CardGameObjectsInGame.Remove(enemyCardObject);
+                                GameStart.INSTANCE.CardObjectsInGame.Remove(enemyCardObject);
                                 for (int i = 0; i < eventData.pointerClick.transform.childCount; i++)
                                 {
                                     GameObject child = eventData.pointerClick.transform.GetChild(i).gameObject;

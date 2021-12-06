@@ -19,7 +19,7 @@ public class GameStart : MonoBehaviour
     public Button UndoButton;
     public List<Deck> DecksInGame = new List<Deck>();
     public List<Card> CardsInGame = new List<Card>();
-    public List<CardObject> CardGameObjectsInGame = new List<CardObject>();
+    public List<CardObject> CardObjectsInGame = new List<CardObject>();
     public List<GameObject> StatBoxes = new List<GameObject>();
     public GameObject CountersPrefab;
 
@@ -41,6 +41,63 @@ public class GameStart : MonoBehaviour
 
     //TODO: move to a leader class
     public string EnemyLeader, PlayerLeader;
+
+    internal void DamageAllEnemyCards(int damage)
+    {
+        List<CardObject> iteratable = new List<CardObject>(CardObjectsInGame);
+        foreach(CardObject co in iteratable)
+        {
+            if(co.GameObject.transform.parent.parent.name == "EnemyField")
+            {
+                DamageCard(co, damage);
+            }
+        }
+    }
+
+    private void DamageCard(CardObject co, int damage)
+    {
+        co.currentHP -= damage;
+        if (co.currentHP <= 0)
+        {
+            DestroyCard(co);
+        }
+    }
+
+    public void UpdateAllStatBoxes()
+    {
+        foreach(GameObject slot in GetSlotMap().Values)
+        {
+            if (SlotWithCard(slot))
+            {
+                GameObject cardGameObject = slot.transform.GetChild(3).gameObject;
+                CardObject co = FindCardObject(cardGameObject);
+                UpdateStatBoxes(co, slot);
+            }
+            else
+            {
+                GameObject hpBox = slot.transform.GetChild(0).gameObject;
+                GameObject atkBox = slot.transform.GetChild(1).gameObject;
+                hpBox.SetActive(false);
+                atkBox.SetActive(false);
+            }
+        }
+    }
+
+    private void DestroyCard(CardObject co)
+    {
+        CardObjectsInGame.Remove(co);
+        GameObject graveyard;
+        if (co.GameObject.transform.parent.parent.name == "PlayerField")
+        {
+            graveyard = PlayerGraveyard;
+        }
+        else
+        {
+            graveyard = EnemyGraveyard;
+        }
+        co.GameObject.transform.SetParent(graveyard.transform, false);
+    }
+
     public Deck PlayerDeck, EnemyDeck;
     public Hand PlayerHand, EnemyHand;
     public Card CardUsingEffect;
@@ -82,7 +139,7 @@ public class GameStart : MonoBehaviour
     internal List<CardObject> FindCardsInGameByTag(Deck.TagType stake)
     {
         List<CardObject> ret = new List<CardObject>();
-        foreach(CardObject co in GameStart.INSTANCE.CardGameObjectsInGame)
+        foreach(CardObject co in GameStart.INSTANCE.CardObjectsInGame)
         {
             if (co.card.Tags.Contains(stake))
             {
@@ -95,7 +152,7 @@ public class GameStart : MonoBehaviour
     internal List<CardObject> FindCardObject(Card c)
     {
         List<CardObject> co = new List<CardObject>();
-        foreach (CardObject coin in CardGameObjectsInGame)
+        foreach (CardObject coin in CardObjectsInGame)
         {
             if (coin.card.ImageName == c.ImageName)
             {
@@ -108,7 +165,7 @@ public class GameStart : MonoBehaviour
     public CardObject FindCardObject(GameObject go)
     {
         CardObject co = null;
-        foreach (CardObject c in CardGameObjectsInGame)
+        foreach (CardObject c in CardObjectsInGame)
         {
             if (c.GameObject.GetInstanceID() == go.GetInstanceID())
             {
@@ -123,7 +180,7 @@ public class GameStart : MonoBehaviour
     public CardObject FindEnemyLeaderCardObject(string leaderName)
     {
         CardObject co = null;
-        foreach (CardObject c in CardGameObjectsInGame)
+        foreach (CardObject c in CardObjectsInGame)
         {
             if (c.GameObject.name == leaderName + "Card")
             {
@@ -154,8 +211,8 @@ public class GameStart : MonoBehaviour
         DecksInGame.Add(PlayerDeck);
         DecksInGame.Add(EnemyDeck);
         CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
-        CardGameObjectsInGame.Add(leaderCardObject);
-        CardGameObjectsInGame.Add(CreateCardInSlot(EnemyLeader, CardSlot11));
+        CardObjectsInGame.Add(leaderCardObject);
+        CardObjectsInGame.Add(CreateCardInSlot(EnemyLeader, CardSlot11));
         PlayerHand = new Hand();
         EnemyHand = new Hand();
         EnemyHand.cards = Draw(EnemyDeck, STARTING_CARDS_HAND);
@@ -293,7 +350,7 @@ public class GameStart : MonoBehaviour
     void Update()
     {
         TurnStateDisplay.text = GameState.ToString();
-        foreach(CardObject co in CardGameObjectsInGame)
+        foreach(CardObject co in CardObjectsInGame)
         {
             if (co.counters == 0 && co.GameObject.transform.childCount > 0)
             {
@@ -425,7 +482,7 @@ public class GameStart : MonoBehaviour
             GameObject go = PlayerHandArea.transform.GetChild(i).gameObject;
             SaveGameObject(go);
         }
-        foreach (CardObject co in CardGameObjectsInGame)
+        foreach (CardObject co in CardObjectsInGame)
         {
             SaveCardObject(co);
         }
@@ -450,7 +507,7 @@ public class GameStart : MonoBehaviour
                 GameObject go = PlayerHandArea.transform.GetChild(i).gameObject;
                 LoadGameObject(go);
             }
-            foreach (CardObject go in CardGameObjectsInGame)
+            foreach (CardObject go in CardObjectsInGame)
             {
                 LoadCardObject(go);
             }
@@ -545,7 +602,7 @@ public class GameStart : MonoBehaviour
 
     private void RestoreCards()
     {
-        foreach (CardObject co in CardGameObjectsInGame)
+        foreach (CardObject co in CardObjectsInGame)
         {
             GameObject go = co.GameObject;
             Image goImage = go.GetComponent<Image>();
@@ -632,7 +689,7 @@ public class GameStart : MonoBehaviour
 
     public void UpdateStatBoxes(CardObject co, GameObject cardSlot, GameObject previousParent = null)
     {
-        if (!CardGameObjectsInGame.Contains(co) && previousParent != null)
+        if (!CardObjectsInGame.Contains(co) && previousParent != null)
         {
             string ppslotNumber = previousParent.name.Substring(8, 2);
             GameObject pphpGODad = previousParent.transform.Find("HPBlock" + ppslotNumber).gameObject;
