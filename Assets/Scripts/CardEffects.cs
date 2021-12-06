@@ -80,7 +80,10 @@ public class CardEffects
 
     internal static bool LuciferEffect(Card c)
     {
-        Debug.Log("");
+        List<CardObject> stakes = GameStart.INSTANCE.FindCardsInGameByTag(Deck.TagType.Stake);
+        GameObject luciferGO = c.GetTargetCard();
+        CardObject lucifer = GameStart.INSTANCE.FindCardObject(luciferGO);
+        GameStart.INSTANCE.AddCounter(lucifer, (stakes.Count-1)*2);
         return true;
     }
 
@@ -101,13 +104,13 @@ public class CardEffects
 
     internal static bool RonoveEffect(Card c)
     {
-        Debug.Log("");
+        Debug.Log("Gives ally card a shield");
         return true;
     }
 
     internal static bool WillEffect(Card c)
     {
-        Debug.Log("");
+        Debug.Log("Witches cant use their skill");
         return true;
     }
 

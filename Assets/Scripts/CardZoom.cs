@@ -185,6 +185,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                                 co.currentATK = card.Attack;
                                 co.card = card;
                                 GameStart.INSTANCE.CardGameObjectsInGame.Add(co);
+                                EffectListener.INSTANCE.OnCardPlayed(co);
                                 GameStart.INSTANCE.UpdateStatBoxes(co, eventData.pointerClick.gameObject, previousParent);
                                 RemovePreviousMark();
                                 GameStart.INSTANCE.RecalculateCosts();

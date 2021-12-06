@@ -79,6 +79,19 @@ public class GameStart : MonoBehaviour
         Debug.Log("Get rekt m8");
     }
 
+    internal List<CardObject> FindCardsInGameByTag(Deck.TagType stake)
+    {
+        List<CardObject> ret = new List<CardObject>();
+        foreach(CardObject co in GameStart.INSTANCE.CardGameObjectsInGame)
+        {
+            if (co.card.Tags.Contains(stake))
+            {
+                ret.Add(co);
+            }
+        }
+        return ret;
+    }
+
     internal List<CardObject> FindCardObject(Card c)
     {
         List<CardObject> co = new List<CardObject>();

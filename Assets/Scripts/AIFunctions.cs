@@ -293,6 +293,11 @@ public class AIFunctions : MonoBehaviour
             Card ret = PlayCardInSlot(card, slotNumber);
             if (ret!=null)
             {
+                List<CardObject> co = GameStart.INSTANCE.FindCardObject(ret);
+                if(co.Count != 0)
+                {
+                    EffectListener.INSTANCE.OnCardPlayed(co[0]);
+                }
                 GameStart.INSTANCE.RecalculateCosts();
             }
             return ret;

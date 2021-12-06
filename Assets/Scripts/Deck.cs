@@ -96,7 +96,9 @@ public class Deck
         Card satan = new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<TagType> { TagType.Summoned, TagType.Stake }, true, false, 0);
         AddCardRegister(satan);
         EffectListener.INSTANCE.DestroysCardsList.Add(satan);
-        AddCardRegister(new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<TagType> { TagType.Summoned, TagType.Stake }, true, false, 0));
+        Card lucifer = new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<TagType> { TagType.Summoned, TagType.Stake }, true, false, 0);
+        AddCardRegister(lucifer);
+        EffectListener.INSTANCE.CardPlayedList.Add(lucifer);
         Card gaap = new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<TagType> { TagType.Summoned, TagType.Demon }, true, false, 0);
         AddCardRegister(gaap);
         EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(gaap);

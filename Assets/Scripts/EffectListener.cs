@@ -10,10 +10,23 @@ public class EffectListener
     public List<Card> TurnEndingList = new List<Card>();
     public List<Card> CanAttackFromAnywhereList = new List<Card>();
     public List<Card> DestroysCardsList = new List<Card>();
+    public List<Card> CardPlayedList = new List<Card>();
 
     public EffectListener()
     {
         INSTANCE = this;
+    }
+
+    public bool OnCardPlayed(CardObject cardPlayed)
+    {
+        if (CardPlayedList.Contains(cardPlayed.card))
+        {
+            Card c = cardPlayed.card;
+            c.InitializeEffectParametrs();
+            c.SetTargetCard(cardPlayed.GameObject);
+            c.Effect.Invoke(c);
+        }
+        return true;
     }
 
     public bool OnTrunEnd()
