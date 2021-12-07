@@ -111,6 +111,7 @@ public class AIFunctions : MonoBehaviour
         MoveCardRight(leaderCardObject, locationX, locationY, slot);
     }
 
+
     private void MoveCardRight(CardObject card, int locationX, int locationY, GameObject previousSlot)
     {
         GameObject rightSlot;

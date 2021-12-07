@@ -87,7 +87,8 @@ public class CardEffects
             {
                 List<Card> willCardList = GameStart.INSTANCE.Draw(GameStart.INSTANCE.EnemyDeck, 1, cardName:"Will");
                 Card willCard = willCardList[0];
-                AIFunctions.INSTANCE.PlayCardInSlot(willCard, emptyField.name.Substring(8, 2));
+                GameStart.INSTANCE.CreateCardInSlot(willCard.ImageName, emptyField);
+                WillGO = emptyField.transform.GetChild(3).gameObject; 
                 CardObject cow = new CardObject(WillGO, willCard);
                 GameStart.INSTANCE.CardObjectsInGame.Add(cow);
                 GameStart.INSTANCE.UpdateStatBoxes(cow, emptyField);

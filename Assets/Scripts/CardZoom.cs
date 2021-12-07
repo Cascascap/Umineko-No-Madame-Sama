@@ -22,10 +22,6 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if((IsCard(this.gameObject) && this.transform.parent.name != "EnemyHandArea") || this.transform.parent.name == "PlayerHandArea")
         {
             CardObject co = GameStart.INSTANCE.FindCardObject(this.gameObject);
-            if (co == null)
-            {
-                return;
-            }
             if(co!=null && co.counters > 0)
             {
                 GameObject cardCounterPanel = Instantiate(GameStart.INSTANCE.CountersPrefab, new Vector3(0, 0, 0), Quaternion.identity);

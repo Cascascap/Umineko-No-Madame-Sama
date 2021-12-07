@@ -35,7 +35,7 @@ public class GameStart : MonoBehaviour
 
     public GameObject SelectedCardGameObject;
     public State GameState = State.Moving;
-    public int Turn = 1;
+    public int Turn;
 
     public static GameStart INSTANCE = null;
 
@@ -242,6 +242,7 @@ public class GameStart : MonoBehaviour
             INSTANCE = this;
         }
         Debug.Log("Starting");
+        Turn = 1;
         EffectListener effectListener = new EffectListener();
         Button EndTurnbtn = EndTurnButton.GetComponent<Button>();
         Button UndoBtn = UndoButton.GetComponent<Button>();
@@ -846,7 +847,7 @@ public class GameStart : MonoBehaviour
             }
             else if (cardName != null)
             {
-                drawnCard = GetCardInDeckByName(cardName);
+                drawnCard = GetCardInDeckByName(startingdeck, cardName);
                 if (drawnCard == null)
                 {
                     return new List<Card>();
@@ -882,11 +883,10 @@ public class GameStart : MonoBehaviour
         return ret;
     }
 
-    private Card GetCardInDeckByName(string cardName)
+    private Card GetCardInDeckByName(Deck deck, string cardName)
     {
         Card drawnCard = null;
         Stack<Card> newStack = new Stack<Card>();
-        Deck deck = GameStart.INSTANCE.PlayerDeck;
         while (deck.cards.Count != 0)
         {
             Card card = deck.cards.Pop();
