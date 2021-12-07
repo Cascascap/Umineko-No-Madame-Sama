@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Deck;
 
 public class CardEffects
 {
@@ -112,6 +113,12 @@ public class CardEffects
     internal static bool WillEffect(Card c)
     {
         Debug.Log("Witches cant use their skill");
+        List<TagType> tags = c.GetTargetCardTags();
+        GameObject effectUser = c.GetTargetCard();
+        if (tags.Contains(TagType.Witch) && effectUser.transform.parent.parent.name == "PlayerField")
+        {
+            return false;
+        }
         return true;
     }
 

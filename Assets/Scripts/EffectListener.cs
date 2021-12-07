@@ -11,10 +11,32 @@ public class EffectListener
     public List<Card> CanAttackFromAnywhereList = new List<Card>();
     public List<Card> DestroysCardsList = new List<Card>();
     public List<Card> CardPlayedList = new List<Card>();
+    public List<Card> EffectStopperList = new List<Card>();
 
     public EffectListener()
     {
         INSTANCE = this;
+    }
+
+    public bool OnAllowUseEffect(CardObject cardUsingEffect)
+    {
+        bool effectAllowed = true;
+        foreach (Card c in EffectStopperList)
+        {
+            List<CardObject> cos = GameStart.INSTANCE.FindCardObject(c);
+            foreach(CardObject co in cos)
+            {
+                c.InitializeEffectParametrs();
+                c.SetTargetCard(cardUsingEffect.GameObject);
+                c.SetTargetCardTags(cardUsingEffect.card.Tags);
+                bool effectResult = c.Effect.Invoke(c);
+                if (!effectResult)
+                {
+                    return false;
+                }
+            }
+        }
+        return effectAllowed;
     }
 
     public bool OnCardPlayed(CardObject cardPlayed)

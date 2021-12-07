@@ -112,9 +112,13 @@ public class Deck
         AddCardRegister(this.leaderCard, true);
         Card Konpeitou = new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summoned, TagType.Object }, true, false, 0);
         AddCardRegister(Konpeitou, times:4);
-        AddCardRegister(new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<TagType> { TagType.Human }, true, false, 0));
         AddCardRegister(new Card(2, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human }, false, false, 1));
-        AddCardRegister(new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<TagType> { TagType.Cat, TagType.Pet }, true, false, 1));
+        Card will = new Card(2, 8, 10, CardEffects.WillEffect, "Will", new List<TagType> { TagType.Human }, true, false, 0);
+        AddCardRegister(will);
+        EffectListener.INSTANCE.EffectStopperList.Add(will);
+        Card diana = new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<TagType> { TagType.Cat, TagType.Pet }, true, false, 1);
+        EffectListener.INSTANCE.TurnEndingList.Add(diana);
+        AddCardRegister(diana);
     }
 
     public Card FindCardInDeck(string name)

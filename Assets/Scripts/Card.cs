@@ -49,4 +49,14 @@ public class Card
     {
         return (GameObject) this.EffectParameters[1];
     }
+
+    public void SetTargetCardTags(List<TagType> targetTags)
+    {
+        this.EffectParameters.Add(2, targetTags);
+    }
+
+    public List<TagType> GetTargetCardTags()
+    {
+        return (List<TagType>)this.EffectParameters[2];
+    }
 }

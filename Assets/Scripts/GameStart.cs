@@ -611,6 +611,10 @@ public class GameStart : MonoBehaviour
         if (go != null)
         {
             GameObject savedObjectParent = GameObject.Find(PlayerPrefs.GetString(go.name));
+            if(savedObjectParent == null)
+            {
+                return;
+            }
             Image image = go.GetComponent<Image>();
             go.transform.SetParent(savedObjectParent.gameObject.transform, false);
             float x = PlayerPrefs.GetFloat(go.name + "x");
