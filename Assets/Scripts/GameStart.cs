@@ -35,7 +35,7 @@ public class GameStart : MonoBehaviour
 
     public GameObject SelectedCardGameObject;
     public State GameState = State.Moving;
-    public int Turn = 0;
+    public int Turn = 1;
 
     public static GameStart INSTANCE = null;
 
@@ -555,7 +555,8 @@ public class GameStart : MonoBehaviour
                 GameObject go = PlayerHandArea.transform.GetChild(i).gameObject;
                 LoadGameObject(go);
             }
-            foreach (CardObject go in CardObjectsInGame)
+            List<CardObject> iteratableList = new List<CardObject>(CardObjectsInGame);
+            foreach (CardObject go in iteratableList)
             {
                 LoadCardObject(go);
             }
@@ -615,8 +616,31 @@ public class GameStart : MonoBehaviour
             if(savedObjectParent == null)
             {
                 ShuffleCardBackInDeck(go, PlayerDeck);
+                CardObject co = FindCardObject(go);
+                if (co != null)
+                {
+                    CardObjectsInGame.Remove(co);
+                }
                 GameObject.Destroy(go);
                 return;
+            }
+            else if(savedObjectParent.name == "PlayerHandArea")
+            {
+                CardObject co = FindCardObject(go);
+                if (co != null)
+                {
+                    CardObjectsInGame.Remove(co);
+                    for (int i = 0; i < go.transform.childCount; i++)
+                    {
+                        GameObject child = go.transform.GetChild(i).gameObject;
+                        if (child.name.StartsWith("CounterPanel"))
+                        {
+                            GameObject.DestroyImmediate(child);
+                            break;
+                        }
+                    }
+                }
+                
             }
             Image image = go.GetComponent<Image>();
             go.transform.SetParent(savedObjectParent.gameObject.transform, false);
