@@ -651,6 +651,19 @@ public class GameStart : MonoBehaviour
         LoadGameObject(go);
     }
 
+    public GameObject GetEmptySlot(GameObject field)
+    {
+        for(int i =0; i<field.transform.childCount; i++)
+        {
+            GameObject slot = field.transform.GetChild(i).gameObject;
+            if (!SlotWithCard(slot))
+            {
+                return slot;
+            }
+        }
+        return null;
+    }
+
 
     private void RestoreCards()
     {
@@ -679,10 +692,7 @@ public class GameStart : MonoBehaviour
                 break;
             }
         }
-        CardObject cardObject = new CardObject(cardInHand);
-        cardObject.card = card;
-        cardObject.currentHP = card.HP;
-        cardObject.currentATK = card.Attack;
+        CardObject cardObject = new CardObject(cardInHand, card);
         cardInHand.transform.SetParent(cardSlot.transform, false);
         cardInHand.transform.localPosition = new Vector3(0, 0, 0);
         UpdateStatBoxes(cardObject, cardSlot: cardSlot);
@@ -701,10 +711,7 @@ public class GameStart : MonoBehaviour
         CardZoom script = go.GetComponent<CardZoom>();
         script.ZoomedCard = ZoomedCard;
         Card card = FindCard(cardName);
-        CardObject cardObject = new CardObject(go);
-        cardObject.card = card;
-        cardObject.currentHP = card.HP;
-        cardObject.currentATK = card.Attack;
+        CardObject cardObject = new CardObject(go, card);
         if (card.Tags.Contains(Deck.TagType.Leader))
         {
             go.name = cardName + "Card";
@@ -804,6 +811,14 @@ public class GameStart : MonoBehaviour
                     return new List<Card>();
                 }
             }
+            else if (cardName != null)
+            {
+                drawnCard = GetCardInDeckByName(cardName);
+                if (drawnCard == null)
+                {
+                    return new List<Card>();
+                }
+            }
             else
             {
                 if(startingdeck.cards.Count == 0)
@@ -832,6 +847,27 @@ public class GameStart : MonoBehaviour
             }
         }
         return ret;
+    }
+
+    private Card GetCardInDeckByName(string cardName)
+    {
+        Card drawnCard = null;
+        Stack<Card> newStack = new Stack<Card>();
+        Deck deck = GameStart.INSTANCE.PlayerDeck;
+        while (deck.cards.Count != 0)
+        {
+            Card card = deck.cards.Pop();
+            if (card.ImageName == cardName && drawnCard == null)
+            {
+                drawnCard = card;
+            }
+            else
+            {
+                newStack.Push(card);
+            }
+        }
+        deck.cards = newStack;
+        return drawnCard;
     }
 
     private Card GetCardInDeckByTag(Deck.TagType tag)

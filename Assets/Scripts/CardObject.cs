@@ -6,10 +6,13 @@ using UnityEngine;
 public class CardObject
 {
 
-    public CardObject(GameObject gameObject)
+    public CardObject(GameObject gameObject, Card card)
     {
         GameObject = gameObject;
         TurnEffectWasUsedOn = -1;
+        this.card = card;
+        this.currentHP = card.HP;
+        this.currentATK = card.Attack;
     }
 
     public Card card { get; set; }

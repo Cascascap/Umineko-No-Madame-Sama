@@ -253,7 +253,7 @@ public class AIFunctions : MonoBehaviour
             {
                 if (co.card.PassiveEffect)
                 {
-                    return;
+                    continue;
                 }
                 if (!co.card.UsesTarget)
                 {
@@ -265,7 +265,7 @@ public class AIFunctions : MonoBehaviour
                     CardObject target = GetCardInFieldByTag(targetTag);
                     if(target == null)
                     {
-                        return;
+                        continue;
                     }
                     GameStart.INSTANCE.UseCardEffect(co, target.GameObject);
                 }
@@ -305,7 +305,7 @@ public class AIFunctions : MonoBehaviour
         return null;
     }
 
-    private Card PlayCardInSlot(Card card, string slotNumber)
+    public Card PlayCardInSlot(Card card, string slotNumber)
     {
         GameObject slot = GameObject.Find("CardSlot" + slotNumber);
         if (SlotOccupied(slot))

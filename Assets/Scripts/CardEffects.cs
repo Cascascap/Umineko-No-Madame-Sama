@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static Deck;
 
 public class CardEffects
@@ -40,7 +41,69 @@ public class CardEffects
 
     internal static bool LionEffect(Card c)
     {
-        Debug.Log("");
+        GameObject WillGO = null;
+        GameObject emptyField = GameStart.INSTANCE.GetEmptySlot(GameStart.INSTANCE.EnemyField);
+        bool willInGame = false;
+        if (emptyField == null)
+        {
+            return false;
+        }
+        foreach(Card cardInGame in GameStart.INSTANCE.CardsInGame)
+        {
+            if(cardInGame.ImageName == "Will")
+            {
+                List<CardObject> cos = GameStart.INSTANCE.FindCardObject(cardInGame);
+                if(cos.Count != 0)
+                {
+                    willInGame = true;
+                    return false;
+                }
+            }
+        }
+        if (!willInGame)
+        {
+            for(int i=0; i<GameStart.INSTANCE.EnemyGraveyard.transform.childCount; i++)
+            {
+                GameObject child = GameStart.INSTANCE.EnemyGraveyard.transform.GetChild(i).gameObject;
+                if (child.name.Contains("Will"))
+                {
+                    WillGO = child;
+                    break;
+                }
+            }
+            if(WillGO == null)
+            {
+                for (int i = 0; i < GameStart.INSTANCE.EnemyHandArea.transform.childCount; i++)
+                {
+                    GameObject child = GameStart.INSTANCE.EnemyHandArea.transform.GetChild(i).gameObject;
+                    if (child.name.Contains("Will"))
+                    {
+                        WillGO = child;
+                        break;
+                    }
+                }
+            }
+            if(WillGO == null)
+            {
+                List<Card> willCardList = GameStart.INSTANCE.Draw(GameStart.INSTANCE.EnemyDeck, 1, cardName:"Will");
+                Card willCard = willCardList[0];
+                AIFunctions.INSTANCE.PlayCardInSlot(willCard, emptyField.name.Substring(8, 2));
+                CardObject cow = new CardObject(WillGO, willCard);
+                GameStart.INSTANCE.CardObjectsInGame.Add(cow);
+                GameStart.INSTANCE.UpdateStatBoxes(cow, emptyField);
+                GameStart.INSTANCE.RecalculateCosts();
+                return true;
+            }
+            WillGO.transform.SetParent(emptyField.transform, false);
+            WillGO.transform.localPosition = new Vector3(0, 0, 0);
+            GameObject cardCover = WillGO.transform.GetChild(0).gameObject;
+            GameObject.DestroyImmediate(cardCover);
+            Card willCard2 = GameStart.INSTANCE.FindCard("Will");
+            CardObject co = new CardObject(WillGO, willCard2);
+            GameStart.INSTANCE.CardObjectsInGame.Add(co);
+            GameStart.INSTANCE.UpdateStatBoxes(co, emptyField);
+            GameStart.INSTANCE.RecalculateCosts();
+        }
         return true;
     }
 

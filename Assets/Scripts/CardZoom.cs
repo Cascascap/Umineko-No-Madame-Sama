@@ -180,10 +180,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                                 GameObject previousParent = movingCard.transform.parent.gameObject;
                                 movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                                 movingCard.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
-                                CardObject co = new CardObject(movingCard);
-                                co.currentHP = card.HP;
-                                co.currentATK = card.Attack;
-                                co.card = card;
+                                CardObject co = new CardObject(movingCard, card);
                                 GameStart.INSTANCE.CardObjectsInGame.Add(co);
                                 EffectListener.INSTANCE.OnCardPlayed(co);
                                 GameStart.INSTANCE.UpdateStatBoxes(co, eventData.pointerClick.gameObject, previousParent);
