@@ -102,8 +102,8 @@ public class Deck
         Card gaap = new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<TagType> { TagType.Summoned, TagType.Demon }, true, false, 0);
         AddCardRegister(gaap);
         EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(gaap);
-        AddCardRegister(new Card(2, 8, 4, CardEffects.RonoveEffect, "Ronove", new List<TagType> { TagType.Summoned, TagType.Demon }, false, true, 1, TagType.All, TargetType.Ally));
-        AddCardRegister(new Card(3, 12, 6, CardEffects.VirgiliaEffect, "Virgilia", new List<TagType> { TagType.Witch }, false, false, 1));
+        AddCardRegister(new Card(2, 8, 4, CardEffects.RonoveEffect, "Ronove", new List<TagType> { TagType.Summoned, TagType.Demon }, false, true, 2, TagType.All, TargetType.Ally));
+        AddCardRegister(new Card(3, 12, 6, CardEffects.VirgiliaEffect, "Virgilia", new List<TagType> { TagType.Witch }, false, false, 3));
     }
 
     public void Lambda()

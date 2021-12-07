@@ -84,7 +84,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     }
                     if (!cardObject.usedEffect && (GameStart.INSTANCE.GameState == GameStart.State.Moving || GameStart.INSTANCE.GameState == GameStart.State.Summoning))
                     {
-                        if (cardObject.card.Cooldown == 0 || cardObject.TurnEffectWasUsedOn == 0 || (cardObject.TurnEffectWasUsedOn != 0 && (cardObject.card.Cooldown + cardObject.TurnEffectWasUsedOn <= GameStart.INSTANCE.Turn)))
+                        if (cardObject.card.Cooldown == 0 || cardObject.TurnEffectWasUsedOn < 0 || (cardObject.card.Cooldown + cardObject.TurnEffectWasUsedOn <= GameStart.INSTANCE.Turn))
                         {
                             if (!cardObject.card.UsesTarget)
                             {

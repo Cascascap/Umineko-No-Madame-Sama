@@ -9,7 +9,7 @@ public class CardObject
     public CardObject(GameObject gameObject)
     {
         GameObject = gameObject;
-        TurnEffectWasUsedOn = 0;
+        TurnEffectWasUsedOn = -1;
     }
 
     public Card card { get; set; }
