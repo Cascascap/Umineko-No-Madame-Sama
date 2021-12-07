@@ -29,13 +29,9 @@ public class CardEffects
     internal static bool BeelzebubEffect(Card c)
     {
         GameObject target = c.GetTargetCard();
+        int counters = c.GetCounters();
         CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(target);
-        int countersToRemove = targetCardObject.counters;
-        if(countersToRemove >= 2) 
-        {
-            countersToRemove = 2;
-        }
-        GameStart.INSTANCE.AddCounter(targetCardObject, countersToRemove);
+        GameStart.INSTANCE.AddCounter(targetCardObject, counters);
         return true;
     }
 
@@ -79,6 +75,8 @@ public class CardEffects
                     if (child.name.Contains("Will"))
                     {
                         WillGO = child;
+                        GameObject cardCover = WillGO.transform.GetChild(0).gameObject;
+                        GameObject.DestroyImmediate(cardCover);
                         break;
                     }
                 }
@@ -97,8 +95,6 @@ public class CardEffects
             }
             WillGO.transform.SetParent(emptyField.transform, false);
             WillGO.transform.localPosition = new Vector3(0, 0, 0);
-            GameObject cardCover = WillGO.transform.GetChild(0).gameObject;
-            GameObject.DestroyImmediate(cardCover);
             Card willCard2 = GameStart.INSTANCE.FindCard("Will");
             CardObject co = new CardObject(WillGO, willCard2);
             GameStart.INSTANCE.CardObjectsInGame.Add(co);
@@ -136,9 +132,14 @@ public class CardEffects
         }
         else
         {
-            GameStart.INSTANCE.RemoveCounter(co, 1);
+            int countersToRemove = co.counters;
+            if (countersToRemove >= 2)
+            {
+                countersToRemove = 2;
+            }
+            GameStart.INSTANCE.RemoveCounter(co, countersToRemove);
             CardObject leviathanCO = GameStart.INSTANCE.FindCardObject(GameStart.INSTANCE.SelectedCardGameObject);
-            GameStart.INSTANCE.AddCounter(leviathanCO, 1);
+            GameStart.INSTANCE.AddCounter(leviathanCO, countersToRemove);
             return true;
         }
     }

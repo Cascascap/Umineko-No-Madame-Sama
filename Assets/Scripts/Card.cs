@@ -59,4 +59,14 @@ public class Card
     {
         return (List<TagType>)this.EffectParameters[2];
     }
+
+    public void SetCounters(int counters)
+    {
+        this.EffectParameters.Add(3, counters);
+    }
+
+    public int GetCounters()
+    {
+        return (int) this.EffectParameters[3];
+    }
 }

@@ -86,6 +86,7 @@ public class EffectListener
             {
                 c.InitializeEffectParametrs();
                 c.SetTargetCard(go);
+                c.SetCounters(countersAdded);
                 c.Effect.Invoke(c);
             }
         }
