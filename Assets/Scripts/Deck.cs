@@ -16,6 +16,7 @@ public class Deck
 
     public enum TagType
     {
+        All,
         Leader,
         Witch,
         Human,
@@ -25,7 +26,7 @@ public class Deck
         Cat,
         Pet,
         Object,
-        All
+        Servant
     }
 
     public int remainingCards = 0;
@@ -119,6 +120,21 @@ public class Deck
         Card diana = new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<TagType> { TagType.Cat, TagType.Pet }, true, false, 1);
         EffectListener.INSTANCE.TurnEndingList.Add(diana);
         AddCardRegister(diana);
+    }
+
+    public void Kinzo()
+    {
+        this.leaderCard = new Card(0, 30, 2, CardEffects.KinzoEffect, "Kinzo", new List<TagType> { TagType.Leader, TagType.Human }, false, true, 1);
+        AddCardRegister(this.leaderCard, true);
+        Card Genji = new Card(2, 12, 2, CardEffects.GenjiEffect, "Genji", new List<TagType> { TagType.Servant, TagType.Human }, true, false, 0);
+        AddCardRegister(new Card(2, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, false, false, 1));
+        Card Kanon = new Card(1, 6, 6, CardEffects.KanonEffect, "Kanon", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 0);
+        AddCardRegister(Kanon);
+        EffectListener.INSTANCE.DestroysCardsList.Add(Kanon);
+        Card Kumasawa = new Card(1, 2, 2, CardEffects.KumasawaEffect, "Kumasawa", new List<TagType> { TagType.Human, TagType.Servant }, false, false, 2);
+        AddCardRegister(Kumasawa);
+        AddCardRegister(new Card(2, 10, 4, CardEffects.NanjoEffect, "Nanjo", new List<TagType> { TagType.Human }, false, true, 1));
+        AddCardRegister(new Card(1, 2, 2, CardEffects.ShannonEffect, "Shannon", new List<TagType> { TagType.Human, TagType.Servant }, false, true, 1));
     }
 
     public Card FindCardInDeck(string name)

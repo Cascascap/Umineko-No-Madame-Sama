@@ -160,11 +160,53 @@ public class CardEffects
         return true;
     }
 
+    internal static bool GenjiEffect(Card arg)
+    {
+        Debug.Log("Passive: Grants Kinzo 3 +1/+1 counters at the end of your turn");
+        return true;
+    }
+
+    internal static bool KinzoEffect(Card arg)
+    {
+        Debug.Log("Once per turn Gives a servant card 2 +1/+1");
+        return true;
+    }
+
+    internal static bool ShannonEffect(Card arg)
+    {
+        Debug.Log("Once per turn: Grants a shield to an ally card");
+        return true;
+    }
+
+    internal static bool GohdaEffect(Card arg)
+    {
+        Debug.Log("Once per turn: Grants every ally a +1/+1 counter");
+        return true;
+    }
+
+    internal static bool KanonEffect(Card arg)
+    {
+        Debug.Log("Passive: Gains a +1/+1 counter after destroying a card");
+        return true;
+    }
+
     internal static bool SatanEffect(Card c)
     {
         GameObject target = c.GetTargetCard();
         CardObject satanCO = GameStart.INSTANCE.FindCardObject(target);
         GameStart.INSTANCE.AddCounter(satanCO, 1);
+        return true;
+    }
+
+    internal static bool KumasawaEffect(Card arg)
+    {
+        Debug.Log("Cooldown 2: Deals 1 damage to every enemy");
+        return true;
+    }
+
+    internal static bool NanjoEffect(Card arg)
+    {
+        Debug.Log("Once per turn, heal ally to max hp");
         return true;
     }
 
