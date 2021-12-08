@@ -92,6 +92,12 @@ public class GameStart : MonoBehaviour
         Image shieldImage = gos.AddComponent<Image>();
         shieldImage.sprite = shieldSprite;
         gos.transform.SetParent(go.transform, false);
+        GameObject counterPanel = GetCounterPanel(go);
+        if (counterPanel!=null)
+        {
+            gos.transform.SetSiblingIndex(1);
+            counterPanel.transform.SetSiblingIndex(2);
+        }
 
     }
 
@@ -398,16 +404,26 @@ public class GameStart : MonoBehaviour
         {
             if (co.counters == 0 && co.GameObject.transform.childCount > 0)
             {
-                for (int i = 0; i < co.GameObject.transform.childCount; i++)
+                GameObject counterPanel = GetCounterPanel(co.GameObject);
+                if (counterPanel!= null)
                 {
-                    GameObject child = co.GameObject.transform.GetChild(i).gameObject;
-                    if (child.name.Contains("CounterPanel"))
-                    {
-                        GameObject.Destroy(child);
-                    }
+                    GameObject.Destroy(counterPanel);
                 }
             }
         }
+    }
+
+    public GameObject GetCounterPanel(GameObject go)
+    {
+        for (int i = 0; i < go.transform.childCount; i++)
+        {
+            GameObject child = go.transform.GetChild(i).gameObject;
+            if (child.name.Contains("CounterPanel"))
+            {
+                return child;
+            }
+        }
+        return null;
     }
 
     //Returns true if the attack destroys the card
