@@ -570,9 +570,12 @@ public class GameStart : MonoBehaviour
             {
                 GameObject go = EnemyGraveyard.transform.GetChild(i).gameObject;
                 LoadGameObject(go);
-                Card c = FindCard(go.GetComponent<Image>().sprite.name);
-                CardObject co = new CardObject(go, c);
-                CardObjectsInGame.Add(co);
+                if (go.transform.parent.name != "EnemyGraveyard")
+                {
+                    Card c = FindCard(go.GetComponent<Image>().sprite.name);
+                    CardObject co = new CardObject(go, c);
+                    CardObjectsInGame.Add(co);
+                }
             }
             PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
@@ -684,6 +687,8 @@ public class GameStart : MonoBehaviour
         PlayerPrefs.SetInt(go.name + "TurnEffectWasUsedOn", co.TurnEffectWasUsedOn);
         PlayerPrefs.SetInt(go.name + "Counters", co.counters);
         PlayerPrefs.SetInt(go.name + "CurrentHP", co.currentHP);
+        int hasShield = HasShield(co.GameObject)?1:0;
+        PlayerPrefs.SetInt(go.name + "HasShield", hasShield);
         SaveGameObject(go);
     }
     private void LoadCardObject(CardObject co)
@@ -695,6 +700,16 @@ public class GameStart : MonoBehaviour
         co.TurnEffectWasUsedOn = PlayerPrefs.GetInt(go.name + "TurnEffectWasUsedOn");
         co.currentHP = PlayerPrefs.GetInt(go.name + "CurrentHP");
         co.counters = PlayerPrefs.GetInt(go.name + "Counters");
+        bool hasShield = PlayerPrefs.GetInt(go.name + "HasShield")==1;
+        if (hasShield && !HasShield(co.GameObject))
+        {
+            CreateShield(co.GameObject);
+        }
+        else if(!hasShield && HasShield(co.GameObject))
+        {
+            RemoveShield(co.GameObject);
+        }
+
         LoadGameObject(go);
     }
 
