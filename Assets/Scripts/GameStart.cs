@@ -539,6 +539,11 @@ public class GameStart : MonoBehaviour
         {
             SaveStatBox(go);
         }
+        for (int i = 0; i < EnemyGraveyard.transform.childCount; i++)
+        {
+            GameObject go = EnemyGraveyard.transform.GetChild(i).gameObject;
+            SaveGameObject(go);
+        }
         PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
         PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
     }
@@ -560,6 +565,14 @@ public class GameStart : MonoBehaviour
             foreach (CardObject go in iteratableList)
             {
                 LoadCardObject(go);
+            }
+            for (int i = 0; i < EnemyGraveyard.transform.childCount; i++)
+            {
+                GameObject go = EnemyGraveyard.transform.GetChild(i).gameObject;
+                LoadGameObject(go);
+                Card c = FindCard(go.GetComponent<Image>().sprite.name);
+                CardObject co = new CardObject(go, c);
+                CardObjectsInGame.Add(co);
             }
             PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
