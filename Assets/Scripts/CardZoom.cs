@@ -78,10 +78,21 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     {
                         return;
                     }
+                    if (cardObject.card.PassiveEffect)
+                    {
+                        Debug.Log("Can't manually activate passive effect");
+                        return;
+                    }
                     if (!cardObject.usedEffect && (GameStart.INSTANCE.GameState == GameStart.State.Moving || GameStart.INSTANCE.GameState == GameStart.State.Summoning))
                     {
-                        if ((cardObject.card.Cooldown == 0 || cardObject.TurnEffectWasUsedOn < 0 || (cardObject.card.Cooldown + cardObject.TurnEffectWasUsedOn <= GameStart.INSTANCE.Turn)) && EffectListener.INSTANCE.OnAllowUseEffect(cardObject))
+                        if (!EffectListener.INSTANCE.OnAllowUseEffect(cardObject))
                         {
+                            Debug.Log("A card is preventing you from activating this effect");
+                            return;
+                        }
+                        if ((cardObject.card.Cooldown == 0 || cardObject.TurnEffectWasUsedOn < 0 || (cardObject.card.Cooldown + cardObject.TurnEffectWasUsedOn <= GameStart.INSTANCE.Turn)))
+                        {
+                            
                             if (!cardObject.card.UsesTarget)
                             {
                                 GameStart.INSTANCE.UseCardEffect(cardObject, null);
