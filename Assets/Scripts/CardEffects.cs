@@ -48,7 +48,7 @@ public class CardEffects
         {
             if(cardInGame.ImageName == "Will")
             {
-                List<CardObject> cos = GameStart.INSTANCE.FindCardObject(cardInGame);
+                List<CardObject> cos = GameStart.INSTANCE.FindCardObject(cardInGame.ImageName);
                 if(cos.Count != 0)
                 {
                     willInGame = true;
@@ -116,7 +116,7 @@ public class CardEffects
 
     internal static bool VirgiliaEffect(Card c)
     {
-        GameStart.INSTANCE.DamageAllEnemyCards(4);
+        GameStart.INSTANCE.DamageAllEnemyCards(4, true);
         GameStart.INSTANCE.UpdateAllStatBoxes();
         return true;
     }
@@ -162,8 +162,15 @@ public class CardEffects
 
     internal static bool GenjiEffect(Card arg)
     {
-        Debug.Log("Passive: Grants Kinzo 3 +1/+1 counters at the end of your turn");
-        return true;
+        foreach (CardObject co in GameStart.INSTANCE.CardObjectsInGame)
+        {
+            if (co.card.ImageName == "Kinzo")
+            {
+                GameStart.INSTANCE.AddCounterEffect(co, 3);
+                return true;
+            }
+        }
+        return false;
     }
 
     internal static bool KinzoEffect(Card arg)
@@ -175,18 +182,31 @@ public class CardEffects
     internal static bool ShannonEffect(Card arg)
     {
         Debug.Log("Once per turn: Grants a shield to an ally card");
+        CardObject bestTarget = null;
+        for(int i=0; i<GameStart.INSTANCE.CardObjectsInGame.Count; i++)
+        {
+
+        }
         return true;
     }
 
     internal static bool GohdaEffect(Card arg)
     {
-        Debug.Log("Once per turn: Grants every ally a +1/+1 counter");
+        foreach(CardObject co in GameStart.INSTANCE.CardObjectsInGame)
+        {
+            if(co.GameObject.transform.parent.parent.name == "EnemyField")
+            {
+                GameStart.INSTANCE.AddCounterEffect(co, 1);
+            }
+        }
         return true;
     }
 
-    internal static bool KanonEffect(Card arg)
+    internal static bool KanonEffect(Card c)
     {
-        Debug.Log("Passive: Gains a +1/+1 counter after destroying a card");
+        GameObject target = c.GetTargetCard();
+        CardObject kanon = GameStart.INSTANCE.FindCardObject(target);
+        GameStart.INSTANCE.AddCounter(kanon, 1);
         return true;
     }
 
@@ -200,7 +220,8 @@ public class CardEffects
 
     internal static bool KumasawaEffect(Card arg)
     {
-        Debug.Log("Cooldown 2: Deals 1 damage to every enemy");
+        GameStart.INSTANCE.DamageAllEnemyCards(1, false);
+        GameStart.INSTANCE.UpdateAllStatBoxes();
         return true;
     }
 
@@ -231,7 +252,13 @@ public class CardEffects
 
     internal static bool DianaEffect(Card c)
     {
-        Debug.Log("Grants will 2 +1/+1 counter at the start of your turn");
+        List<CardObject> willcos = GameStart.INSTANCE.FindCardObject("Will");
+        if(willcos.Count == 0)
+        {
+            return false;
+        }
+        CardObject willco = willcos[0];
+        GameStart.INSTANCE.AddCounter(willco, 2);
         return true;
     }
 

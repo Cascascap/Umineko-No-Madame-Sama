@@ -22,11 +22,20 @@ public class AIFunctions : MonoBehaviour
     {
         GameStart.INSTANCE.Draw(GameStart.INSTANCE.EnemyDeck, 1);
         GameStart.INSTANCE.RearrangeHand(false);
+        KinzoAI();
+        UseEffects();
+        AllAttack();
+        GameStart.INSTANCE.RearrangeHand(false);
+        GameStart.INSTANCE.OnTurnStart();
+    }
+
+    private void KinzoAI()
+    {
         if (!IsLeaderOnTop())
         {
             TakeFirstTurn();
         }
-        else if(!IsLeaderOnRight())
+        else if (!IsLeaderOnRight())
         {
             TakeSecondTurn();
         }
@@ -34,10 +43,22 @@ public class AIFunctions : MonoBehaviour
         {
             TakeTurn();
         }
-        UseEffects();
-        AllAttack();
-        GameStart.INSTANCE.RearrangeHand(false);
-        GameStart.INSTANCE.OnTurnStart();
+    }
+
+    private void LambdaAI()
+    {
+        if (!IsLeaderOnTop())
+        {
+            TakeFirstTurn();
+        }
+        else if (!IsLeaderOnRight())
+        {
+            TakeSecondTurn();
+        }
+        else
+        {
+            TakeTurn();
+        }
     }
 
     private void TakeTurn()
@@ -168,6 +189,7 @@ public class AIFunctions : MonoBehaviour
                 bool destroysCard = GameStart.INSTANCE.Attack(targetCardSlot, co.card.Attack + co.counters);
                 if (destroysCard)
                 {
+                    EffectListener.INSTANCE.OnDestroyedCard(co);
                     GameObject enemyCardGO = targetCardSlot.transform.GetChild(3).gameObject;
                     Image goImage = enemyCardGO.GetComponent<Image>();
                     goImage.color = new Color32(255, 255, 255, 255);
@@ -294,7 +316,7 @@ public class AIFunctions : MonoBehaviour
             Card ret = PlayCardInSlot(card, slotNumber);
             if (ret!=null)
             {
-                List<CardObject> co = GameStart.INSTANCE.FindCardObject(ret);
+                List<CardObject> co = GameStart.INSTANCE.FindCardObject(ret.ImageName);
                 if(co.Count != 0)
                 {
                     EffectListener.INSTANCE.OnCardPlayed(co[0]);

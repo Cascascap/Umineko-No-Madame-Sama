@@ -42,12 +42,58 @@ public class GameStart : MonoBehaviour
     //TODO: move to a leader class
     public string EnemyLeader, PlayerLeader;
 
-    internal void DamageAllEnemyCards(int damage)
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        if (INSTANCE == null)
+        {
+            INSTANCE = this;
+        }
+        Debug.Log("Starting");
+        Turn = 1;
+        EffectListener effectListener = new EffectListener();
+        Button EndTurnbtn = EndTurnButton.GetComponent<Button>();
+        Button UndoBtn = UndoButton.GetComponent<Button>();
+        EndTurnbtn.onClick.AddListener(OnEndTurn);
+        UndoBtn.onClick.AddListener(Undo);
+        EnemyLeader = "Lambda";
+        PlayerLeader = "Beatrice";
+        PlayerDeck = CreateDeck(PlayerLeader);
+        EnemyDeck = CreateDeck(EnemyLeader);
+        DecksInGame.Add(PlayerDeck);
+        DecksInGame.Add(EnemyDeck);
+        CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
+        CardObjectsInGame.Add(leaderCardObject);
+        CardObject enemyLeaderCardObject = CreateCardInSlot(EnemyLeader, CardSlot11);
+        CardObjectsInGame.Add(enemyLeaderCardObject);
+        PlayerHand = new Hand();
+        EnemyHand = new Hand();
+        EnemyHand.cards = Draw(EnemyDeck, STARTING_CARDS_HAND);
+        RearrangeHand(false);
+        PlayerHand.cards = Draw(PlayerDeck, STARTING_CARDS_HAND);
+        RearrangeHand(true);
+        InitializeSlotMap();
+        RecalculateCosts();
+        SaveState();
+    }
+
+
+    internal void DamageAllEnemyCards(int damage, bool playerCard)
     {
         List<CardObject> iteratable = new List<CardObject>(CardObjectsInGame);
+        String fieldName;
+        if (playerCard)
+        {
+            fieldName = "EnemyField";
+        }
+        else
+        {
+            fieldName = "PlayerField";
+        }
         foreach(CardObject co in iteratable)
         {
-            if(co.GameObject.transform.parent.parent.name == "EnemyField")
+            if(co.GameObject.transform.parent.parent.name == fieldName)
             {
                 DamageCard(co, damage);
             }
@@ -71,6 +117,10 @@ public class GameStart : MonoBehaviour
             {
                 GameObject cardGameObject = slot.transform.GetChild(3).gameObject;
                 CardObject co = FindCardObject(cardGameObject);
+                if(co.card.ImageName == EnemyLeader)
+                {
+                    
+                }
                 UpdateStatBoxes(co, slot);
             }
             else
@@ -198,12 +248,12 @@ public class GameStart : MonoBehaviour
         return ret;
     }
 
-    internal List<CardObject> FindCardObject(Card c)
+    internal List<CardObject> FindCardObject(string cardName)
     {
         List<CardObject> co = new List<CardObject>();
         foreach (CardObject coin in CardObjectsInGame)
         {
-            if (coin.card.ImageName == c.ImageName)
+            if (coin.card.ImageName == cardName)
             {
                 co.Add(coin);
             }
@@ -238,41 +288,6 @@ public class GameStart : MonoBehaviour
             }
         }
         return co;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        if(INSTANCE == null)
-        {
-            INSTANCE = this;
-        }
-        Debug.Log("Starting");
-        Turn = 1;
-        EffectListener effectListener = new EffectListener();
-        Button EndTurnbtn = EndTurnButton.GetComponent<Button>();
-        Button UndoBtn = UndoButton.GetComponent<Button>();
-        EndTurnbtn.onClick.AddListener(OnEndTurn);
-        UndoBtn.onClick.AddListener(Undo);
-        EnemyLeader = "Lambda";
-        PlayerLeader = "Beatrice";
-        PlayerDeck = CreateDeck(PlayerLeader);
-        EnemyDeck = CreateDeck(EnemyLeader);
-        DecksInGame.Add(PlayerDeck);
-        DecksInGame.Add(EnemyDeck);
-        CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
-        CardObjectsInGame.Add(leaderCardObject);
-        CardObject enemyLeaderCardObject = CreateCardInSlot(EnemyLeader, CardSlot11);
-        CardObjectsInGame.Add(enemyLeaderCardObject);
-        PlayerHand = new Hand();
-        EnemyHand = new Hand();
-        EnemyHand.cards = Draw(EnemyDeck, STARTING_CARDS_HAND);
-        RearrangeHand(false);
-        PlayerHand.cards = Draw(PlayerDeck, STARTING_CARDS_HAND);
-        RearrangeHand(true);
-        InitializeSlotMap();
-        RecalculateCosts();
-        SaveState();
     }
 
     private void InitializeSlotMap()
@@ -400,17 +415,6 @@ public class GameStart : MonoBehaviour
     void Update()
     {
         TurnStateDisplay.text = GameState.ToString();
-        foreach(CardObject co in CardObjectsInGame)
-        {
-            if (co.counters == 0 && co.GameObject.transform.childCount > 0)
-            {
-                GameObject counterPanel = GetCounterPanel(co.GameObject);
-                if (counterPanel!= null)
-                {
-                    GameObject.Destroy(counterPanel);
-                }
-            }
-        }
     }
 
     public GameObject GetCounterPanel(GameObject go)
@@ -593,12 +597,44 @@ public class GameStart : MonoBehaviour
                     CardObjectsInGame.Add(co);
                 }
             }
+            UpdateCounters();
             PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
             GameState = State.Moving;
             CardUsingEffect = null;
             CardZoom.RemovePreviousMark();
         }
+    }
+
+    private void UpdateCounters()
+    {
+        foreach (CardObject co in CardObjectsInGame)
+        {
+            GameObject counterPanel = GetCounterPanel(co.GameObject);
+            if (co.counters == 0 && co.GameObject.transform.childCount > 0)
+            {
+                if (counterPanel != null)
+                {
+                    GameObject.Destroy(counterPanel);
+                }
+            }
+            else
+            {
+                if (counterPanel != null)
+                {
+                    TextMeshProUGUI counterText = GetCounterText(counterPanel);
+                    counterText.text = co.counters.ToString();
+                }
+            }
+        }
+    }
+
+    private TextMeshProUGUI GetCounterText(GameObject counterPanel)
+    {
+        GameObject imageObject = counterPanel.transform.GetChild(0).gameObject;
+        GameObject counterObject = imageObject.transform.GetChild(1).gameObject;
+        TextMeshProUGUI counterText = counterObject.GetComponent<TextMeshProUGUI>();
+        return counterText;
     }
 
     public void UseCardEffect(CardObject co, GameObject objective)
@@ -1101,24 +1137,32 @@ public class GameStart : MonoBehaviour
 
     public void AddCounter(CardObject co, int numberOfCounters)
     {
-        GameObject cardCounterPanel = Instantiate(CountersPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        GameObject imageObject = cardCounterPanel.transform.GetChild(0).gameObject;
-        imageObject.transform.localPosition = new Vector3(-35, 55, 0);
-        imageObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(30, 30, 0);
-        GameObject plusObject = imageObject.transform.GetChild(0).gameObject;
-        GameObject counterObject = imageObject.transform.GetChild(1).gameObject;
+        GameObject counterPanel = GetCounterPanel(co.GameObject);
+        TextMeshProUGUI counterText = null;
+        if (counterPanel != null)
+        {
+            counterText = GetCounterText(counterPanel);
+        }
+        else
+        {
+            GameObject cardCounterPanel = Instantiate(CountersPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            GameObject imageObject = cardCounterPanel.transform.GetChild(0).gameObject;
+            imageObject.transform.localPosition = new Vector3(-35, 55, 0);
+            imageObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(30, 30, 0);
+            GameObject plusObject = imageObject.transform.GetChild(0).gameObject;
+            GameObject counterObject = imageObject.transform.GetChild(1).gameObject;
 
-        plusObject.transform.localPosition = new Vector3((float)-8.5, (float)-0.1, 0);
-        plusObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(13, 30, 0);
-        counterObject.transform.localPosition = new Vector3(7, 0, 0);
-        counterObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(17, 30, 0);
-
-        TextMeshProUGUI counterText = counterObject.GetComponent<TextMeshProUGUI>();
+            plusObject.transform.localPosition = new Vector3((float)-8.5, (float)-0.1, 0);
+            plusObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(13, 30, 0);
+            counterObject.transform.localPosition = new Vector3(7, 0, 0);
+            counterObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(17, 30, 0);
+            counterText = counterObject.GetComponent<TextMeshProUGUI>();
+            cardCounterPanel.transform.SetParent(co.GameObject.transform, false);
+        }
         co.counters += numberOfCounters;
         co.currentHP += numberOfCounters;
         co.currentATK += numberOfCounters;
         counterText.text = co.counters.ToString();
-        cardCounterPanel.transform.SetParent(co.GameObject.transform, false);
         UpdateStatBoxes(co, co.GameObject.transform.parent.gameObject);
     }
 
