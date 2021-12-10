@@ -190,7 +190,7 @@ public class AIFunctions : MonoBehaviour
                 if (destroysCard)
                 {
                     EffectListener.INSTANCE.OnDestroyedCard(co);
-                    GameObject enemyCardGO = targetCardSlot.transform.GetChild(3).gameObject;
+                    GameObject enemyCardGO = GameStart.INSTANCE.GetCardGameObject(targetCardSlot);
                     Image goImage = enemyCardGO.GetComponent<Image>();
                     goImage.color = new Color32(255, 255, 255, 255);
                     GameStart.INSTANCE.CardObjectsInGame.Remove(bestTarget);
@@ -225,7 +225,7 @@ public class AIFunctions : MonoBehaviour
                 bool canAttack = GameStart.INSTANCE.CanAttack(co.GameObject.transform.parent.gameObject, slot);
                 if (canAttack)
                 {
-                    CardObject candidate = GameStart.INSTANCE.FindCardObject(slot.transform.GetChild(3).gameObject);
+                    CardObject candidate = GameStart.INSTANCE.FindCardObject(GameStart.INSTANCE.GetCardGameObject(slot));
                     if(candidate == null)
                     {
                         continue;

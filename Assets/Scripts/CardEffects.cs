@@ -38,9 +38,9 @@ public class CardEffects
     internal static bool LionEffect(Card c)
     {
         GameObject WillGO = null;
-        GameObject emptyField = GameStart.INSTANCE.GetEmptySlot(GameStart.INSTANCE.EnemyField);
+        GameObject emptySlot = GameStart.INSTANCE.GetEmptySlot(GameStart.INSTANCE.EnemyField);
         bool willInGame = false;
-        if (emptyField == null)
+        if (emptySlot == null)
         {
             return false;
         }
@@ -85,20 +85,20 @@ public class CardEffects
             {
                 List<Card> willCardList = GameStart.INSTANCE.Draw(GameStart.INSTANCE.EnemyDeck, 1, cardName:"Will");
                 Card willCard = willCardList[0];
-                GameStart.INSTANCE.CreateCardInSlot(willCard.ImageName, emptyField);
-                WillGO = emptyField.transform.GetChild(3).gameObject; 
+                GameStart.INSTANCE.CreateCardInSlot(willCard.ImageName, emptySlot);
+                WillGO = GameStart.INSTANCE.GetCardGameObject(emptySlot); 
                 CardObject cow = new CardObject(WillGO, willCard);
                 GameStart.INSTANCE.CardObjectsInGame.Add(cow);
-                GameStart.INSTANCE.UpdateStatBoxes(cow, emptyField);
+                GameStart.INSTANCE.UpdateStatBoxes(cow, emptySlot);
                 GameStart.INSTANCE.RecalculateCosts();
                 return true;
             }
-            WillGO.transform.SetParent(emptyField.transform, false);
+            WillGO.transform.SetParent(emptySlot.transform, false);
             WillGO.transform.localPosition = new Vector3(0, 0, 0);
             Card willCard2 = GameStart.INSTANCE.FindCard("Will");
             CardObject co = new CardObject(WillGO, willCard2);
             GameStart.INSTANCE.CardObjectsInGame.Add(co);
-            GameStart.INSTANCE.UpdateStatBoxes(co, emptyField);
+            GameStart.INSTANCE.UpdateStatBoxes(co, emptySlot);
             GameStart.INSTANCE.RecalculateCosts();
         }
         return true;

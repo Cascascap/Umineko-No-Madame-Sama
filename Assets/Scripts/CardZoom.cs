@@ -19,7 +19,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             return;
         }
         //If theres a card in the hovered slot or its a card in hand
-        if((IsCard(this.gameObject) && this.transform.parent.name != "EnemyHandArea") || this.transform.parent.name == "PlayerHandArea")
+        if((GameStart.INSTANCE.IsCard(this.gameObject) && this.transform.parent.name != "EnemyHandArea") || this.transform.parent.name == "PlayerHandArea")
         {
             CardObject co = GameStart.INSTANCE.FindCardObject(this.gameObject);
             if(co!=null && co.counters > 0)
@@ -74,7 +74,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     {
                         return;
                     }
-                    if (IsCardInHand(cardObject))
+                    if (CardInHand(cardObject.GameObject))
                     {
                         return;
                     }
@@ -132,10 +132,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (GameStart.INSTANCE.SelectedCardGameObject == null && IsAllyCard(eventData.pointerClick) && GameStart.INSTANCE.CardUsingEffect == null)
             {
                 CreateMark();
-            }
-            else if (IsAllyCard(eventData.pointerClick) && GameStart.INSTANCE.CardUsingEffect==null)
-            {
-                CreateMark();
+                ShowPosibleMovements();
             }
             else
             {
@@ -146,6 +143,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 if (eventData.pointerClick.name == GameStart.INSTANCE.SelectedCardGameObject.name)
                 {
                     RemovePreviousMark();
+                    GameStart.INSTANCE.HidePosibleMovements();
                     GameStart.INSTANCE.CardUsingEffect = null;
                 }
                 else
@@ -192,6 +190,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                                 EffectListener.INSTANCE.OnCardPlayed(co);
                                 GameStart.INSTANCE.UpdateStatBoxes(co, eventData.pointerClick.gameObject, previousParent);
                                 RemovePreviousMark();
+                                GameStart.INSTANCE.HidePosibleMovements();
                                 GameStart.INSTANCE.RecalculateCosts();
                                 GameStart.INSTANCE.RearrangeHand(true);
                                 Debug.Log("Put card in field");
@@ -222,6 +221,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             movingCard.transform.SetParent(eventData.pointerClick.gameObject.transform, false);
                             GameStart.INSTANCE.UpdateStatBoxes(cardObject, eventData.pointerClick.gameObject, previousParent);
                             RemovePreviousMark();
+                            GameStart.INSTANCE.HidePosibleMovements();
                             GameStart.INSTANCE.RecalculateCosts();
                             Debug.Log("Card moves");
                         }
@@ -249,7 +249,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             if (destroysCard)
                             {
                                 EffectListener.INSTANCE.OnDestroyedCard(cardObject);
-                                GameObject enemyCardGO = enemyCardSlot.transform.GetChild(3).gameObject;
+                                GameObject enemyCardGO = GameStart.INSTANCE.GetCardGameObject(enemyCardSlot);
                                 GameStart.INSTANCE.CardObjectsInGame.Remove(enemyCardObject);
                                 for (int i = 0; i < eventData.pointerClick.transform.childCount; i++)
                                 {
@@ -270,6 +270,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                             cardImage.color = new Color32(40, 40, 40, 255);
                             cardObject.acted = true;
                             RemovePreviousMark();
+                            GameStart.INSTANCE.HidePosibleMovements();
                             GameStart.INSTANCE.RecalculateCosts();
                             Debug.Log("Attack");
                         }
@@ -291,6 +292,57 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         RemovePreviousMark();
         Debug.Log("Used effect");
     }
+
+
+    private void ShowPosibleMovements()
+    {
+        GameObject selectedCard = GameStart.INSTANCE.SelectedCardGameObject;
+        if(selectedCard.transform.parent.name == GameStart.INSTANCE.PlayerHandArea.name)
+        {
+            return;
+        }
+        CardObject co = GameStart.INSTANCE.FindCardObject(selectedCard);
+        if (co == null)
+        {
+            return;
+        }
+        if(co!=null && co.moved)
+        {
+            return;
+        }
+        for (int i=0; i<GameStart.INSTANCE.PlayerField.transform.childCount; i++)
+        {
+            GameObject slot = GameStart.INSTANCE.PlayerField.transform.GetChild(i).gameObject;
+            bool canMove = CanMoveToPosition(selectedCard, slot);
+            GameObject movementGuideGO = new GameObject("MovementGuide");
+            RectTransform rectTransform = movementGuideGO.AddComponent<RectTransform>();
+            rectTransform.sizeDelta = new Vector2(112, 160);
+            Image movementGuideImage = movementGuideGO.AddComponent<Image>();
+            Sprite guideMovementSprite = null;
+            if (canMove && !GameStart.INSTANCE.SlotWithCard(slot))
+            {
+                //canMove
+                guideMovementSprite = (Sprite)Resources.Load("Circle", typeof(Sprite));
+            }
+            else if(canMove && GameStart.INSTANCE.SlotWithCard(slot) && selectedCard.transform.parent.name != slot.name)
+            {
+                //can step on card
+                guideMovementSprite = (Sprite)Resources.Load("Skull", typeof(Sprite));
+            }
+            else if(selectedCard.transform.parent.name != slot.name)
+            {
+                //cant move
+                guideMovementSprite = (Sprite)Resources.Load("Cross", typeof(Sprite));
+            }
+            else
+            {
+                GameObject.Destroy(movementGuideGO);
+            }
+            movementGuideGO.transform.SetParent(slot.transform, false);
+            movementGuideImage.sprite = guideMovementSprite;
+        }
+    }
+
 
     private bool CanMoveToPosition(GameObject movingCard, GameObject objectiveSlot)
     {
@@ -331,7 +383,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private bool EnemyCardInGame(GameObject card)
     {
-        if (IsCard(card))
+        if (GameStart.INSTANCE.IsCard(card))
         {
             return card.transform.parent.parent.name == "EnemyField";
         }
@@ -341,14 +393,10 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    private bool IsCard(GameObject card)
-    {
-        return card.name.EndsWith("Card");
-    }
 
     private bool PlayerCardInGame(GameObject card)
     {
-        if (IsCard(card))
+        if (GameStart.INSTANCE.IsCard(card))
         {
             return card.transform.parent.parent.name == "PlayerField";
         }
@@ -360,7 +408,7 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private bool CardInHand(GameObject card)
     {
-        if (IsCard(card))
+        if (GameStart.INSTANCE.IsCard(card))
         {
             return card.transform.parent.name == "PlayerHandArea";
         }
@@ -372,7 +420,19 @@ public class CardZoom : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private bool PlayerOpenSlot(GameObject card)
     {
-        if (!IsCard(card))
+        if (card.name.StartsWith("CardSlot"))
+        {
+            card = GameStart.INSTANCE.GetCardGameObject(card);
+            if (card != null)
+            {
+                return card.transform.parent.name == "PlayerField";
+            }
+            else
+            {
+                return true;
+            }
+        }
+        if (!GameStart.INSTANCE.IsCard(card))
         {
             return card.transform.parent.name == "PlayerField";
         }

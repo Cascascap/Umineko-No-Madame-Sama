@@ -115,7 +115,7 @@ public class GameStart : MonoBehaviour
         {
             if (SlotWithCard(slot))
             {
-                GameObject cardGameObject = slot.transform.GetChild(3).gameObject;
+                GameObject cardGameObject = GetCardGameObject(slot);
                 CardObject co = FindCardObject(cardGameObject);
                 if(co.card.ImageName == EnemyLeader)
                 {
@@ -149,6 +149,24 @@ public class GameStart : MonoBehaviour
             counterPanel.transform.SetSiblingIndex(2);
         }
 
+    }
+
+    public GameObject GetCardGameObject(GameObject slot)
+    {
+        for(int i=0; i<slot.transform.childCount; i++)
+        {
+            GameObject child = slot.transform.GetChild(i).gameObject;
+            if (IsCard(child))
+            {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    public bool IsCard(GameObject card)
+    {
+        return card.name.EndsWith("Card");
     }
 
     public void RemoveShield(GameObject go)
@@ -238,7 +256,7 @@ public class GameStart : MonoBehaviour
     internal List<CardObject> FindCardsInGameByTag(Deck.TagType stake)
     {
         List<CardObject> ret = new List<CardObject>();
-        foreach(CardObject co in GameStart.INSTANCE.CardObjectsInGame)
+        foreach(CardObject co in CardObjectsInGame)
         {
             if (co.card.Tags.Contains(stake))
             {
@@ -433,7 +451,7 @@ public class GameStart : MonoBehaviour
     //Returns true if the attack destroys the card
     public bool Attack(GameObject defenderSlot, int damage)
     {
-        GameObject cardObject = defenderSlot.transform.GetChild(3).gameObject;
+        GameObject cardObject = GetCardGameObject(defenderSlot);
         if (HasShield(cardObject))
         {
             RemoveShield(cardObject);
@@ -475,7 +493,7 @@ public class GameStart : MonoBehaviour
         {
             hpText.text = newHP.ToString();
             co.currentHP = newHP;
-            if (EnemyLeader == defenderSlot.transform.GetChild(3).GetComponent<Image>().sprite.name)
+            if (EnemyLeader == GetCardGameObject(defenderSlot).GetComponent<Image>().sprite.name)
             {
                 EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>().text = newHP.ToString();
                 if (newHP < EnemyDeck.leaderCard.HP / 3)
@@ -598,6 +616,7 @@ public class GameStart : MonoBehaviour
                 }
             }
             UpdateCounters();
+            HidePosibleMovements();
             PlayerLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("PlayerLifePoints");
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
             GameState = State.Moving;
@@ -963,6 +982,23 @@ public class GameStart : MonoBehaviour
         return ret;
     }
 
+    public void HidePosibleMovements()
+    {
+        for (int i = 0; i < PlayerField.transform.childCount; i++)
+        {
+            GameObject slot = PlayerField.transform.GetChild(i).gameObject;
+            for (int j = 0; j < slot.transform.childCount; j++)
+            {
+                GameObject slotChild = slot.transform.GetChild(j).gameObject;
+                if (slotChild.name == "MovementGuide")
+                {
+                    GameObject.Destroy(slotChild);
+                }
+
+            }
+        }
+    }
+
     private Card GetCardInDeckByName(Deck deck, string cardName)
     {
         Card drawnCard = null;
@@ -987,7 +1023,7 @@ public class GameStart : MonoBehaviour
     {
         Card drawnCard = null;
         Stack<Card> newStack = new Stack<Card>();
-        Deck deck = GameStart.INSTANCE.PlayerDeck;
+        Deck deck = PlayerDeck;
         while (deck.cards.Count != 0)
         {
             Card card = deck.cards.Pop();
@@ -1048,8 +1084,8 @@ public class GameStart : MonoBehaviour
 
     public bool CanAttack(GameObject slot, GameObject defender)
     {
-        GameObject go = slot.transform.GetChild(3).gameObject;
-        CardObject co = GameStart.INSTANCE.FindCardObject(go);
+        GameObject go = GetCardGameObject(slot);
+        CardObject co = FindCardObject(go);
         if (EffectListener.INSTANCE.CanAttackFromAnywhereList.Contains(co.card))
         {
             return true;
