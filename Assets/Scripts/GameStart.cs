@@ -103,10 +103,30 @@ public class GameStart : MonoBehaviour
     private void DamageCard(CardObject co, int damage)
     {
         co.currentHP -= damage;
-        if (co.currentHP <= 0)
+        if (co.card.ImageName == EnemyLeader)
         {
-            DestroyCard(co);
+            TextMeshProUGUI lifePointsText = EnemyLifePoints.GetComponent<TextMeshProUGUI>(); 
+            if (co.currentHP <= 0)
+            {
+                lifePointsText.text = "0";
+                DestroyCard(co);
+                Victory();
+            }
+            else
+            {
+
+                lifePointsText.text = co.currentHP.ToString();
+            }
+
         }
+        else
+        {
+            if (co.currentHP <= 0)
+            {
+                DestroyCard(co);
+            }
+        }
+        
     }
 
     public void UpdateAllStatBoxes()
@@ -582,6 +602,11 @@ public class GameStart : MonoBehaviour
             GameObject go = EnemyGraveyard.transform.GetChild(i).gameObject;
             SaveGameObject(go);
         }
+        for (int i = 0; i < PlayerGraveyard.transform.childCount; i++)
+        {
+            GameObject go = PlayerGraveyard.transform.GetChild(i).gameObject;
+            SaveGameObject(go);
+        }
         PlayerPrefs.SetString("PlayerLifePoints", PlayerLifePoints.GetComponent<TextMeshProUGUI>().text);
         PlayerPrefs.SetString("EnemyLifePoints", EnemyLifePoints.GetComponent<TextMeshProUGUI>().text);
     }
@@ -608,7 +633,18 @@ public class GameStart : MonoBehaviour
             {
                 GameObject go = EnemyGraveyard.transform.GetChild(i).gameObject;
                 LoadGameObject(go);
-                if (go.transform.parent.name != "EnemyGraveyard")
+                if (go.transform.parent.name != EnemyGraveyard.name)
+                {
+                    Card c = FindCard(go.GetComponent<Image>().sprite.name);
+                    CardObject co = new CardObject(go, c);
+                    CardObjectsInGame.Add(co);
+                }
+            }
+            for (int i = 0; i < PlayerGraveyard.transform.childCount; i++)
+            {
+                GameObject go = PlayerGraveyard.transform.GetChild(i).gameObject;
+                LoadGameObject(go);
+                if (go.transform.parent.name != PlayerField.name)
                 {
                     Card c = FindCard(go.GetComponent<Image>().sprite.name);
                     CardObject co = new CardObject(go, c);
@@ -1042,7 +1078,7 @@ public class GameStart : MonoBehaviour
 
     public bool SlotWithCard(GameObject go)
     {
-        return go.transform.childCount > 3;
+        return GameStart.INSTANCE.GetCardGameObject(go)!=null;
     }
 
     public void RearrangeHand(bool playerHand)
