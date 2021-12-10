@@ -3064,6 +3064,7 @@ MonoBehaviour:
   EnemyGraveyard: {fileID: 1233635908}
   PlayerField: {fileID: 1974808173}
   EnemyField: {fileID: 635710433}
+  Background: {fileID: 86369689}
   CardPrefab: {fileID: 8151410570973560199, guid: b2f15179a8fbfba44876c409bfc81b80,
     type: 3}
   EndTurnButton: {fileID: 734725848}
@@ -3118,8 +3119,6 @@ MonoBehaviour:
   Turn: 0
   EnemyLeader: 
   PlayerLeader: 
-  PlayerHand: {fileID: 0}
-  EnemyHand: {fileID: 0}
 --- !u!114 &352503001
 MonoBehaviour:
   m_ObjectHideFlags: 0

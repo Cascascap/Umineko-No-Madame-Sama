@@ -12,7 +12,7 @@ public class GameStart : MonoBehaviour
     public GameObject PlayerHandArea, EnemyHandArea;
     public GameObject CardSlot00, CardSlot01, CardSlot02, CardSlot10, CardSlot11, CardSlot12, CardSlot20, CardSlot21, CardSlot22, CardSlot30, CardSlot31, CardSlot32;
     public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot, PlayerGraveyard, EnemyGraveyard, PlayerField, EnemyField;
-
+    public GameObject Background;
 
     public GameObject CardPrefab;
     public Button EndTurnButton;
@@ -57,7 +57,7 @@ public class GameStart : MonoBehaviour
         Button UndoBtn = UndoButton.GetComponent<Button>();
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
-        EnemyLeader = "Kinzo";
+        EnemyLeader = "Lambda";
         PlayerLeader = "Beatrice";
         PlayerDeck = CreateDeck(PlayerLeader);
         DecksInGame.Add(PlayerDeck);
@@ -88,6 +88,15 @@ public class GameStart : MonoBehaviour
         RearrangeHand(false);
         TextMeshProUGUI leaderStartingHP = EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>();
         leaderStartingHP.text = enemyLeaderCardObject.card.HP.ToString();
+        PlayMusic(enemyLeader);
+    }
+
+    private void PlayMusic(string enemyLeader)
+    {
+        AudioSource ass = Background.GetComponent<AudioSource>();
+        AudioClip ac = (AudioClip)Resources.Load("Music/"+enemyLeader+"Theme", typeof(AudioClip));
+        ass.clip = ac;
+        ass.Play();
     }
 
     internal void DamageAllEnemyCards(int damage, bool playerCard)
