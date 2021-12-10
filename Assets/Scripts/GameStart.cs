@@ -57,27 +57,38 @@ public class GameStart : MonoBehaviour
         Button UndoBtn = UndoButton.GetComponent<Button>();
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
-        EnemyLeader = "Lambda";
+        EnemyLeader = "Kinzo";
         PlayerLeader = "Beatrice";
         PlayerDeck = CreateDeck(PlayerLeader);
-        EnemyDeck = CreateDeck(EnemyLeader);
         DecksInGame.Add(PlayerDeck);
-        DecksInGame.Add(EnemyDeck);
         CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
         CardObjectsInGame.Add(leaderCardObject);
-        CardObject enemyLeaderCardObject = CreateCardInSlot(EnemyLeader, CardSlot11);
-        CardObjectsInGame.Add(enemyLeaderCardObject);
         PlayerHand = new Hand();
-        EnemyHand = new Hand();
-        EnemyHand.cards = Draw(EnemyDeck, STARTING_CARDS_HAND);
-        RearrangeHand(false);
         PlayerHand.cards = Draw(PlayerDeck, STARTING_CARDS_HAND);
+        InitializeLeader(EnemyLeader);
         RearrangeHand(true);
         InitializeSlotMap();
         RecalculateCosts();
         SaveState();
     }
 
+    private void InitializeLeader(string enemyLeader)
+    {
+        Sprite leaderSprite = (Sprite)Resources.Load("Leaders/" + enemyLeader + "2", typeof(Sprite));
+        EnemyLeaderImage.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = enemyLeader;
+        Image enemyLeaderImage = EnemyLeaderImage.transform.GetChild(1).GetComponent<Image>();
+        enemyLeaderImage.sprite = leaderSprite;
+
+        EnemyDeck = CreateDeck(EnemyLeader);
+        DecksInGame.Add(EnemyDeck);
+        CardObject enemyLeaderCardObject = CreateCardInSlot(EnemyLeader, CardSlot11);
+        CardObjectsInGame.Add(enemyLeaderCardObject);
+        EnemyHand = new Hand();
+        EnemyHand.cards = Draw(EnemyDeck, STARTING_CARDS_HAND);
+        RearrangeHand(false);
+        TextMeshProUGUI leaderStartingHP = EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>();
+        leaderStartingHP.text = enemyLeaderCardObject.card.HP.ToString();
+    }
 
     internal void DamageAllEnemyCards(int damage, bool playerCard)
     {
@@ -666,17 +677,27 @@ public class GameStart : MonoBehaviour
         foreach (CardObject co in CardObjectsInGame)
         {
             GameObject counterPanel = GetCounterPanel(co.GameObject);
-            if (co.counters == 0 && co.GameObject.transform.childCount > 0)
+            if (co.counters == 0)
             {
                 if (counterPanel != null)
                 {
                     GameObject.Destroy(counterPanel);
+                }
+                else
+                {
+                    continue;
                 }
             }
             else
             {
                 if (counterPanel != null)
                 {
+                    TextMeshProUGUI counterText = GetCounterText(counterPanel);
+                    counterText.text = co.counters.ToString();
+                }
+                else
+                {
+                    counterPanel = CreateCounterPanel(co);
                     TextMeshProUGUI counterText = GetCounterText(counterPanel);
                     counterText.text = co.counters.ToString();
                 }
@@ -1187,7 +1208,7 @@ public class GameStart : MonoBehaviour
 
     internal void RemoveCounter(CardObject co, int numberOfCounters)
     {
-        GameObject cardCounterPanel = co.GameObject.transform.GetChild(0).gameObject;
+        GameObject cardCounterPanel = GetCounterPanel(co.GameObject);
         GameObject imageObject = cardCounterPanel.transform.GetChild(0).gameObject;
         GameObject counterObject = imageObject.transform.GetChild(1).gameObject;
 
@@ -1217,25 +1238,32 @@ public class GameStart : MonoBehaviour
         }
         else
         {
-            GameObject cardCounterPanel = Instantiate(CountersPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            GameObject imageObject = cardCounterPanel.transform.GetChild(0).gameObject;
-            imageObject.transform.localPosition = new Vector3(-35, 55, 0);
-            imageObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(30, 30, 0);
-            GameObject plusObject = imageObject.transform.GetChild(0).gameObject;
-            GameObject counterObject = imageObject.transform.GetChild(1).gameObject;
-
-            plusObject.transform.localPosition = new Vector3((float)-8.5, (float)-0.1, 0);
-            plusObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(13, 30, 0);
-            counterObject.transform.localPosition = new Vector3(7, 0, 0);
-            counterObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(17, 30, 0);
-            counterText = counterObject.GetComponent<TextMeshProUGUI>();
-            cardCounterPanel.transform.SetParent(co.GameObject.transform, false);
+            counterPanel = CreateCounterPanel(co);
+            counterText = GetCounterText(counterPanel);
         }
         co.counters += numberOfCounters;
         co.currentHP += numberOfCounters;
         co.currentATK += numberOfCounters;
         counterText.text = co.counters.ToString();
         UpdateStatBoxes(co, co.GameObject.transform.parent.gameObject);
+    }
+
+    private GameObject CreateCounterPanel(CardObject co)
+    {
+        GameObject cardCounterPanel = Instantiate(CountersPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        GameObject imageObject = cardCounterPanel.transform.GetChild(0).gameObject;
+        imageObject.transform.localPosition = new Vector3(-35, 55, 0);
+        imageObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(30, 30, 0);
+        GameObject plusObject = imageObject.transform.GetChild(0).gameObject;
+        GameObject counterObject = imageObject.transform.GetChild(1).gameObject;
+
+        plusObject.transform.localPosition = new Vector3((float)-8.5, (float)-0.1, 0);
+        plusObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(13, 30, 0);
+        counterObject.transform.localPosition = new Vector3(7, 0, 0);
+        counterObject.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(17, 30, 0);
+        TextMeshProUGUI counterText = counterObject.GetComponent<TextMeshProUGUI>();
+        cardCounterPanel.transform.SetParent(co.GameObject.transform, false);
+        return cardCounterPanel;
     }
 
     public GameObject FindFreeSlot(bool enemyField)

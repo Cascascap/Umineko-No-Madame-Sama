@@ -300,7 +300,7 @@ public class AIFunctions : MonoBehaviour
     {
         foreach (CardObject co in GameStart.INSTANCE.CardObjectsInGame)
         {
-            if (co.card.Tags.Contains(targetTag))
+            if (co.card.Tags.Contains(targetTag) || targetTag == TagType.All)
             {
                 return co;
             }

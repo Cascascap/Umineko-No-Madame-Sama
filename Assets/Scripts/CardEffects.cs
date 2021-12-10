@@ -183,10 +183,53 @@ public class CardEffects
     {
         Debug.Log("Once per turn: Grants a shield to an ally card");
         CardObject bestTarget = null;
+        bool cardsInFrontRow = false;
         for(int i=0; i<GameStart.INSTANCE.CardObjectsInGame.Count; i++)
         {
-
+            CardObject candidate = GameStart.INSTANCE.CardObjectsInGame[i];
+            if(candidate.GameObject.transform.parent.parent.name != GameStart.INSTANCE.EnemyField.name || GameStart.INSTANCE.HasShield(candidate.GameObject))
+            {
+                continue;
+            }
+            string yPosition = candidate.GameObject.transform.parent.name.Substring(8, 1);
+            if (yPosition == "1")
+            {
+                if(bestTarget == null || cardsInFrontRow==false)
+                {
+                    bestTarget = candidate;
+                }
+                else
+                {
+                    if(candidate.currentATK > bestTarget.currentATK)
+                    {
+                        bestTarget = candidate;
+                    }
+                }
+                cardsInFrontRow = true;
+            }
+            else
+            {
+                if (cardsInFrontRow)
+                {
+                    continue;
+                }
+                else
+                {
+                    if(bestTarget == null)
+                    {
+                        bestTarget = candidate;
+                    }
+                    else
+                    {
+                        if (candidate.currentATK > bestTarget.currentATK)
+                        {
+                            bestTarget = candidate;
+                        }
+                    }
+                }
+            }
         }
+        GameStart.INSTANCE.CreateShield(bestTarget.GameObject);
         return true;
     }
 
@@ -227,7 +270,36 @@ public class CardEffects
 
     internal static bool NanjoEffect(Card arg)
     {
-        Debug.Log("Once per turn, heal ally to max hp");
+        CardObject bestTarget = null;
+        for (int i = 0; i < GameStart.INSTANCE.CardObjectsInGame.Count; i++)
+        {
+            CardObject candidate = GameStart.INSTANCE.CardObjectsInGame[i];
+            if (candidate.GameObject.transform.parent.parent.name != GameStart.INSTANCE.EnemyField.name)
+            {
+                continue;
+            }
+            else if(candidate.card.ImageName == GameStart.INSTANCE.EnemyLeader)
+            {
+                bestTarget = candidate;
+                break;
+            }
+            else
+            {
+                if(bestTarget == null)
+                {
+                    bestTarget = candidate;
+                }
+                else
+                {
+                    if((bestTarget.card.HP + bestTarget.counters - bestTarget.currentHP) < (candidate.card.HP + candidate.counters - candidate.currentHP))
+                    {
+                        bestTarget = candidate;
+                    }
+                }
+            }
+        }
+        bestTarget.currentHP = bestTarget.card.HP + bestTarget.counters;
+        GameStart.INSTANCE.UpdateStatBoxes(bestTarget, bestTarget.GameObject.transform.parent.gameObject);
         return true;
     }
 
