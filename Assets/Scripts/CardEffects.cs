@@ -10,19 +10,19 @@ public class CardEffects
     internal static bool BeatriceEffect(Card c)
     {
         Debug.Log("Draw stake");
-        List<Card> drawnCards =  GameStart.INSTANCE.Draw(GameStart.INSTANCE.PlayerDeck, 1, Deck.TagType.Stake);
+        List<Card> drawnCards =  Game.INSTANCE.Draw(Game.INSTANCE.PlayerDeck, 1, Deck.TagType.Stake);
         if(drawnCards.Count == 0)
         {
             return false;
         }
-        GameStart.INSTANCE.RearrangeHand(true);
+        Game.INSTANCE.RearrangeHand(true);
         return true;
     }
 
     internal static bool AsmodeusEffect(Card c)
     {
-        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(c.GetTargetCard());
-        GameStart.INSTANCE.AddCounterEffect(targetCardObject, 1);
+        CardObject targetCardObject = Game.INSTANCE.FindCardObject(c.GetTargetCard());
+        Game.INSTANCE.AddCounterEffect(targetCardObject, 1);
         return true;
     }
 
@@ -30,25 +30,25 @@ public class CardEffects
     {
         GameObject target = c.GetTargetCard();
         int counters = c.GetCounters();
-        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(target);
-        GameStart.INSTANCE.AddCounter(targetCardObject, counters);
+        CardObject targetCardObject = Game.INSTANCE.FindCardObject(target);
+        Game.INSTANCE.AddCounter(targetCardObject, counters);
         return true;
     }
 
     internal static bool LionEffect(Card c)
     {
         GameObject WillGO = null;
-        GameObject emptySlot = GameStart.INSTANCE.GetEmptySlot(GameStart.INSTANCE.EnemyField);
+        GameObject emptySlot = Game.INSTANCE.GetEmptySlot(Game.INSTANCE.EnemyField);
         bool willInGame = false;
         if (emptySlot == null)
         {
             return false;
         }
-        foreach(Card cardInGame in GameStart.INSTANCE.CardsInGame)
+        foreach(Card cardInGame in Game.INSTANCE.CardsInGame)
         {
             if(cardInGame.ImageName == "Will")
             {
-                List<CardObject> cos = GameStart.INSTANCE.FindCardObject(cardInGame.ImageName);
+                List<CardObject> cos = Game.INSTANCE.FindCardObject(cardInGame.ImageName);
                 if(cos.Count != 0)
                 {
                     willInGame = true;
@@ -58,9 +58,9 @@ public class CardEffects
         }
         if (!willInGame)
         {
-            for(int i=0; i<GameStart.INSTANCE.EnemyGraveyard.transform.childCount; i++)
+            for(int i=0; i<Game.INSTANCE.EnemyGraveyard.transform.childCount; i++)
             {
-                GameObject child = GameStart.INSTANCE.EnemyGraveyard.transform.GetChild(i).gameObject;
+                GameObject child = Game.INSTANCE.EnemyGraveyard.transform.GetChild(i).gameObject;
                 if (child.name.Contains("Will"))
                 {
                     WillGO = child;
@@ -69,9 +69,9 @@ public class CardEffects
             }
             if(WillGO == null)
             {
-                for (int i = 0; i < GameStart.INSTANCE.EnemyHandArea.transform.childCount; i++)
+                for (int i = 0; i < Game.INSTANCE.EnemyHandArea.transform.childCount; i++)
                 {
-                    GameObject child = GameStart.INSTANCE.EnemyHandArea.transform.GetChild(i).gameObject;
+                    GameObject child = Game.INSTANCE.EnemyHandArea.transform.GetChild(i).gameObject;
                     if (child.name.Contains("Will"))
                     {
                         WillGO = child;
@@ -83,23 +83,23 @@ public class CardEffects
             }
             if(WillGO == null)
             {
-                List<Card> willCardList = GameStart.INSTANCE.Draw(GameStart.INSTANCE.EnemyDeck, 1, cardName:"Will");
+                List<Card> willCardList = Game.INSTANCE.Draw(Game.INSTANCE.EnemyDeck, 1, cardName:"Will");
                 Card willCard = willCardList[0];
-                GameStart.INSTANCE.CreateCardInSlot(willCard.ImageName, emptySlot);
-                WillGO = GameStart.INSTANCE.GetCardGameObject(emptySlot); 
+                Game.INSTANCE.CreateCardInSlot(willCard.ImageName, emptySlot);
+                WillGO = Game.INSTANCE.GetCardGameObject(emptySlot); 
                 CardObject cow = new CardObject(WillGO, willCard);
-                GameStart.INSTANCE.CardObjectsInGame.Add(cow);
-                GameStart.INSTANCE.UpdateStatBoxes(cow, emptySlot);
-                GameStart.INSTANCE.RecalculateCosts();
+                Game.INSTANCE.CardObjectsInGame.Add(cow);
+                Game.INSTANCE.UpdateStatBoxes(cow, emptySlot);
+                Game.INSTANCE.RecalculateCosts();
                 return true;
             }
             WillGO.transform.SetParent(emptySlot.transform, false);
             WillGO.transform.localPosition = new Vector3(0, 0, 0);
-            Card willCard2 = GameStart.INSTANCE.FindCard("Will");
+            Card willCard2 = Game.INSTANCE.FindCard("Will");
             CardObject co = new CardObject(WillGO, willCard2);
-            GameStart.INSTANCE.CardObjectsInGame.Add(co);
-            GameStart.INSTANCE.UpdateStatBoxes(co, emptySlot);
-            GameStart.INSTANCE.RecalculateCosts();
+            Game.INSTANCE.CardObjectsInGame.Add(co);
+            Game.INSTANCE.UpdateStatBoxes(co, emptySlot);
+            Game.INSTANCE.RecalculateCosts();
         }
         return true;
     }
@@ -116,8 +116,8 @@ public class CardEffects
 
     internal static bool VirgiliaEffect(Card c)
     {
-        GameStart.INSTANCE.DamageAllEnemyCards(4, true);
-        GameStart.INSTANCE.UpdateAllStatBoxes();
+        Game.INSTANCE.DamageAllEnemyCards(4, true);
+        Game.INSTANCE.UpdateAllStatBoxes();
         return true;
     }
 
@@ -125,7 +125,7 @@ public class CardEffects
     {
         Debug.Log("");
         GameObject target = c.GetTargetCard();
-        CardObject co = GameStart.INSTANCE.FindCardObject(target);
+        CardObject co = Game.INSTANCE.FindCardObject(target);
         if(co.counters == 0)
         {
             return false;
@@ -137,36 +137,36 @@ public class CardEffects
             {
                 countersToRemove = 2;
             }
-            GameStart.INSTANCE.RemoveCounter(co, countersToRemove);
-            CardObject leviathanCO = GameStart.INSTANCE.FindCardObject(GameStart.INSTANCE.SelectedCardGameObject);
-            GameStart.INSTANCE.AddCounter(leviathanCO, countersToRemove);
+            Game.INSTANCE.RemoveCounter(co, countersToRemove);
+            CardObject leviathanCO = Game.INSTANCE.FindCardObject(Game.INSTANCE.SelectedCardGameObject);
+            Game.INSTANCE.AddCounter(leviathanCO, countersToRemove);
             return true;
         }
     }
 
     internal static bool LuciferEffect(Card c)
     {
-        List<CardObject> stakes = GameStart.INSTANCE.FindCardsInGameByTag(Deck.TagType.Stake);
+        List<CardObject> stakes = Game.INSTANCE.FindCardsInGameByTag(Deck.TagType.Stake);
         GameObject luciferGO = c.GetTargetCard();
-        CardObject lucifer = GameStart.INSTANCE.FindCardObject(luciferGO);
-        GameStart.INSTANCE.AddCounter(lucifer, (stakes.Count-1)*2);
+        CardObject lucifer = Game.INSTANCE.FindCardObject(luciferGO);
+        Game.INSTANCE.AddCounter(lucifer, (stakes.Count-1)*2);
         return true;
     }
 
     internal static bool MammonEffect(Card c)
     {
-        GameStart.INSTANCE.Draw(GameStart.INSTANCE.PlayerDeck, 1);
-        GameStart.INSTANCE.RearrangeHand(true);
+        Game.INSTANCE.Draw(Game.INSTANCE.PlayerDeck, 1);
+        Game.INSTANCE.RearrangeHand(true);
         return true;
     }
 
     internal static bool GenjiEffect(Card arg)
     {
-        foreach (CardObject co in GameStart.INSTANCE.CardObjectsInGame)
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
         {
             if (co.card.ImageName == "Kinzo")
             {
-                GameStart.INSTANCE.AddCounterEffect(co, 3);
+                Game.INSTANCE.AddCounterEffect(co, 3);
                 return true;
             }
         }
@@ -184,10 +184,10 @@ public class CardEffects
         Debug.Log("Once per turn: Grants a shield to an ally card");
         CardObject bestTarget = null;
         bool cardsInFrontRow = false;
-        for(int i=0; i<GameStart.INSTANCE.CardObjectsInGame.Count; i++)
+        for(int i=0; i<Game.INSTANCE.CardObjectsInGame.Count; i++)
         {
-            CardObject candidate = GameStart.INSTANCE.CardObjectsInGame[i];
-            if(candidate.GameObject.transform.parent.parent.name != GameStart.INSTANCE.EnemyField.name || GameStart.INSTANCE.HasShield(candidate.GameObject))
+            CardObject candidate = Game.INSTANCE.CardObjectsInGame[i];
+            if(candidate.GameObject.transform.parent.parent.name != Game.INSTANCE.EnemyField.name || Game.INSTANCE.HasShield(candidate.GameObject))
             {
                 continue;
             }
@@ -229,17 +229,17 @@ public class CardEffects
                 }
             }
         }
-        GameStart.INSTANCE.CreateShield(bestTarget.GameObject);
+        Game.INSTANCE.CreateShield(bestTarget.GameObject);
         return true;
     }
 
     internal static bool GohdaEffect(Card arg)
     {
-        foreach(CardObject co in GameStart.INSTANCE.CardObjectsInGame)
+        foreach(CardObject co in Game.INSTANCE.CardObjectsInGame)
         {
             if(co.GameObject.transform.parent.parent.name == "EnemyField")
             {
-                GameStart.INSTANCE.AddCounterEffect(co, 1);
+                Game.INSTANCE.AddCounterEffect(co, 1);
             }
         }
         return true;
@@ -248,37 +248,37 @@ public class CardEffects
     internal static bool KanonEffect(Card c)
     {
         GameObject target = c.GetTargetCard();
-        CardObject kanon = GameStart.INSTANCE.FindCardObject(target);
-        GameStart.INSTANCE.AddCounter(kanon, 1);
+        CardObject kanon = Game.INSTANCE.FindCardObject(target);
+        Game.INSTANCE.AddCounter(kanon, 1);
         return true;
     }
 
     internal static bool SatanEffect(Card c)
     {
         GameObject target = c.GetTargetCard();
-        CardObject satanCO = GameStart.INSTANCE.FindCardObject(target);
-        GameStart.INSTANCE.AddCounter(satanCO, 1);
+        CardObject satanCO = Game.INSTANCE.FindCardObject(target);
+        Game.INSTANCE.AddCounter(satanCO, 1);
         return true;
     }
 
     internal static bool KumasawaEffect(Card arg)
     {
-        GameStart.INSTANCE.DamageAllEnemyCards(1, false);
-        GameStart.INSTANCE.UpdateAllStatBoxes();
+        Game.INSTANCE.DamageAllEnemyCards(1, false);
+        Game.INSTANCE.UpdateAllStatBoxes();
         return true;
     }
 
     internal static bool NanjoEffect(Card arg)
     {
         CardObject bestTarget = null;
-        for (int i = 0; i < GameStart.INSTANCE.CardObjectsInGame.Count; i++)
+        for (int i = 0; i < Game.INSTANCE.CardObjectsInGame.Count; i++)
         {
-            CardObject candidate = GameStart.INSTANCE.CardObjectsInGame[i];
-            if (candidate.GameObject.transform.parent.parent.name != GameStart.INSTANCE.EnemyField.name)
+            CardObject candidate = Game.INSTANCE.CardObjectsInGame[i];
+            if (candidate.GameObject.transform.parent.parent.name != Game.INSTANCE.EnemyField.name)
             {
                 continue;
             }
-            else if(candidate.card.ImageName == GameStart.INSTANCE.EnemyLeader)
+            else if(candidate.card.ImageName == Game.INSTANCE.EnemyLeader)
             {
                 bestTarget = candidate;
                 break;
@@ -299,14 +299,14 @@ public class CardEffects
             }
         }
         bestTarget.currentHP = bestTarget.card.HP + bestTarget.counters;
-        GameStart.INSTANCE.UpdateStatBoxes(bestTarget, bestTarget.GameObject.transform.parent.gameObject);
+        Game.INSTANCE.UpdateStatBoxes(bestTarget, bestTarget.GameObject.transform.parent.gameObject);
         return true;
     }
 
     internal static bool RonoveEffect(Card c)
     {
-        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(c.GetTargetCard());
-        GameStart.INSTANCE.CreateShield(targetCardObject.GameObject);
+        CardObject targetCardObject = Game.INSTANCE.FindCardObject(c.GetTargetCard());
+        Game.INSTANCE.CreateShield(targetCardObject.GameObject);
         return true;
     }
 
@@ -324,13 +324,13 @@ public class CardEffects
 
     internal static bool DianaEffect(Card c)
     {
-        List<CardObject> willcos = GameStart.INSTANCE.FindCardObject("Will");
+        List<CardObject> willcos = Game.INSTANCE.FindCardObject("Will");
         if(willcos.Count == 0)
         {
             return false;
         }
         CardObject willco = willcos[0];
-        GameStart.INSTANCE.AddCounter(willco, 2);
+        Game.INSTANCE.AddCounter(willco, 2);
         return true;
     }
 
@@ -342,11 +342,11 @@ public class CardEffects
 
     internal static bool LambdaEffect(Card c)
     {
-        GameObject gameSlot = GameStart.INSTANCE.FindFreeSlot(true);
+        GameObject gameSlot = Game.INSTANCE.FindFreeSlot(true);
         if (gameSlot != null)
         {
-            CardObject co = GameStart.INSTANCE.CreateCardInSlot("Konpeitou", gameSlot);
-            GameStart.INSTANCE.CardObjectsInGame.Add(co);
+            CardObject co = Game.INSTANCE.CreateCardInSlot("Konpeitou", gameSlot);
+            Game.INSTANCE.CardObjectsInGame.Add(co);
             return true;
         }
         else
@@ -358,11 +358,11 @@ public class CardEffects
     internal static bool BelphegorEffect(Card c)
     {
         GameObject target = c.GetTargetCard();
-        CardObject targetCardObject = GameStart.INSTANCE.FindCardObject(target);
+        CardObject targetCardObject = Game.INSTANCE.FindCardObject(target);
         if (!targetCardObject.acted)
         {
             targetCardObject.currentHP = targetCardObject.card.HP + targetCardObject.counters;
-            GameStart.INSTANCE.UpdateStatBoxes(targetCardObject, target.transform.parent.gameObject);
+            Game.INSTANCE.UpdateStatBoxes(targetCardObject, target.transform.parent.gameObject);
             return true;
         }
         else

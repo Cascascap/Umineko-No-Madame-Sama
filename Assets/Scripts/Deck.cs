@@ -67,7 +67,7 @@ public class Deck
     }
     private void AddCardRegister(Card card, bool leader = false, int times = 1)
     {
-        GameStart.INSTANCE.CardsInGame.Add(card);
+        Game.INSTANCE.CardsInGame.Add(card);
         if (!leader)
         {
             for (int i = 0; i < times; i++)

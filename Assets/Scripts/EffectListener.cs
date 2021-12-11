@@ -23,7 +23,7 @@ public class EffectListener
         bool effectAllowed = true;
         foreach (Card c in EffectStopperList)
         {
-            List<CardObject> cos = GameStart.INSTANCE.FindCardObject(c.ImageName);
+            List<CardObject> cos = Game.INSTANCE.FindCardObject(c.ImageName);
             foreach(CardObject co in cos)
             {
                 c.InitializeEffectParametrs();
@@ -55,7 +55,7 @@ public class EffectListener
     {
         foreach (Card c in TurnEndingList)
         {
-            List<CardObject> co = GameStart.INSTANCE.FindCardObject(c.ImageName);
+            List<CardObject> co = Game.INSTANCE.FindCardObject(c.ImageName);
             foreach(CardObject cin in co)
             {
                 c.InitializeEffectParametrs();

@@ -27,6 +27,6 @@ public class CardObject
 
     internal bool IsEnemyCard()
     {
-        return GameObject.transform.parent.parent.name == GameStart.INSTANCE.EnemyField.name;
+        return GameObject.transform.parent.parent.name == Game.INSTANCE.EnemyField.name;
     }
 }

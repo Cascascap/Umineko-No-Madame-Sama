@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameStart : MonoBehaviour
+public class Game : MonoBehaviour
 {
     public GameObject PlayerLeaderImage, EnemyLeaderImage, PlayerLifePoints, EnemyLifePoints;
     public GameObject PlayerHandArea, EnemyHandArea;
@@ -37,7 +37,7 @@ public class GameStart : MonoBehaviour
     public State GameState = State.Moving;
     public int Turn;
 
-    public static GameStart INSTANCE = null;
+    public static Game INSTANCE = null;
 
     //TODO: move to a leader class
     public string EnemyLeader, PlayerLeader;
@@ -51,13 +51,14 @@ public class GameStart : MonoBehaviour
             INSTANCE = this;
         }
         Debug.Log("Starting");
+        string enemyLeaderName = PlayerPrefs.GetString("EnemyName");
         Turn = 1;
         EffectListener effectListener = new EffectListener();
         Button EndTurnbtn = EndTurnButton.GetComponent<Button>();
         Button UndoBtn = UndoButton.GetComponent<Button>();
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
-        EnemyLeader = "Lambda";
+        EnemyLeader = enemyLeaderName;
         PlayerLeader = "Beatrice";
         PlayerDeck = CreateDeck(PlayerLeader);
         DecksInGame.Add(PlayerDeck);
@@ -576,7 +577,7 @@ public class GameStart : MonoBehaviour
         if (GameState != State.EnemyTurn)
         {
             GameState = State.EnemyTurn;
-            CardZoom.RemovePreviousMark();
+            CardFunctions.RemovePreviousMark();
             EffectListener.INSTANCE.OnTrunEnd();
             AIFunctions.INSTANCE.TakeTurn(EnemyDeck);
             Turn++;
@@ -677,7 +678,7 @@ public class GameStart : MonoBehaviour
             EnemyLifePoints.GetComponent<TextMeshProUGUI>().text = PlayerPrefs.GetString("EnemyLifePoints");
             GameState = State.Moving;
             CardUsingEffect = null;
-            CardZoom.RemovePreviousMark();
+            CardFunctions.RemovePreviousMark();
         }
     }
 
@@ -907,7 +908,7 @@ public class GameStart : MonoBehaviour
         Image image = go.GetComponent<Image>();
         image.sprite = enemyLeaderSprite;
         go.transform.SetParent(cardSlot.transform, false);
-        CardZoom script = go.GetComponent<CardZoom>();
+        CardFunctions script = go.GetComponent<CardFunctions>();
         script.ZoomedCard = ZoomedCard;
         Card card = FindCard(cardName);
         CardObject cardObject = new CardObject(go, card);
@@ -940,7 +941,7 @@ public class GameStart : MonoBehaviour
         rectTransform.sizeDelta = new Vector2(112, 160);
         Image image = go.GetComponent<Image>();
         image.sprite = sprite;
-        CardZoom script = go.GetComponent<CardZoom>();
+        CardFunctions script = go.GetComponent<CardFunctions>();
         script.ZoomedCard = ZoomedCard;
         return go;
     }
@@ -1039,7 +1040,7 @@ public class GameStart : MonoBehaviour
                 Image image = cardBack.GetComponent<Image>();
                 image.sprite = cardBackSprite;
                 go.transform.SetParent(EnemyHandArea.transform, false);
-                CardZoom script = cardBack.GetComponent<CardZoom>();
+                CardFunctions script = cardBack.GetComponent<CardFunctions>();
                 script.ZoomedCard = ZoomedCard;
                 cardBack.transform.SetParent(go.transform, false);
 
@@ -1108,7 +1109,7 @@ public class GameStart : MonoBehaviour
 
     public bool SlotWithCard(GameObject go)
     {
-        return GameStart.INSTANCE.GetCardGameObject(go)!=null;
+        return Game.INSTANCE.GetCardGameObject(go)!=null;
     }
 
     public void RearrangeHand(bool playerHand)
