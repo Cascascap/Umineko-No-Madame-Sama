@@ -727,8 +727,11 @@ public class Game : MonoBehaviour
     {
         Debug.Log("Using " + co.card.ImageName + "'s effect");
         Card c = co.card;
-        c.InitializeEffectParametrs();
-        c.SetTargetCard(objective);
+        if(objective != null)
+        {
+            c.InitializeEffectParametrs();
+            c.SetTargetCard(objective);
+        }
         bool effectSuccess = co.card.Effect(c);
         if (effectSuccess)
         {

@@ -284,16 +284,122 @@ public class AIFunctions : MonoBehaviour
                 }
                 else
                 {
-                    TagType targetTag = co.card.TargetTag;
-                    CardObject target = GetCardInFieldByTag(targetTag);
-                    if(target == null)
+                    if (co.card.RequiresAI)
                     {
-                        continue;
+                        SetBestEffectTarget(co.card);
+                        Game.INSTANCE.UseCardEffect(co, null);
                     }
-                    Game.INSTANCE.UseCardEffect(co, target.GameObject);
+                    else
+                    {
+                        TagType targetTag = co.card.TargetTag;
+                        CardObject target = GetCardInFieldByTag(targetTag);
+                        if (target != null)
+                        {
+                            Game.INSTANCE.UseCardEffect(co, target.GameObject);
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private void SetBestEffectTarget(Card effectUser)
+    {
+        effectUser.InitializeEffectParametrs();
+        if (effectUser.ImageName == "Nanjo")
+        {
+            NanjoEffectAI(effectUser);
+        }
+        else if(effectUser.ImageName == "Shannon")
+        {
+            ShannonEffectAI(effectUser);
+        }
+        return;
+    }
+
+    private void NanjoEffectAI(Card effectUser)
+    {
+        CardObject bestTarget = null;
+        for (int i = 0; i < Game.INSTANCE.CardObjectsInGame.Count; i++)
+        {
+            CardObject candidate = Game.INSTANCE.CardObjectsInGame[i];
+            if (candidate.GameObject.transform.parent.parent.name != Game.INSTANCE.EnemyField.name)
+            {
+                continue;
+            }
+            else if (candidate.card.ImageName == Game.INSTANCE.EnemyLeader)
+            {
+                bestTarget = candidate;
+                break;
+            }
+            else
+            {
+                if (bestTarget == null)
+                {
+                    bestTarget = candidate;
+                }
+                else
+                {
+                    if ((bestTarget.card.HP + bestTarget.counters - bestTarget.currentHP) < (candidate.card.HP + candidate.counters - candidate.currentHP))
+                    {
+                        bestTarget = candidate;
+                    }
+                }
+            }
+        }
+        effectUser.SetTargetCardObject(bestTarget);
+    }
+
+    private void ShannonEffectAI(Card effectUser)
+    {
+        CardObject bestTarget = null;
+        bool cardsInFrontRow = false;
+        for (int i = 0; i < Game.INSTANCE.CardObjectsInGame.Count; i++)
+        {
+            CardObject candidate = Game.INSTANCE.CardObjectsInGame[i];
+            if (candidate.GameObject.transform.parent.parent.name != Game.INSTANCE.EnemyField.name || Game.INSTANCE.HasShield(candidate.GameObject))
+            {
+                continue;
+            }
+            string yPosition = candidate.GameObject.transform.parent.name.Substring(8, 1);
+            if (yPosition == "1")
+            {
+                if (bestTarget == null || cardsInFrontRow == false)
+                {
+                    bestTarget = candidate;
+                }
+                else
+                {
+                    if (candidate.currentATK > bestTarget.currentATK)
+                    {
+                        bestTarget = candidate;
+                    }
+                }
+                cardsInFrontRow = true;
+            }
+            else
+            {
+                if (cardsInFrontRow)
+                {
+                    continue;
+                }
+                else
+                {
+                    if (bestTarget == null)
+                    {
+                        bestTarget = candidate;
+                    }
+                    else
+                    {
+                        if (candidate.currentATK > bestTarget.currentATK)
+                        {
+                            bestTarget = candidate;
+                        }
+                    }
+                }
+            }
+        }
+        effectUser.SetTargetCardObject(bestTarget);
     }
 
     private CardObject GetCardInFieldByTag(TagType targetTag)

@@ -179,57 +179,9 @@ public class CardEffects
         return true;
     }
 
-    internal static bool ShannonEffect(Card arg)
+    internal static bool ShannonEffect(Card c)
     {
-        Debug.Log("Once per turn: Grants a shield to an ally card");
-        CardObject bestTarget = null;
-        bool cardsInFrontRow = false;
-        for(int i=0; i<Game.INSTANCE.CardObjectsInGame.Count; i++)
-        {
-            CardObject candidate = Game.INSTANCE.CardObjectsInGame[i];
-            if(candidate.GameObject.transform.parent.parent.name != Game.INSTANCE.EnemyField.name || Game.INSTANCE.HasShield(candidate.GameObject))
-            {
-                continue;
-            }
-            string yPosition = candidate.GameObject.transform.parent.name.Substring(8, 1);
-            if (yPosition == "1")
-            {
-                if(bestTarget == null || cardsInFrontRow==false)
-                {
-                    bestTarget = candidate;
-                }
-                else
-                {
-                    if(candidate.currentATK > bestTarget.currentATK)
-                    {
-                        bestTarget = candidate;
-                    }
-                }
-                cardsInFrontRow = true;
-            }
-            else
-            {
-                if (cardsInFrontRow)
-                {
-                    continue;
-                }
-                else
-                {
-                    if(bestTarget == null)
-                    {
-                        bestTarget = candidate;
-                    }
-                    else
-                    {
-                        if (candidate.currentATK > bestTarget.currentATK)
-                        {
-                            bestTarget = candidate;
-                        }
-                    }
-                }
-            }
-        }
-        Game.INSTANCE.CreateShield(bestTarget.GameObject);
+        Game.INSTANCE.CreateShield(c.GetTargetCardObject().GameObject);
         return true;
     }
 
@@ -268,36 +220,9 @@ public class CardEffects
         return true;
     }
 
-    internal static bool NanjoEffect(Card arg)
+    internal static bool NanjoEffect(Card c)
     {
-        CardObject bestTarget = null;
-        for (int i = 0; i < Game.INSTANCE.CardObjectsInGame.Count; i++)
-        {
-            CardObject candidate = Game.INSTANCE.CardObjectsInGame[i];
-            if (candidate.GameObject.transform.parent.parent.name != Game.INSTANCE.EnemyField.name)
-            {
-                continue;
-            }
-            else if(candidate.card.ImageName == Game.INSTANCE.EnemyLeader)
-            {
-                bestTarget = candidate;
-                break;
-            }
-            else
-            {
-                if(bestTarget == null)
-                {
-                    bestTarget = candidate;
-                }
-                else
-                {
-                    if((bestTarget.card.HP + bestTarget.counters - bestTarget.currentHP) < (candidate.card.HP + candidate.counters - candidate.currentHP))
-                    {
-                        bestTarget = candidate;
-                    }
-                }
-            }
-        }
+        CardObject bestTarget = c.GetTargetCardObject();
         bestTarget.currentHP = bestTarget.card.HP + bestTarget.counters;
         Game.INSTANCE.UpdateStatBoxes(bestTarget, bestTarget.GameObject.transform.parent.gameObject);
         return true;
@@ -305,8 +230,7 @@ public class CardEffects
 
     internal static bool RonoveEffect(Card c)
     {
-        CardObject targetCardObject = Game.INSTANCE.FindCardObject(c.GetTargetCard());
-        Game.INSTANCE.CreateShield(targetCardObject.GameObject);
+        Game.INSTANCE.CreateShield(c.GetTargetCard());
         return true;
     }
 

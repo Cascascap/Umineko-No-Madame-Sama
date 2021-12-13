@@ -113,7 +113,7 @@ public class Deck
         AddCardRegister(this.leaderCard, true);
         Card Konpeitou = new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summoned, TagType.Object }, true, false, 0);
         AddCardRegister(Konpeitou, times:4);
-        AddCardRegister(new Card(2, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human }, false, false, 1));
+        AddCardRegister(new Card(2, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human }, false, false, 1, requiresAI:true));
         Card will = new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<TagType> { TagType.Human }, true, false, 0);
         AddCardRegister(will);
         EffectListener.INSTANCE.EffectStopperList.Add(will);
@@ -134,8 +134,8 @@ public class Deck
         EffectListener.INSTANCE.DestroysCardsList.Add(Kanon);
         Card Kumasawa = new Card(1, 2, 2, CardEffects.KumasawaEffect, "Kumasawa", new List<TagType> { TagType.Human, TagType.Servant }, false, false, 2);
         AddCardRegister(Kumasawa);
-        AddCardRegister(new Card(2, 10, 4, CardEffects.NanjoEffect, "Nanjo", new List<TagType> { TagType.Human }, false, true, 1));
-        AddCardRegister(new Card(1, 2, 2, CardEffects.ShannonEffect, "Shannon", new List<TagType> { TagType.Human, TagType.Servant }, false, true, 1));
+        AddCardRegister(new Card(2, 10, 4, CardEffects.NanjoEffect, "Nanjo", new List<TagType> { TagType.Human }, false, true, 1, requiresAI: true));
+        AddCardRegister(new Card(1, 2, 2, CardEffects.ShannonEffect, "Shannon", new List<TagType> { TagType.Human, TagType.Servant }, false, true, 1, requiresAI: true));
     }
 
     public Card FindCardInDeck(string name)
