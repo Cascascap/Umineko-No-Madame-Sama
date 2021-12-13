@@ -27,7 +27,7 @@ public class EffectListener
             foreach(CardObject co in cos)
             {
                 c.InitializeEffectParametrs();
-                c.SetTargetCard(cardUsingEffect.GameObject);
+                c.SetTargetCardObject(cardUsingEffect);
                 c.SetTargetCardTags(cardUsingEffect.card.Tags);
                 bool effectResult = c.Effect.Invoke(c);
                 if (!effectResult)
@@ -45,7 +45,7 @@ public class EffectListener
         {
             Card c = cardPlayed.card;
             c.InitializeEffectParametrs();
-            c.SetTargetCard(cardPlayed.GameObject);
+            c.SetTargetCardObject(cardPlayed);
             c.Effect.Invoke(c);
         }
         return true;
@@ -59,7 +59,7 @@ public class EffectListener
             foreach(CardObject cin in co)
             {
                 c.InitializeEffectParametrs();
-                c.SetTargetCard(cin.GameObject);
+                c.SetTargetCardObject(cin);
                 c.Effect.Invoke(c);
             }
         }
@@ -72,7 +72,7 @@ public class EffectListener
         {
             Card c = destroyer.card;
             c.InitializeEffectParametrs();
-            c.SetTargetCard(destroyer.GameObject);
+            c.SetTargetCardObject(destroyer);
             c.Effect.Invoke(c);
         }
         return true;
@@ -85,7 +85,8 @@ public class EffectListener
             if (go.name.StartsWith(c.ImageName))
             {
                 c.InitializeEffectParametrs();
-                c.SetTargetCard(go);
+                CardObject co = Game.INSTANCE.FindCardObject(go);
+                c.SetTargetCardObject(co);
                 c.SetCounters(countersAdded);
                 c.Effect.Invoke(c);
             }

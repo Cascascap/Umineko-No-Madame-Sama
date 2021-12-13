@@ -301,7 +301,8 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         GameObject go = Game.INSTANCE.SelectedCardGameObject;
         CardObject cardObject = Game.INSTANCE.FindCardObject(go);
-        Game.INSTANCE.UseCardEffect(cardObject, eventData);
+        CardObject tagetCO = Game.INSTANCE.FindCardObject(eventData);
+        Game.INSTANCE.UseCardEffect(cardObject, tagetCO);
         Game.INSTANCE.CardUsingEffect = null;
         RemovePreviousMark();
         Debug.Log("Used effect");

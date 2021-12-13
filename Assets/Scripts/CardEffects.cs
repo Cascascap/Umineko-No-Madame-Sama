@@ -21,16 +21,15 @@ public class CardEffects
 
     internal static bool AsmodeusEffect(Card c)
     {
-        CardObject targetCardObject = Game.INSTANCE.FindCardObject(c.GetTargetCard());
+        CardObject targetCardObject = c.GetTargetCardObject();
         Game.INSTANCE.AddCounterEffect(targetCardObject, 1);
         return true;
     }
 
     internal static bool BeelzebubEffect(Card c)
     {
-        GameObject target = c.GetTargetCard();
+        CardObject targetCardObject = c.GetTargetCardObject();
         int counters = c.GetCounters();
-        CardObject targetCardObject = Game.INSTANCE.FindCardObject(target);
         Game.INSTANCE.AddCounter(targetCardObject, counters);
         return true;
     }
@@ -124,9 +123,8 @@ public class CardEffects
     internal static bool LeviathanEffect(Card c)
     {
         Debug.Log("");
-        GameObject target = c.GetTargetCard();
-        CardObject co = Game.INSTANCE.FindCardObject(target);
-        if(co.counters == 0)
+        CardObject co = c.GetTargetCardObject();
+        if (co.counters == 0)
         {
             return false;
         }
@@ -147,8 +145,7 @@ public class CardEffects
     internal static bool LuciferEffect(Card c)
     {
         List<CardObject> stakes = Game.INSTANCE.FindCardsInGameByTag(Deck.TagType.Stake);
-        GameObject luciferGO = c.GetTargetCard();
-        CardObject lucifer = Game.INSTANCE.FindCardObject(luciferGO);
+        CardObject lucifer = c.GetTargetCardObject();
         Game.INSTANCE.AddCounter(lucifer, (stakes.Count-1)*2);
         return true;
     }
@@ -199,16 +196,14 @@ public class CardEffects
 
     internal static bool KanonEffect(Card c)
     {
-        GameObject target = c.GetTargetCard();
-        CardObject kanon = Game.INSTANCE.FindCardObject(target);
+        CardObject kanon = c.GetTargetCardObject();
         Game.INSTANCE.AddCounter(kanon, 1);
         return true;
     }
 
     internal static bool SatanEffect(Card c)
     {
-        GameObject target = c.GetTargetCard();
-        CardObject satanCO = Game.INSTANCE.FindCardObject(target);
+        CardObject satanCO = c.GetTargetCardObject();
         Game.INSTANCE.AddCounter(satanCO, 1);
         return true;
     }
@@ -230,7 +225,7 @@ public class CardEffects
 
     internal static bool RonoveEffect(Card c)
     {
-        Game.INSTANCE.CreateShield(c.GetTargetCard());
+        Game.INSTANCE.CreateShield(c.GetTargetCardObject().GameObject);
         return true;
     }
 
@@ -238,8 +233,8 @@ public class CardEffects
     {
         Debug.Log("Witches cant use their skill");
         List<TagType> tags = c.GetTargetCardTags();
-        GameObject effectUser = c.GetTargetCard();
-        if (tags.Contains(TagType.Witch) && effectUser.transform.parent.parent.name == "PlayerField")
+        CardObject effectUser = c.GetTargetCardObject();
+        if (tags.Contains(TagType.Witch) && effectUser.GameObject.transform.parent.parent.name == "PlayerField")
         {
             return false;
         }
@@ -281,12 +276,11 @@ public class CardEffects
 
     internal static bool BelphegorEffect(Card c)
     {
-        GameObject target = c.GetTargetCard();
-        CardObject targetCardObject = Game.INSTANCE.FindCardObject(target);
+        CardObject targetCardObject = c.GetTargetCardObject();
         if (!targetCardObject.acted)
         {
             targetCardObject.currentHP = targetCardObject.card.HP + targetCardObject.counters;
-            Game.INSTANCE.UpdateStatBoxes(targetCardObject, target.transform.parent.gameObject);
+            Game.INSTANCE.UpdateStatBoxes(targetCardObject, targetCardObject.GameObject.transform.parent.gameObject);
             return true;
         }
         else

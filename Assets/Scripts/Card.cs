@@ -42,14 +42,15 @@ public class Card
     {
         this.EffectParameters = new Dictionary<int, object>();
     }
-    public void SetTargetCard(GameObject target)
+
+    public void SetTargetCardObject(CardObject target)
     {
         this.EffectParameters.Add(1, target);
     }
 
-    public GameObject GetTargetCard()
+    public CardObject GetTargetCardObject()
     {
-        return (GameObject) this.EffectParameters[1];
+        return (CardObject)this.EffectParameters[1];
     }
 
     public void SetTargetCardTags(List<TagType> targetTags)
@@ -72,13 +73,4 @@ public class Card
         return (int) this.EffectParameters[3];
     }
 
-    public void SetTargetCardObject(CardObject target)
-    {
-        this.EffectParameters.Add(4, target);
-    }
-
-    public CardObject GetTargetCardObject()
-    {
-        return (CardObject)this.EffectParameters[4];
-    }
 }

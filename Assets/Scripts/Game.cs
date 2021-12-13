@@ -723,14 +723,14 @@ public class Game : MonoBehaviour
         return counterText;
     }
 
-    public void UseCardEffect(CardObject co, GameObject objective)
+    public void UseCardEffect(CardObject co, CardObject objective)
     {
         Debug.Log("Using " + co.card.ImageName + "'s effect");
         Card c = co.card;
         if(objective != null)
         {
             c.InitializeEffectParametrs();
-            c.SetTargetCard(objective);
+            c.SetTargetCardObject(objective);
         }
         bool effectSuccess = co.card.Effect(c);
         if (effectSuccess)

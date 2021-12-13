@@ -295,7 +295,7 @@ public class AIFunctions : MonoBehaviour
                         CardObject target = GetCardInFieldByTag(targetTag);
                         if (target != null)
                         {
-                            Game.INSTANCE.UseCardEffect(co, target.GameObject);
+                            Game.INSTANCE.UseCardEffect(co, target);
                         }
                     }
                 }
