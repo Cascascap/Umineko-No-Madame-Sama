@@ -59,7 +59,7 @@ public class Game : MonoBehaviour
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
         EnemyLeader = enemyLeaderName;
-        PlayerLeader = "Kinzo";
+        PlayerLeader = "Lambda";
         PlayerDeck = CreateDeck(PlayerLeader);
         DecksInGame.Add(PlayerDeck);
         CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
@@ -90,6 +90,19 @@ public class Game : MonoBehaviour
         TextMeshProUGUI leaderStartingHP = EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>();
         leaderStartingHP.text = enemyLeaderCardObject.card.HP.ToString();
         PlayMusic(enemyLeader);
+    }
+
+    internal void RemoveCardObjectFromHand(GameObject handArea, Card card)
+    {
+        for(int i=0; i<handArea.transform.childCount; i++)
+        {
+            GameObject child = handArea.transform.GetChild(i).gameObject;
+            if (child.name.StartsWith(card.ImageName))
+            {
+                GameObject.Destroy(child);
+                break;
+            }
+        }
     }
 
     private void PlayMusic(string enemyLeader)
@@ -727,12 +740,10 @@ public class Game : MonoBehaviour
     {
         Debug.Log("Using " + co.card.ImageName + "'s effect");
         Card c = co.card;
-        c.InitializeEffectParametrs();
         if (objective != null)
         {
             c.SetTargetCardObject(objective);
         }
-        c.SetUsedByPlayer(true);
         bool effectSuccess = co.card.Effect(c);
         if (effectSuccess)
         {

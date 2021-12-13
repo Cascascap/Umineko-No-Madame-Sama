@@ -95,6 +95,9 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                             
                             if (!cardObject.card.UsesTarget)
                             {
+                                Card c = cardObject.card;
+                                c.InitializeEffectParametrs();
+                                c.SetUsedByPlayer(true);
                                 Game.INSTANCE.UseCardEffect(cardObject, null);
                                 Debug.Log("Using effect");
                             }
@@ -302,6 +305,9 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         GameObject go = Game.INSTANCE.SelectedCardGameObject;
         CardObject cardObject = Game.INSTANCE.FindCardObject(go);
         CardObject tagetCO = Game.INSTANCE.FindCardObject(eventData);
+        Card c = cardObject.card;
+        c.InitializeEffectParametrs();
+        c.SetUsedByPlayer(true);
         Game.INSTANCE.UseCardEffect(cardObject, tagetCO);
         Game.INSTANCE.CardUsingEffect = null;
         RemovePreviousMark();

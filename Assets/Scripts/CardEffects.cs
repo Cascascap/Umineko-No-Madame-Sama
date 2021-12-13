@@ -36,8 +36,27 @@ public class CardEffects
 
     internal static bool LionEffect(Card c)
     {
+        bool usedByPlayer = c.GetUsedByPlayer();
+        GameObject graveyard = null;
+        GameObject field = null;
+        GameObject handArea = null;
+        Deck deck = null;
+        if (usedByPlayer)
+        {
+            graveyard = Game.INSTANCE.PlayerGraveyard;
+            handArea = Game.INSTANCE.PlayerHandArea;
+            field = Game.INSTANCE.PlayerField;
+            deck = Game.INSTANCE.PlayerDeck;
+        }
+        else
+        {
+            graveyard = Game.INSTANCE.EnemyGraveyard;
+            handArea = Game.INSTANCE.EnemyHandArea;
+            field = Game.INSTANCE.EnemyField;
+            deck = Game.INSTANCE.EnemyDeck;
+        }
         GameObject WillGO = null;
-        GameObject emptySlot = Game.INSTANCE.GetEmptySlot(Game.INSTANCE.EnemyField);
+        GameObject emptySlot = Game.INSTANCE.GetEmptySlot(field);
         bool willInGame = false;
         if (emptySlot == null)
         {
@@ -57,9 +76,9 @@ public class CardEffects
         }
         if (!willInGame)
         {
-            for(int i=0; i<Game.INSTANCE.EnemyGraveyard.transform.childCount; i++)
+            for(int i=0; i<graveyard.transform.childCount; i++)
             {
-                GameObject child = Game.INSTANCE.EnemyGraveyard.transform.GetChild(i).gameObject;
+                GameObject child = graveyard.transform.GetChild(i).gameObject;
                 if (child.name.Contains("Will"))
                 {
                     WillGO = child;
@@ -68,28 +87,34 @@ public class CardEffects
             }
             if(WillGO == null)
             {
-                for (int i = 0; i < Game.INSTANCE.EnemyHandArea.transform.childCount; i++)
+                for (int i = 0; i < handArea.transform.childCount; i++)
                 {
-                    GameObject child = Game.INSTANCE.EnemyHandArea.transform.GetChild(i).gameObject;
-                    if (child.name.Contains("Will"))
+                    GameObject child = handArea.transform.GetChild(i).gameObject;
+                    if (child.name.StartsWith("Will"))
                     {
                         WillGO = child;
-                        GameObject cardCover = WillGO.transform.GetChild(0).gameObject;
-                        GameObject.DestroyImmediate(cardCover);
+                        //If played by the enemy, the card in hand must take off the cover
+                        if (!usedByPlayer)
+                        {
+                            GameObject cardCover = WillGO.transform.GetChild(0).gameObject;
+                            GameObject.DestroyImmediate(cardCover);
+                        }
                         break;
                     }
                 }
             }
             if(WillGO == null)
             {
-                List<Card> willCardList = Game.INSTANCE.Draw(Game.INSTANCE.EnemyDeck, 1, cardName:"Will");
+                List<Card> willCardList = Game.INSTANCE.Draw(deck, 1, cardName:"Will");
                 Card willCard = willCardList[0];
+                Game.INSTANCE.RemoveCardObjectFromHand(handArea, willCard);
                 Game.INSTANCE.CreateCardInSlot(willCard.ImageName, emptySlot);
                 WillGO = Game.INSTANCE.GetCardGameObject(emptySlot); 
                 CardObject cow = new CardObject(WillGO, willCard);
                 Game.INSTANCE.CardObjectsInGame.Add(cow);
                 Game.INSTANCE.UpdateStatBoxes(cow, emptySlot);
                 Game.INSTANCE.RecalculateCosts();
+                Game.INSTANCE.RearrangeHand(usedByPlayer);
                 return true;
             }
             WillGO.transform.SetParent(emptySlot.transform, false);
@@ -99,6 +124,7 @@ public class CardEffects
             Game.INSTANCE.CardObjectsInGame.Add(co);
             Game.INSTANCE.UpdateStatBoxes(co, emptySlot);
             Game.INSTANCE.RecalculateCosts();
+            Game.INSTANCE.RearrangeHand(usedByPlayer); 
         }
         return true;
     }
