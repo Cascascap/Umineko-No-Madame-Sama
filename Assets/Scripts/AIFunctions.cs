@@ -278,6 +278,9 @@ public class AIFunctions : MonoBehaviour
                 {
                     continue;
                 }
+                Card c = co.card;
+                c.InitializeEffectParametrs();
+                c.SetUsedByPlayer(false);
                 if (!co.card.UsesTarget)
                 {
                     Game.INSTANCE.UseCardEffect(co, null);
@@ -305,7 +308,6 @@ public class AIFunctions : MonoBehaviour
 
     private void SetBestEffectTarget(Card effectUser)
     {
-        effectUser.InitializeEffectParametrs();
         if (effectUser.ImageName == "Nanjo")
         {
             NanjoEffectAI(effectUser);

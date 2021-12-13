@@ -124,10 +124,11 @@ public class Deck
 
     public void Kinzo()
     {
-        this.leaderCard = new Card(0, 30, 2, CardEffects.KinzoEffect, "Kinzo", new List<TagType> { TagType.Leader, TagType.Human }, false, true, 1);
+        this.leaderCard = new Card(0, 30, 2, CardEffects.KinzoEffect, "Kinzo", new List<TagType> { TagType.Leader, TagType.Human }, false, true, 1, TagType.Servant, TargetType.Ally);
         AddCardRegister(this.leaderCard, true);
         Card Genji = new Card(2, 12, 2, CardEffects.GenjiEffect, "Genji", new List<TagType> { TagType.Servant, TagType.Human }, true, false, 0);
         EffectListener.INSTANCE.TurnEndingList.Add(Genji);
+        AddCardRegister(Genji);
         AddCardRegister(new Card(2, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, false, false, 1));
         Card Kanon = new Card(1, 6, 6, CardEffects.KanonEffect, "Kanon", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 0);
         AddCardRegister(Kanon);

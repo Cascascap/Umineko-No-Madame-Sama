@@ -115,7 +115,7 @@ public class CardEffects
 
     internal static bool VirgiliaEffect(Card c)
     {
-        Game.INSTANCE.DamageAllEnemyCards(4, true);
+        Game.INSTANCE.DamageAllEnemyCards(4, c.GetUsedByPlayer());
         Game.INSTANCE.UpdateAllStatBoxes();
         return true;
     }
@@ -170,9 +170,10 @@ public class CardEffects
         return false;
     }
 
-    internal static bool KinzoEffect(Card arg)
+    internal static bool KinzoEffect(Card c)
     {
-        Debug.Log("Once per turn Gives a servant card 2 +1/+1");
+        CardObject targetCardObject = c.GetTargetCardObject();
+        Game.INSTANCE.AddCounterEffect(targetCardObject, 2);
         return true;
     }
 
@@ -208,9 +209,9 @@ public class CardEffects
         return true;
     }
 
-    internal static bool KumasawaEffect(Card arg)
+    internal static bool KumasawaEffect(Card c)
     {
-        Game.INSTANCE.DamageAllEnemyCards(1, false);
+        Game.INSTANCE.DamageAllEnemyCards(1, c.GetUsedByPlayer());
         Game.INSTANCE.UpdateAllStatBoxes();
         return true;
     }

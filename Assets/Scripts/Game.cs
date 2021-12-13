@@ -59,7 +59,7 @@ public class Game : MonoBehaviour
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
         EnemyLeader = enemyLeaderName;
-        PlayerLeader = "Beatrice";
+        PlayerLeader = "Kinzo";
         PlayerDeck = CreateDeck(PlayerLeader);
         DecksInGame.Add(PlayerDeck);
         CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
@@ -727,11 +727,12 @@ public class Game : MonoBehaviour
     {
         Debug.Log("Using " + co.card.ImageName + "'s effect");
         Card c = co.card;
-        if(objective != null)
+        c.InitializeEffectParametrs();
+        if (objective != null)
         {
-            c.InitializeEffectParametrs();
             c.SetTargetCardObject(objective);
         }
+        c.SetUsedByPlayer(true);
         bool effectSuccess = co.card.Effect(c);
         if (effectSuccess)
         {

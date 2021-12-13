@@ -73,4 +73,13 @@ public class Card
         return (int) this.EffectParameters[3];
     }
 
+    public void SetUsedByPlayer(bool usedByPlayer)
+    {
+        this.EffectParameters.Add(4, usedByPlayer);
+    }
+
+    public bool GetUsedByPlayer()
+    {
+        return (bool)this.EffectParameters[4];
+    }
 }
