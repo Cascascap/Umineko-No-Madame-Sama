@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -60,7 +61,7 @@ public class Game : MonoBehaviour
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
         EnemyLeader = enemyLeaderName;
-        PlayerLeader = "Beatrice";
+        PlayerLeader = "Ange";
         PlayerDeck = CreateDeck(PlayerLeader);
         DecksInGame.Add(PlayerDeck);
         CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
@@ -278,7 +279,6 @@ public class Game : MonoBehaviour
         }
         return shield != null;
     }
-
 
     private void DestroyCard(CardObject co)
     {
@@ -519,7 +519,7 @@ public class Game : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         TurnStateDisplay.text = GameState.ToString();
     }

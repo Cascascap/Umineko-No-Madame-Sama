@@ -162,9 +162,11 @@ public class Deck
         Card Sakutarou = new Card(1, 5, 1, CardEffects.SakutarouEffect, "Sakutarou", new List<TagType> { TagType.Summon}, true, false, 0);
         EffectListener.INSTANCE.TurnEndingList.Add(Sakutarou);
         AddCardRegister(Sakutarou);
-        Card Maria = new Card(3, 4, 1, CardEffects.MariaEffect, "Maria", new List<TagType> { TagType.Human}, true, false, 0);
+        Card Maria = new Card(2, 4, 1, CardEffects.MariaEffect, "Maria", new List<TagType> { TagType.Human}, true, false, 0);
         EffectListener.INSTANCE.TurnEndingList.Add(Maria);
         AddCardRegister(Maria);
+        Card MariaBeatrice = new Card(3, 8, 6, CardEffects.MariaBeatriceEffect, "MariaBeatrice", new List<TagType> { TagType.Witch }, false, false, 0);
+        AddCardRegister(MariaBeatrice);
     }
 
 

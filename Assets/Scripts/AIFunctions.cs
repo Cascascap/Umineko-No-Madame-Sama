@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,22 +19,22 @@ public class AIFunctions : MonoBehaviour
     }
 
 
-    public void TakeTurn(Deck enemyDeck)
+    public async void TakeTurn(Deck enemyDeck)
     {
         Game.INSTANCE.Draw(Game.INSTANCE.EnemyDeck, 1);
         Game.INSTANCE.RearrangeHand(false);
-        KinzoAI();
+        await KinzoAI();
         UseEffects();
         AllAttack();
         Game.INSTANCE.RearrangeHand(false);
         Game.INSTANCE.OnTurnStart();
     }
 
-    private void KinzoAI()
+    private async Task KinzoAI()
     {
         if (!IsLeaderOnTop())
         {
-            TakeFirstTurn();
+            await TakeFirstTurn();
         }
         else if (!IsLeaderOnRight())
         {
@@ -45,11 +46,11 @@ public class AIFunctions : MonoBehaviour
         }
     }
 
-    private void LambdaAI()
+    private async void LambdaAI()
     {
         if (!IsLeaderOnTop())
         {
-            TakeFirstTurn();
+            await TakeFirstTurn();
         }
         else if (!IsLeaderOnRight())
         {
@@ -66,7 +67,7 @@ public class AIFunctions : MonoBehaviour
         PlayBiggestCostPosibleFromHand();
     }
 
-    private void PlayBiggestCostPosibleFromHand()
+    private async void PlayBiggestCostPosibleFromHand()
     {
         for (int i = 0; i < Game.INSTANCE.EnemyField.transform.childCount; i++)
         {
@@ -76,10 +77,10 @@ public class AIFunctions : MonoBehaviour
                 string slotCoordinates = slot.name.Substring(8, 2);
                 int cost = Int32.Parse(slot.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text);
                 Card succesfulSummon;
-                succesfulSummon = PlayCardByCost(cost, slotCoordinates);
+                succesfulSummon = await PlayCardByCost(cost, slotCoordinates);
                 if (succesfulSummon == null)
                 {
-                    succesfulSummon = PlayCardByCost(cost - 1, slotCoordinates);
+                    succesfulSummon = await PlayCardByCost(cost - 1, slotCoordinates);
                 }
                 else
                 {
@@ -87,7 +88,7 @@ public class AIFunctions : MonoBehaviour
                 }
                 if (succesfulSummon == null)
                 {
-                    succesfulSummon = PlayCardByCost(1, slotCoordinates);
+                    succesfulSummon = await PlayCardByCost(1, slotCoordinates);
                 }
                 else
                 {
@@ -102,22 +103,22 @@ public class AIFunctions : MonoBehaviour
     }
 
 
-    private void TakeSecondTurn()
+    private async void TakeSecondTurn()
     {
         MoveLeaderRight();
         Card succesfulSummon;
-        succesfulSummon = PlayCardByCost(2, "12");
+        succesfulSummon = await PlayCardByCost(2, "12");
         if (succesfulSummon == null)
         {
-            PlayCardByCost(1, "12");
+            await PlayCardByCost(1, "12");
         }
-        succesfulSummon = PlayCardByCost(3, "01");
+        succesfulSummon = await PlayCardByCost(3, "01");
         if (succesfulSummon == null)
         {
-            succesfulSummon = PlayCardByCost(2, "01");
+            succesfulSummon = await PlayCardByCost(2, "01");
             if (succesfulSummon == null)
             {
-                PlayCardByCost(1, "01");
+                await PlayCardByCost(1, "01");
             }
         }
     }
@@ -160,16 +161,16 @@ public class AIFunctions : MonoBehaviour
         Game.INSTANCE.UpdateStatBoxes(card, rightSlot, previousSlot);
     }
 
-    private void TakeFirstTurn()
+    private async Task TakeFirstTurn()
     {
         MoveLeaderTop();
         Card succesfulSummon;
-        PlayCardByCost(1, "11");
-        PlayCardByCost(1, "00");
-        succesfulSummon = PlayCardByCost(2, "10");
+        await PlayCardByCost(1, "11");
+        await PlayCardByCost(1, "00");
+        succesfulSummon = await PlayCardByCost(2, "10");
         if (succesfulSummon == null)
         {
-            PlayCardByCost(1, "10");
+            await PlayCardByCost(1, "10");
         }
     }
 
@@ -416,12 +417,12 @@ public class AIFunctions : MonoBehaviour
         return null;
     }
 
-    private Card PlayCardByCost(int cost, string slotNumber)
+    private async Task<Card> PlayCardByCost(int cost, string slotNumber)
     {
         Card card = GetCardByCostFromHand(cost);
         if (card != null)
         {
-            Card ret = PlayCardInSlot(card, slotNumber);
+            Card ret = await PlayCardInSlot(card, slotNumber);
             if (ret!=null)
             {
                 List<CardObject> co = Game.INSTANCE.FindCardObject(ret.ImageName);
@@ -436,7 +437,7 @@ public class AIFunctions : MonoBehaviour
         return null;
     }
 
-    public Card PlayCardInSlot(Card card, string slotNumber)
+    public async Task<Card> PlayCardInSlot(Card card, string slotNumber)
     {
         GameObject slot = GameObject.Find("CardSlot" + slotNumber);
         if (SlotOccupied(slot))
@@ -451,6 +452,7 @@ public class AIFunctions : MonoBehaviour
         }
         CardObject co = Game.INSTANCE.PlayCardInSlot(card.ImageName, slot);
         Game.INSTANCE.CardObjectsInGame.Add(co);
+        await Task.Delay(1000);
         return co.card;
     }
 

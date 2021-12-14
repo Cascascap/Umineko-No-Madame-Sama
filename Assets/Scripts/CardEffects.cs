@@ -165,7 +165,7 @@ public class CardEffects
             }
             Game.INSTANCE.RemoveCounter(co, countersToRemove);
             CardObject leviathanCO = Game.INSTANCE.FindCardObject(Game.INSTANCE.SelectedCardGameObject);
-            Game.INSTANCE.AddCounter(leviathanCO, countersToRemove);
+            Game.INSTANCE.AddCounterEffect(leviathanCO, countersToRemove);
             return true;
         }
     }
@@ -178,7 +178,7 @@ public class CardEffects
             return false;
         }
         CardObject lucifer = c.GetTargetCardObject();
-        Game.INSTANCE.AddCounter(lucifer, (stakes.Count-1)*2);
+        Game.INSTANCE.AddCounterEffect(lucifer, (stakes.Count-1)*2);
         return true;
     }
 
@@ -267,14 +267,14 @@ public class CardEffects
     internal static bool KanonEffect(Card c)
     {
         CardObject kanon = c.GetTargetCardObject();
-        Game.INSTANCE.AddCounter(kanon, 1);
+        Game.INSTANCE.AddCounterEffect(kanon, 1);
         return true;
     }
 
     internal static bool SatanEffect(Card c)
     {
         CardObject satanCO = c.GetTargetCardObject();
-        Game.INSTANCE.AddCounter(satanCO, 1);
+        Game.INSTANCE.AddCounterEffect(satanCO, 1);
         return true;
     }
 
@@ -290,6 +290,34 @@ public class CardEffects
         CardObject bestTarget = c.GetTargetCardObject();
         bestTarget.currentHP = bestTarget.card.HP + bestTarget.counters;
         Game.INSTANCE.UpdateStatBoxes(bestTarget, bestTarget.GameObject.transform.parent.gameObject);
+        return true;
+    }
+
+    internal static bool MariaBeatriceEffect(Card c)
+    {
+        GameObject field = null;
+        if (c.GetUsedByPlayer())
+        {
+            field = Game.INSTANCE.PlayerField;
+        }
+        else
+        {
+            field = Game.INSTANCE.EnemyField;
+        }
+        foreach(CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if(co.GameObject.transform.parent.parent.name != field.name)
+            {
+                if (Game.INSTANCE.HasShield(co.GameObject))
+                {
+                    Game.INSTANCE.RemoveShield(co.GameObject);
+                }
+                if (Game.INSTANCE.GetCounterPanel(co.GameObject) != null)
+                {
+                    Game.INSTANCE.RemoveCounter(co, co.counters);
+                }
+            }
+        }
         return true;
     }
 
@@ -326,7 +354,7 @@ public class CardEffects
         {
             if (co.card.Tags.Contains(TagType.Stake) && field.name == co.GameObject.transform.parent.parent.name)
             {
-                Game.INSTANCE.AddCounter(co, 3);
+                Game.INSTANCE.AddCounterEffect(co, 3);
             }
         }
         return true;
@@ -367,7 +395,7 @@ public class CardEffects
             return false;
         }
         CardObject willco = willcos[0];
-        Game.INSTANCE.AddCounter(willco, 2);
+        Game.INSTANCE.AddCounterEffect(willco, 2);
         return true;
     }
 

@@ -62,6 +62,10 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log(eventData.pointerClick.name);
+        if(Game.INSTANCE.GameState == Game.State.EnemyTurn)
+        {
+            return;
+        }
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             try
