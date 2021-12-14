@@ -61,7 +61,7 @@ public class Game : MonoBehaviour
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
         EnemyLeader = enemyLeaderName;
-        PlayerLeader = "Ange";
+        PlayerLeader = "Beatrice";
         PlayerDeck = CreateDeck(PlayerLeader);
         DecksInGame.Add(PlayerDeck);
         CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
@@ -330,6 +330,8 @@ public class Game : MonoBehaviour
     {
         EndTurnButton.gameObject.SetActive(false);
         UndoButton.gameObject.SetActive(false);
+        int defeats = PlayerPrefs.GetInt(EnemyLeader + "Defeats");
+        PlayerPrefs.SetInt(EnemyLeader + "Defeats", defeats + 1);
         Debug.Log("Get rekt m8");
     }
 
@@ -617,6 +619,8 @@ public class Game : MonoBehaviour
     {
         EndTurnButton.gameObject.SetActive(false);
         UndoButton.gameObject.SetActive(false);
+        int victories = PlayerPrefs.GetInt(EnemyLeader + "Victories");
+        PlayerPrefs.SetInt(EnemyLeader + "Victories", victories + 1);
         Debug.Log("GG");
     }
 
