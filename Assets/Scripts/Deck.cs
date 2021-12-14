@@ -22,7 +22,7 @@ public class Deck
         Human,
         Demon,
         Stake,
-        Summoned,
+        Summon,
         Cat,
         Pet,
         Object,
@@ -82,28 +82,28 @@ public class Deck
     {
         this.leaderCard = new Card(0, 36, 3, CardEffects.BeatriceEffect, "Beatrice", new List<TagType> { TagType.Leader, TagType.Witch }, false, false, 1);
         AddCardRegister(this.leaderCard, true);
-        Card goat = new Card(1, 2, 2, CardEffects.GoatEffect, "Goat", new List<TagType> { TagType.Summoned }, true, false, 0);
+        Card goat = new Card(1, 2, 2, CardEffects.GoatEffect, "Goat", new List<TagType> { TagType.Summon }, true, false, 0);
         AddCardRegister(goat, times:10);
-        Card asmodeus = new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<TagType> { TagType.Summoned, TagType.Stake }, false, true, 1, TagType.Summoned, TargetType.Ally);
+        Card asmodeus = new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<TagType> { TagType.Summon, TagType.Stake }, false, true, 1, TagType.Summon, TargetType.Ally);
         AddCardRegister(asmodeus);
-        Card beelzebub = new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<TagType> { TagType.Summoned, TagType.Stake }, true, false, 0);
+        Card beelzebub = new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
         AddCardRegister(beelzebub);
         EffectListener.INSTANCE.GettingCountersList.Add(beelzebub);
-        Card belphegor = new Card(1, 6, 2, CardEffects.BelphegorEffect, "Belphegor", new List<TagType> { TagType.Summoned, TagType.Stake }, true, false, 0);
+        Card belphegor = new Card(1, 6, 2, CardEffects.BelphegorEffect, "Belphegor", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
         EffectListener.INSTANCE.TurnEndingList.Add(belphegor);
         AddCardRegister(belphegor);
-        AddCardRegister(new Card(1, 4, 4, CardEffects.LeviathanEffect, "Leviathan", new List<TagType> { TagType.Summoned, TagType.Stake }, false, true, 1, TagType.All, TargetType.Both));
-        AddCardRegister(new Card(1, 4, 4, CardEffects.MammonEffect, "Mammon", new List<TagType> { TagType.Summoned, TagType.Stake }, false, false, 2));
-        Card satan = new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<TagType> { TagType.Summoned, TagType.Stake }, true, false, 0);
+        AddCardRegister(new Card(1, 4, 4, CardEffects.LeviathanEffect, "Leviathan", new List<TagType> { TagType.Summon, TagType.Stake }, false, true, 1, TagType.All, TargetType.Both));
+        AddCardRegister(new Card(1, 4, 4, CardEffects.MammonEffect, "Mammon", new List<TagType> { TagType.Summon, TagType.Stake }, false, false, 2));
+        Card satan = new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
         AddCardRegister(satan);
         EffectListener.INSTANCE.DestroysCardsList.Add(satan);
-        Card lucifer = new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<TagType> { TagType.Summoned, TagType.Stake }, true, false, 0);
+        Card lucifer = new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
         AddCardRegister(lucifer);
         EffectListener.INSTANCE.CardPlayedList.Add(lucifer);
-        Card gaap = new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<TagType> { TagType.Summoned, TagType.Demon }, true, false, 0);
+        Card gaap = new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<TagType> { TagType.Summon, TagType.Demon }, true, false, 0);
         AddCardRegister(gaap);
         EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(gaap);
-        AddCardRegister(new Card(2, 8, 4, CardEffects.RonoveEffect, "Ronove", new List<TagType> { TagType.Summoned, TagType.Demon }, false, true, 2, TagType.All, TargetType.Ally));
+        AddCardRegister(new Card(2, 8, 4, CardEffects.RonoveEffect, "Ronove", new List<TagType> { TagType.Summon, TagType.Demon }, false, true, 2, TagType.All, TargetType.Ally));
         AddCardRegister(new Card(3, 12, 6, CardEffects.VirgiliaEffect, "Virgilia", new List<TagType> { TagType.Witch }, false, false, 3));
     }
 
@@ -111,7 +111,7 @@ public class Deck
     {
         this.leaderCard = new Card(0, 36, 3, CardEffects.LambdaEffect, "Lambda", new List<TagType> { TagType.Leader, TagType.Witch}, false, false, 1);
         AddCardRegister(this.leaderCard, true);
-        Card Konpeitou = new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summoned, TagType.Object }, true, false, 0);
+        Card Konpeitou = new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summon, TagType.Object }, true, false, 0);
         AddCardRegister(Konpeitou, times:4);
         AddCardRegister(new Card(2, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human }, false, false, 1, requiresAI:true));
         Card will = new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<TagType> { TagType.Human }, true, false, 0);
@@ -129,7 +129,7 @@ public class Deck
         Card Genji = new Card(2, 12, 2, CardEffects.GenjiEffect, "Genji", new List<TagType> { TagType.Servant, TagType.Human }, true, false, 0);
         EffectListener.INSTANCE.TurnEndingList.Add(Genji);
         AddCardRegister(Genji);
-        AddCardRegister(new Card(2, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, false, false, 1));
+        AddCardRegister(new Card(2, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 1));
         Card Kanon = new Card(1, 6, 6, CardEffects.KanonEffect, "Kanon", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 0);
         AddCardRegister(Kanon);
         EffectListener.INSTANCE.DestroysCardsList.Add(Kanon);
@@ -138,6 +138,33 @@ public class Deck
         AddCardRegister(new Card(2, 10, 4, CardEffects.NanjoEffect, "Nanjo", new List<TagType> { TagType.Human }, false, true, 1, requiresAI: true));
         AddCardRegister(new Card(1, 2, 2, CardEffects.ShannonEffect, "Shannon", new List<TagType> { TagType.Human, TagType.Servant }, false, true, 1, requiresAI: true));
     }
+
+    public void Ange()
+    {
+        this.leaderCard = new Card(0, 36, 3, CardEffects.BeatriceEffect, "Ange", new List<TagType> { TagType.Leader, TagType.Human }, false, false, 1);
+        AddCardRegister(this.leaderCard, true);
+        Card asmodeus = new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<TagType> { TagType.Summon, TagType.Stake }, false, true, 1, TagType.Summon, TargetType.Ally);
+        AddCardRegister(asmodeus);
+        Card beelzebub = new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
+        AddCardRegister(beelzebub);
+        EffectListener.INSTANCE.GettingCountersList.Add(beelzebub);
+        Card belphegor = new Card(1, 6, 2, CardEffects.BelphegorEffect, "Belphegor", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
+        EffectListener.INSTANCE.TurnEndingList.Add(belphegor);
+        AddCardRegister(belphegor);
+        AddCardRegister(new Card(1, 4, 4, CardEffects.LeviathanEffect, "Leviathan", new List<TagType> { TagType.Summon, TagType.Stake }, false, true, 1, TagType.All, TargetType.Both));
+        AddCardRegister(new Card(1, 4, 4, CardEffects.MammonEffect, "Mammon", new List<TagType> { TagType.Summon, TagType.Stake }, false, false, 2));
+        Card satan = new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
+        AddCardRegister(satan);
+        EffectListener.INSTANCE.DestroysCardsList.Add(satan);
+        Card lucifer = new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
+        AddCardRegister(lucifer);
+        EffectListener.INSTANCE.CardPlayedList.Add(lucifer);
+        Card Sakutarou = new Card(1, 5, 1, CardEffects.SakutarouEffect, "Sakutarou", new List<TagType> { TagType.Summon}, true, false, 0);
+        AddCardRegister(Sakutarou);
+        Card Maria = new Card(3, 4, 1, CardEffects.MariaEffect, "Maria", new List<TagType> { TagType.Human}, true, false, 0);
+        AddCardRegister(Maria);
+    }
+
 
     public Card FindCardInDeck(string name)
     {

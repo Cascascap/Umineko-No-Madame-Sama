@@ -564,9 +564,7 @@ PrefabInstance:
     - target: {fileID: 8820480709589853793, guid: 14edecd7c314ed24c9e9c54688cd7f27,
         type: 3}
       propertyPath: m_text
-      value: 'Featherine
-
-'
+      value: Featherine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14edecd7c314ed24c9e9c54688cd7f27, type: 3}
@@ -787,9 +785,7 @@ PrefabInstance:
     - target: {fileID: 8820480709589853793, guid: 14edecd7c314ed24c9e9c54688cd7f27,
         type: 3}
       propertyPath: m_text
-      value: 'Ange
-
-'
+      value: Ange
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14edecd7c314ed24c9e9c54688cd7f27, type: 3}
@@ -1027,9 +1023,7 @@ PrefabInstance:
     - target: {fileID: 8820480709589853793, guid: 14edecd7c314ed24c9e9c54688cd7f27,
         type: 3}
       propertyPath: m_text
-      value: 'Battler
-
-'
+      value: Battler
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14edecd7c314ed24c9e9c54688cd7f27, type: 3}
@@ -1348,9 +1342,7 @@ PrefabInstance:
     - target: {fileID: 8820480709589853793, guid: 14edecd7c314ed24c9e9c54688cd7f27,
         type: 3}
       propertyPath: m_text
-      value: 'Featherine
-
-'
+      value: Featherine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14edecd7c314ed24c9e9c54688cd7f27, type: 3}

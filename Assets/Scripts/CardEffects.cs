@@ -268,6 +268,16 @@ public class CardEffects
         return true;
     }
 
+    internal static bool SakutarouEffect(Card arg)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static bool MariaEffect(Card arg)
+    {
+        throw new NotImplementedException();
+    }
+
     internal static bool DianaEffect(Card c)
     {
         List<CardObject> willcos = Game.INSTANCE.FindCardObject("Will");
