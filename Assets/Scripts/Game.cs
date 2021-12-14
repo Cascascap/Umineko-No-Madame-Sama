@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = System.Random;
 
 public class Game : MonoBehaviour
 {
@@ -59,7 +60,7 @@ public class Game : MonoBehaviour
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
         EnemyLeader = enemyLeaderName;
-        PlayerLeader = "Lambda";
+        PlayerLeader = "Beatrice";
         PlayerDeck = CreateDeck(PlayerLeader);
         DecksInGame.Add(PlayerDeck);
         CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
@@ -238,6 +239,31 @@ public class Game : MonoBehaviour
         GameObject.DestroyImmediate(shield);
     }
 
+    internal void ResurrectCard(GameObject resurrectedOne, GameObject freeSlot)
+    {
+        resurrectedOne.transform.SetParent(freeSlot.transform, false);
+        Image cardImage = resurrectedOne.GetComponent<Image>();
+        Card card = FindCard(cardImage.sprite.name);
+        CardObject resurrectedCO = new CardObject(resurrectedOne, card);
+        CardObjectsInGame.Add(resurrectedCO);
+        UpdateAllStatBoxes();
+        RecalculateCosts();
+    }
+
+    public void ResurrectRandomCard(GameObject graveyard, GameObject freeSlot)
+    {
+        List<GameObject> graveyardItems = new List<GameObject>();
+        for (int i = 0; i < graveyard.transform.childCount; i++)
+        {
+            GameObject child = graveyard.transform.GetChild(i).gameObject;
+            graveyardItems.Add(child);
+        }
+        Random rng = new Random();
+        graveyardItems.OrderBy(a => rng.Next());
+        GameObject resurrectedOne = graveyardItems[0];
+        Game.INSTANCE.ResurrectCard(resurrectedOne, freeSlot);
+    }
+
     public bool HasShield(GameObject go)
     {
         GameObject shield = null;
@@ -307,12 +333,21 @@ public class Game : MonoBehaviour
         Debug.Log("Get rekt m8");
     }
 
-    internal List<CardObject> FindCardsInGameByTag(Deck.TagType stake)
+    internal List<CardObject> FindCardsInGameByTag(Deck.TagType stake, bool playerCards)
     {
+        GameObject field = null;
+        if (playerCards)
+        {
+            field = PlayerField;
+        }
+        else
+        {
+            field = EnemyField;
+        }
         List<CardObject> ret = new List<CardObject>();
         foreach(CardObject co in CardObjectsInGame)
         {
-            if (co.card.Tags.Contains(stake))
+            if (co.card.Tags.Contains(stake) && co.GameObject.transform.parent.parent.name == field.name)
             {
                 ret.Add(co);
             }

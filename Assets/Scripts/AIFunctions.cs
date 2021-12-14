@@ -295,7 +295,7 @@ public class AIFunctions : MonoBehaviour
                     else
                     {
                         TagType targetTag = co.card.TargetTag;
-                        CardObject target = GetCardInFieldByTag(targetTag);
+                        CardObject target = GetCardInFieldByTag(targetTag, co.card.TargetType);
                         if (target != null)
                         {
                             Game.INSTANCE.UseCardEffect(co, target);
@@ -404,11 +404,11 @@ public class AIFunctions : MonoBehaviour
         effectUser.SetTargetCardObject(bestTarget);
     }
 
-    private CardObject GetCardInFieldByTag(TagType targetTag)
+    private CardObject GetCardInFieldByTag(TagType targetTag, TargetType targetType)
     {
         foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
         {
-            if (co.card.Tags.Contains(targetTag) || targetTag == TagType.All)
+            if ((co.card.Tags.Contains(targetTag) || targetTag == TagType.All) && (TargetType.Both == targetType || co.GameObject.transform.parent.parent.name == Game.INSTANCE.EnemyField.name))
             {
                 return co;
             }

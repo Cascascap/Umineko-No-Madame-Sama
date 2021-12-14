@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 using static Deck;
+using Random = System.Random;
 
 public class CardEffects
 {
@@ -170,7 +172,11 @@ public class CardEffects
 
     internal static bool LuciferEffect(Card c)
     {
-        List<CardObject> stakes = Game.INSTANCE.FindCardsInGameByTag(Deck.TagType.Stake);
+        List<CardObject> stakes = Game.INSTANCE.FindCardsInGameByTag(Deck.TagType.Stake, c.GetUsedByPlayer());
+        if(stakes.Count == 1)
+        {
+            return false;
+        }
         CardObject lucifer = c.GetTargetCardObject();
         Game.INSTANCE.AddCounter(lucifer, (stakes.Count-1)*2);
         return true;
@@ -207,6 +213,43 @@ public class CardEffects
     {
         Game.INSTANCE.CreateShield(c.GetTargetCardObject().GameObject);
         return true;
+    }
+
+    internal static bool AngeEffect(Card c)
+    {
+        GameObject graveyard = null;
+        if (c.GetUsedByPlayer())
+        {
+            graveyard = Game.INSTANCE.PlayerGraveyard;
+        }
+        else
+        {
+            graveyard = Game.INSTANCE.EnemyGraveyard;
+        }
+        if(graveyard.transform.childCount < 1)
+        {
+            return false;
+        }
+        GameObject freeSlot = Game.INSTANCE.FindFreeSlot(!c.GetUsedByPlayer());
+        if (freeSlot != null)
+        {
+            Game.INSTANCE.ResurrectRandomCard(graveyard, freeSlot);
+            if (graveyard.transform.childCount < 1)
+            {
+                return false;
+            }
+            GameObject freeSlot2 = Game.INSTANCE.FindFreeSlot(!c.GetUsedByPlayer());
+            if(freeSlot2 == null)
+            {
+                return false;
+            }
+            Game.INSTANCE.ResurrectRandomCard(graveyard, freeSlot2);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     internal static bool GohdaEffect(Card arg)
@@ -268,14 +311,52 @@ public class CardEffects
         return true;
     }
 
-    internal static bool SakutarouEffect(Card arg)
+    internal static bool SakutarouEffect(Card c)
     {
-        throw new NotImplementedException();
+        GameObject field = null;
+        if (c.GetUsedByPlayer())
+        {
+            field = Game.INSTANCE.PlayerField;
+        }
+        else
+        {
+            field = Game.INSTANCE.EnemyField;
+        }
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.card.Tags.Contains(TagType.Stake) && field.name == co.GameObject.transform.parent.parent.name)
+            {
+                Game.INSTANCE.AddCounter(co, 3);
+            }
+        }
+        return true;
     }
 
-    internal static bool MariaEffect(Card arg)
+    internal static bool MariaEffect(Card c)
     {
-        throw new NotImplementedException();
+        GameObject field = null;
+        if (c.GetUsedByPlayer())
+        {
+            field = Game.INSTANCE.PlayerField;
+        }
+        else
+        {
+            field = Game.INSTANCE.EnemyField;
+        }
+        CardObject sakutarouCO = null;
+        foreach(CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if(co.card.ImageName == "Sakutarou" && field.name == co.GameObject.transform.parent.parent.name)
+            {
+                sakutarouCO = co;
+            }
+        }
+        if(sakutarouCO == null)
+        {
+            return false;
+        }
+        sakutarouCO.counters *= 2;
+        return true;
     }
 
     internal static bool DianaEffect(Card c)

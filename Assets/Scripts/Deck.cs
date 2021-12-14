@@ -141,7 +141,7 @@ public class Deck
 
     public void Ange()
     {
-        this.leaderCard = new Card(0, 36, 3, CardEffects.BeatriceEffect, "Ange", new List<TagType> { TagType.Leader, TagType.Human }, false, false, 1);
+        this.leaderCard = new Card(0, 36, 3, CardEffects.AngeEffect, "Ange", new List<TagType> { TagType.Leader, TagType.Human }, false, false, 1);
         AddCardRegister(this.leaderCard, true);
         Card asmodeus = new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<TagType> { TagType.Summon, TagType.Stake }, false, true, 1, TagType.Summon, TargetType.Ally);
         AddCardRegister(asmodeus);
@@ -160,8 +160,10 @@ public class Deck
         AddCardRegister(lucifer);
         EffectListener.INSTANCE.CardPlayedList.Add(lucifer);
         Card Sakutarou = new Card(1, 5, 1, CardEffects.SakutarouEffect, "Sakutarou", new List<TagType> { TagType.Summon}, true, false, 0);
+        EffectListener.INSTANCE.TurnEndingList.Add(Sakutarou);
         AddCardRegister(Sakutarou);
         Card Maria = new Card(3, 4, 1, CardEffects.MariaEffect, "Maria", new List<TagType> { TagType.Human}, true, false, 0);
+        EffectListener.INSTANCE.TurnEndingList.Add(Maria);
         AddCardRegister(Maria);
     }
 

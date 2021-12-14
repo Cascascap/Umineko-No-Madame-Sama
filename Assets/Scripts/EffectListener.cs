@@ -28,6 +28,7 @@ public class EffectListener
             {
                 c.InitializeEffectParametrs();
                 c.SetTargetCardObject(cardUsingEffect);
+                c.SetUsedByPlayer(co.GameObject.transform.parent.parent.name == Game.INSTANCE.PlayerField.name);
                 c.SetTargetCardTags(cardUsingEffect.card.Tags);
                 bool effectResult = c.Effect.Invoke(c);
                 if (!effectResult)
@@ -41,12 +42,18 @@ public class EffectListener
 
     public bool OnCardPlayed(CardObject cardPlayed)
     {
-        if (CardPlayedList.Contains(cardPlayed.card))
+        bool usedByPlayer = cardPlayed.GameObject.transform.parent.parent.name == Game.INSTANCE.PlayerField.name;
+        foreach (Card ca in CardPlayedList)
         {
-            Card c = cardPlayed.card;
-            c.InitializeEffectParametrs();
-            c.SetTargetCardObject(cardPlayed);
-            c.Effect.Invoke(c);
+            if(ca == cardPlayed.card && ((usedByPlayer && Game.INSTANCE.GameState != Game.State.EnemyTurn) || (!usedByPlayer && Game.INSTANCE.GameState == Game.State.EnemyTurn)))
+            {
+                Card c = cardPlayed.card;
+                c.InitializeEffectParametrs();
+                c.SetUsedByPlayer(usedByPlayer);
+                c.SetTargetCardObject(cardPlayed);
+                c.Effect.Invoke(c);
+            }
+            
         }
         return true;
     }
@@ -59,6 +66,7 @@ public class EffectListener
             foreach(CardObject cin in co)
             {
                 c.InitializeEffectParametrs();
+                c.SetUsedByPlayer(cin.GameObject.transform.parent.parent.name == Game.INSTANCE.PlayerField.name);
                 c.SetTargetCardObject(cin);
                 c.Effect.Invoke(c);
             }
@@ -72,6 +80,7 @@ public class EffectListener
         {
             Card c = destroyer.card;
             c.InitializeEffectParametrs();
+            c.SetUsedByPlayer(destroyer.GameObject.transform.parent.parent.name == Game.INSTANCE.PlayerField.name);
             c.SetTargetCardObject(destroyer);
             c.Effect.Invoke(c);
         }
@@ -86,6 +95,7 @@ public class EffectListener
             {
                 c.InitializeEffectParametrs();
                 CardObject co = Game.INSTANCE.FindCardObject(go);
+                c.SetUsedByPlayer(co.GameObject.transform.parent.parent.name == Game.INSTANCE.PlayerField.name);
                 c.SetTargetCardObject(co);
                 c.SetCounters(countersAdded);
                 c.Effect.Invoke(c);
