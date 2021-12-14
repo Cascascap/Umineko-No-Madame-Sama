@@ -624,9 +624,9 @@ public class Game : MonoBehaviour
     {
         if (GameState != State.EnemyTurn)
         {
+            EffectListener.INSTANCE.OnTrunEnd();
             GameState = State.EnemyTurn;
             CardFunctions.RemovePreviousMark();
-            EffectListener.INSTANCE.OnTrunEnd();
             AIFunctions.INSTANCE.TakeTurn(EnemyDeck);
             Turn++;
         }
@@ -1328,16 +1328,22 @@ public class Game : MonoBehaviour
 
     public GameObject FindFreeSlot(bool enemyField)
     {
+        GameObject field = null;
         if (enemyField)
         {
-            for(int i = 0; i < EnemyField.transform.childCount; i++)
+            field = EnemyField;
+        }
+        else
+        {
+            field = PlayerField;
+        }
+        for (int i = 0; i < field.transform.childCount; i++)
+        {
+            GameObject slot = field.transform.GetChild(i).gameObject;
+            bool hasCard = SlotWithCard(slot);
+            if (!hasCard)
             {
-                GameObject slot = EnemyField.transform.GetChild(i).gameObject;
-                bool hasCard = SlotWithCard(slot);
-                if (!hasCard)
-                {
-                    return slot;
-                }
+                return slot;
             }
         }
         return null;

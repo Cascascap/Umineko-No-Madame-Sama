@@ -65,10 +65,14 @@ public class EffectListener
             List<CardObject> co = Game.INSTANCE.FindCardObject(c.ImageName);
             foreach(CardObject cin in co)
             {
-                c.InitializeEffectParametrs();
-                c.SetUsedByPlayer(cin.GameObject.transform.parent.parent.name == Game.INSTANCE.PlayerField.name);
-                c.SetTargetCardObject(cin);
-                c.Effect.Invoke(c);
+                bool usedByPlayer = cin.GameObject.transform.parent.parent.name == Game.INSTANCE.PlayerField.name;
+                if((usedByPlayer && Game.INSTANCE.GameState != Game.State.EnemyTurn) || (!usedByPlayer && Game.INSTANCE.GameState == Game.State.EnemyTurn))
+                {
+                    c.InitializeEffectParametrs();
+                    c.SetUsedByPlayer(usedByPlayer);
+                    c.SetTargetCardObject(cin);
+                    c.Effect.Invoke(c);
+                }
             }
         }
         return true;

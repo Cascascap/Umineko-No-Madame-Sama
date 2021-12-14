@@ -28,6 +28,7 @@ public class AIFunctions : MonoBehaviour
         await UseEffects();
         await AllAttack();
         Game.INSTANCE.RearrangeHand(false);
+        EffectListener.INSTANCE.OnTrunEnd();
         Game.INSTANCE.OnTurnStart();
     }
 
