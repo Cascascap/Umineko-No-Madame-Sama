@@ -24,8 +24,8 @@ public class AIFunctions : MonoBehaviour
         Game.INSTANCE.Draw(Game.INSTANCE.EnemyDeck, 1);
         Game.INSTANCE.RearrangeHand(false);
         await KinzoAI();
-        UseEffects();
-        AllAttack();
+        await UseEffects();
+        await AllAttack();
         Game.INSTANCE.RearrangeHand(false);
         Game.INSTANCE.OnTurnStart();
     }
@@ -38,11 +38,11 @@ public class AIFunctions : MonoBehaviour
         }
         else if (!IsLeaderOnRight())
         {
-            TakeSecondTurn();
+            await TakeSecondTurn();
         }
         else
         {
-            TakeTurn();
+            await TakeTurn();
         }
     }
 
@@ -54,20 +54,20 @@ public class AIFunctions : MonoBehaviour
         }
         else if (!IsLeaderOnRight())
         {
-            TakeSecondTurn();
+            await TakeSecondTurn();
         }
         else
         {
-            TakeTurn();
+            await TakeTurn();
         }
     }
 
-    private void TakeTurn()
+    private async Task TakeTurn()
     {
-        PlayBiggestCostPosibleFromHand();
+        await PlayBiggestCostPosibleFromHand();
     }
 
-    private async void PlayBiggestCostPosibleFromHand()
+    private async Task PlayBiggestCostPosibleFromHand()
     {
         for (int i = 0; i < Game.INSTANCE.EnemyField.transform.childCount; i++)
         {
@@ -103,7 +103,7 @@ public class AIFunctions : MonoBehaviour
     }
 
 
-    private async void TakeSecondTurn()
+    private async Task TakeSecondTurn()
     {
         MoveLeaderRight();
         Card succesfulSummon;
@@ -174,7 +174,7 @@ public class AIFunctions : MonoBehaviour
         }
     }
 
-    private void AllAttack()
+    private async Task AllAttack()
     {
         for(int index = 0; index<Game.INSTANCE.CardObjectsInGame.Count; index++) 
         {
@@ -210,6 +210,7 @@ public class AIFunctions : MonoBehaviour
                     }
                     Game.INSTANCE.UpdateStatBoxes(bestTarget, null, previousParent: targetCardSlot);
                     Game.INSTANCE.RecalculateCosts();
+                    await Task.Delay(1000);
                 }
             }
         }
@@ -268,7 +269,7 @@ public class AIFunctions : MonoBehaviour
         return attackOptions;
     }
 
-    private void UseEffects()
+    private async Task UseEffects()
     {
         List<CardObject> cin = new List<CardObject>(Game.INSTANCE.CardObjectsInGame);
         foreach (CardObject co in cin) 
@@ -304,6 +305,7 @@ public class AIFunctions : MonoBehaviour
                     }
                 }
             }
+            await Task.Delay(1000);
         }
     }
 
