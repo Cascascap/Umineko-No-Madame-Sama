@@ -10,6 +10,7 @@ using static Deck;
 public class AIFunctions : MonoBehaviour
 {
     public static AIFunctions INSTANCE = null;
+    public static int AI_SPEED = 500;
 
     // Start is called before the first frame update
     void Start()
@@ -210,7 +211,7 @@ public class AIFunctions : MonoBehaviour
                     }
                     Game.INSTANCE.UpdateStatBoxes(bestTarget, null, previousParent: targetCardSlot);
                     Game.INSTANCE.RecalculateCosts();
-                    await Task.Delay(1000);
+                    await Task.Delay(AI_SPEED);
                 }
             }
         }
@@ -305,7 +306,7 @@ public class AIFunctions : MonoBehaviour
                     }
                 }
             }
-            await Task.Delay(1000);
+            await Task.Delay(AI_SPEED);
         }
     }
 
@@ -454,7 +455,7 @@ public class AIFunctions : MonoBehaviour
         }
         CardObject co = Game.INSTANCE.PlayCardInSlot(card.ImageName, slot);
         Game.INSTANCE.CardObjectsInGame.Add(co);
-        await Task.Delay(1000);
+        await Task.Delay(AI_SPEED);
         return co.card;
     }
 

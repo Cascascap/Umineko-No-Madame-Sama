@@ -383,7 +383,11 @@ public class CardEffects
         {
             return false;
         }
-        sakutarouCO.counters *= 2;
+        if(sakutarouCO.counters == 0)
+        {
+            return false;
+        }
+        Game.INSTANCE.AddCounterEffect(sakutarouCO, sakutarouCO.counters);
         return true;
     }
 

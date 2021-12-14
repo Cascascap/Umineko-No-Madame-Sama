@@ -129,7 +129,9 @@ public class Deck
         Card Genji = new Card(2, 12, 2, CardEffects.GenjiEffect, "Genji", new List<TagType> { TagType.Servant, TagType.Human }, true, false, 0);
         EffectListener.INSTANCE.TurnEndingList.Add(Genji);
         AddCardRegister(Genji);
-        AddCardRegister(new Card(2, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 1));
+        Card Gohda = new Card(2, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 1);
+        EffectListener.INSTANCE.TurnEndingList.Add(Gohda);
+        AddCardRegister(Gohda);
         Card Kanon = new Card(1, 6, 6, CardEffects.KanonEffect, "Kanon", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 0);
         AddCardRegister(Kanon);
         EffectListener.INSTANCE.DestroysCardsList.Add(Kanon);

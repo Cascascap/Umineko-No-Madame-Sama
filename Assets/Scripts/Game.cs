@@ -1263,7 +1263,7 @@ public class Game : MonoBehaviour
     public void AddCounterEffect(CardObject co, int numberOfCounters)
     {
         AddCounter(co, numberOfCounters);
-        EffectListener.INSTANCE.OnGettingCounters(co.GameObject, 1);
+        EffectListener.INSTANCE.OnGettingCounters(co.GameObject, numberOfCounters);
     }
 
     internal void RemoveCounter(CardObject co, int numberOfCounters)

@@ -61,7 +61,6 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log(eventData.pointerClick.name);
         if(Game.INSTANCE.GameState == Game.State.EnemyTurn)
         {
             return;
@@ -149,9 +148,16 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 }
                 if (eventData.pointerClick.name == Game.INSTANCE.SelectedCardGameObject.name)
                 {
-                    RemovePreviousMark();
-                    Game.INSTANCE.HidePosibleMovements();
-                    Game.INSTANCE.CardUsingEffect = null;
+                    if (Game.INSTANCE.CardUsingEffect != null)
+                    {
+                        UseEffect(eventData.pointerClick);
+                    }
+                    else
+                    {
+                        RemovePreviousMark();
+                        Game.INSTANCE.HidePosibleMovements();
+                        Game.INSTANCE.CardUsingEffect = null;
+                    }
                 }
                 else
                 {
@@ -235,6 +241,7 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                                 {
                                     Game.INSTANCE.CardObjectsInGame.Remove(steppedCO);
                                     steppedCO.GameObject.transform.SetParent(Game.INSTANCE.PlayerGraveyard.transform, false);
+                                    CleanCard(steppedCO.GameObject);
                                 }
                             }
                             cardObject.moved = true;
@@ -272,14 +279,7 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                                 EffectListener.INSTANCE.OnDestroyedCard(cardObject);
                                 GameObject enemyCardGO = Game.INSTANCE.GetCardGameObject(enemyCardSlot);
                                 Game.INSTANCE.CardObjectsInGame.Remove(enemyCardObject);
-                                for (int i = 0; i < eventData.pointerClick.transform.childCount; i++)
-                                {
-                                    GameObject child = eventData.pointerClick.transform.GetChild(i).gameObject;
-                                    if (child.name.StartsWith("CounterPanel") || child.name == "Shield")
-                                    {
-                                        GameObject.Destroy(child);
-                                    }
-                                }
+                                CleanCard(enemyCardObject.GameObject);
                                 enemyCardGO.transform.SetParent(Game.INSTANCE.EnemyGraveyard.transform, false);
                                 if (enemyCardName == Game.INSTANCE.EnemyLeader)
                                 {
@@ -303,6 +303,17 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
     }
 
+    private static void CleanCard(GameObject go)
+    {
+        for (int i = 0; i < go.transform.childCount; i++)
+        {
+            GameObject child = go.transform.GetChild(i).gameObject;
+            if (child.name.StartsWith("CounterPanel") || child.name == "Shield")
+            {
+                GameObject.Destroy(child);
+            }
+        }
+    }
 
     private static void UseEffect(GameObject eventData)
     {
