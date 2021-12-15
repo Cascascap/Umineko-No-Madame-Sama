@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4134018866579260735}
   - component: {fileID: 6204061858969183908}
   - component: {fileID: 6851124640196571750}
+  - component: {fileID: 6031143398646451525}
   m_Layer: 5
   m_Name: EnemyPanel
   m_TagString: Untagged
@@ -82,6 +83,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6031143398646451525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2414871195619332625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43e4ce7fd461a2748b0fb7edb3a32231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyPanel: {fileID: 2414871195619332625}
+  EnemyName: {fileID: 8820480709589853793}
+  VictoryText: {fileID: 8534062199700491916}
+  DefeatText: {fileID: 6031652197596433802}
 --- !u!1 &2763501558080729391
 GameObject:
   m_ObjectHideFlags: 0

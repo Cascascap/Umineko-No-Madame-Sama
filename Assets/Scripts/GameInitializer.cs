@@ -4,39 +4,33 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameInitializer : MonoBehaviour, IPointerClickHandler
 {
     public GameObject EnemyPanel;
-    public string enemyName;
-    public TextMeshProUGUI victoryText;
-    public TextMeshProUGUI defeatText;
+    public TextMeshProUGUI EnemyName;
+    public TextMeshProUGUI VictoryText;
+    public TextMeshProUGUI DefeatText;
 
     void Start()
     {
-        enemyName = EnemyPanel.transform.GetChild(2).gameObject.GetComponent<TextMeshProUGUI>().text;
-        victoryText = EnemyPanel.transform.GetChild(5).gameObject.GetComponent<TextMeshProUGUI>();
-        defeatText = EnemyPanel.transform.GetChild(6).gameObject.GetComponent<TextMeshProUGUI>();
     }
 
     void Update()
     {
-        int victories = PlayerPrefs.GetInt(enemyName+"Victories");
-        int defeats = PlayerPrefs.GetInt(enemyName + "Defeats");
-        victoryText.text = victories.ToString();
-        defeatText.text = defeats.ToString();
+        int victories = PlayerPrefs.GetInt(EnemyName.text+"Victories");
+        int defeats = PlayerPrefs.GetInt(EnemyName.text + "Defeats");
+        VictoryText.text = victories.ToString();
+        DefeatText.text = defeats.ToString();
     }
 
     private void ChangeScene()
     {
-        PlayerPrefs.SetString("EnemyName", enemyName);
+        PlayerPrefs.SetString("EnemyName", EnemyName.text);
         SceneManager.LoadScene(1);
     }
 
-    private void GoToDeckBuilding()
-    {
-        SceneManager.LoadScene(2);
-    }
 
     public void OnPointerClick(PointerEventData eventData)
     {

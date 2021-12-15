@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CardInDeckManager : MonoBehaviour
@@ -12,7 +10,7 @@ public class CardInDeckManager : MonoBehaviour
     private int OFFSET = -5;
     void Start()
     {
-        int cardsInDeck = 40;
+        int cardsInDeck = 30;
         for(int i=0; i<cardsInDeck; i++)
         {
             CardInDeck spawnedCard = Instantiate(CardInDeckPrefab, new Vector3(0, 0), Quaternion.identity, Background.transform);

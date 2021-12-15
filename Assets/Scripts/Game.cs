@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = System.Random;
 
@@ -17,8 +18,7 @@ public class Game : MonoBehaviour
     public GameObject Background;
 
     public GameObject CardPrefab;
-    public Button EndTurnButton;
-    public Button UndoButton;
+    public Button EndTurnButton, UndoButton, GoToMainMenuButton;
     public List<Deck> DecksInGame = new List<Deck>();
     public List<Card> CardsInGame = new List<Card>();
     public List<CardObject> CardObjectsInGame = new List<CardObject>();
@@ -332,6 +332,8 @@ public class Game : MonoBehaviour
         UndoButton.gameObject.SetActive(false);
         int defeats = PlayerPrefs.GetInt(EnemyLeader + "Defeats");
         PlayerPrefs.SetInt(EnemyLeader + "Defeats", defeats + 1);
+        GoToMainMenuButton.gameObject.SetActive(true);
+        GoToMainMenuButton.onClick.AddListener(GoBackToMainMenu);
         Debug.Log("Get rekt m8");
     }
 
@@ -615,12 +617,19 @@ public class Game : MonoBehaviour
         }
     }
 
+    private void GoBackToMainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     internal void Victory()
     {
         EndTurnButton.gameObject.SetActive(false);
         UndoButton.gameObject.SetActive(false);
         int victories = PlayerPrefs.GetInt(EnemyLeader + "Victories");
         PlayerPrefs.SetInt(EnemyLeader + "Victories", victories + 1);
+        GoToMainMenuButton.gameObject.SetActive(true);
+        GoToMainMenuButton.onClick.AddListener(GoBackToMainMenu);
         Debug.Log("GG");
     }
 
