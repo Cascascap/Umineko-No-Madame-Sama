@@ -8,10 +8,11 @@ using UnityEngine.UI;
 
 public class GameInitializer : MonoBehaviour, IPointerClickHandler
 {
-    public GameObject EnemyPanel;
-    public TextMeshProUGUI EnemyName;
-    public TextMeshProUGUI VictoryText;
-    public TextMeshProUGUI DefeatText;
+    [SerializeField] private GameObject EnemyPanel;
+    [SerializeField] private TextMeshProUGUI EnemyName;
+    [SerializeField] private TextMeshProUGUI VictoryText;
+    [SerializeField] private TextMeshProUGUI DefeatText;
+    [SerializeField] private TMP_InputField DeckNameTextInput;
 
     void Start()
     {
@@ -27,7 +28,9 @@ public class GameInitializer : MonoBehaviour, IPointerClickHandler
 
     private void ChangeScene()
     {
+        string deckName = DeckNameTextInput.text;
         PlayerPrefs.SetString("EnemyName", EnemyName.text);
+        PlayerPrefs.SetString("DeckName", deckName);
         SceneManager.LoadScene(1);
     }
 

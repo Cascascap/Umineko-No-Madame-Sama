@@ -183,8 +183,17 @@ public class CardEffects
 
     internal static bool MammonEffect(Card c)
     {
-        Game.INSTANCE.Draw(Game.INSTANCE.PlayerDeck, 1);
-        Game.INSTANCE.RearrangeHand(true);
+        Deck deck = null;
+        if (c.GetUsedByPlayer())
+        {
+            deck = Game.INSTANCE.PlayerDeck;
+        }
+        else
+        {
+            deck = Game.INSTANCE.EnemyDeck;
+        }
+        Game.INSTANCE.Draw(deck, 1);
+        Game.INSTANCE.RearrangeHand(c.GetUsedByPlayer());
         return true;
     }
 
@@ -550,7 +559,7 @@ public class CardEffects
 
     internal static bool LambdaEffect(Card c)
     {
-        GameObject gameSlot = Game.INSTANCE.FindFreeSlot(true);
+        GameObject gameSlot = Game.INSTANCE.FindFreeSlot(!c.GetUsedByPlayer());
         if (gameSlot != null)
         {
             CardObject co = Game.INSTANCE.CreateCardInSlot("Konpeitou", gameSlot);

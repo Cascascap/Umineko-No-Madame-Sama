@@ -223,4 +223,53 @@ public class Deck
         }
         return null;
     }
+
+    public enum CardsByID
+    {
+        Goat=1,
+        Lucifer=2,
+        Leviathan=3,
+        Satan=4,
+        Belphegor=5,
+        Mammon=6,
+        Beelzebub=7,
+        Asmodeus=8,
+        Gaap=9,
+        Ronove=10,
+        Virgilia=11,
+        Genji=12,
+        Kumasawa=13,
+        Gohda=14,
+        Kanon=15,
+        Shannon=16,
+        Nanjo=17,
+        Maria=18,
+        MariaBeatrice=19,
+        Sakutarou=20,
+        Rudolf=21,
+        Kyrie=22,
+        Krauss=23,
+        Natsuhi=24,
+        Eva=25,
+        Hideyoshi=26,
+        Rosa=27,
+        George=28,
+        Jessica=29,
+        Chiester00=30,
+        Chiester410=31,
+        Chiester45=32,
+        Chiester556=33,
+        Dlanor=34,
+        Gertrude=35,
+        Cornelia=36,
+        Will=37,
+        Lion=38,
+        Diana=39,
+        Konpeitou=40,
+        Bernkastel=41,
+        Cat=42,
+        Piece=43,
+        AngeBeatrice=44,
+        EvaBeatrice=45
+    }
 }

@@ -54,6 +54,8 @@ public class Game : MonoBehaviour
         }
         Debug.Log("Starting");
         string enemyLeaderName = PlayerPrefs.GetString("EnemyName");
+        string deckName = PlayerPrefs.GetString("DeckName");
+        string playerName = GetPlayerName(deckName);
         Turn = 1;
         EffectListener effectListener = new EffectListener();
         Button EndTurnbtn = EndTurnButton.GetComponent<Button>();
@@ -61,26 +63,43 @@ public class Game : MonoBehaviour
         EndTurnbtn.onClick.AddListener(OnEndTurn);
         UndoBtn.onClick.AddListener(Undo);
         EnemyLeader = enemyLeaderName;
-        PlayerLeader = "Beatrice";
+        PlayerLeader = playerName;
         PlayerDeck = CreateDeck(PlayerLeader);
         DecksInGame.Add(PlayerDeck);
         CardObject leaderCardObject = CreateCardInSlot(PlayerLeader, CardSlot21);
         CardObjectsInGame.Add(leaderCardObject);
         PlayerHand = new Hand();
         PlayerHand.cards = Draw(PlayerDeck, STARTING_CARDS_HAND);
-        InitializeLeader(EnemyLeader);
+        InitializeLeaders();
         RearrangeHand(true);
         InitializeSlotMap();
         RecalculateCosts();
         SaveState();
     }
 
-    private void InitializeLeader(string enemyLeader)
+    private string GetPlayerName(string deckName)
     {
-        Sprite leaderSprite = (Sprite)Resources.Load("Leaders/" + enemyLeader + "2", typeof(Sprite));
-        EnemyLeaderImage.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = enemyLeader;
+        if(deckName == "lambda" || deckName == "Kinzo" || deckName  == "Ange" || deckName == "Battler" ||
+            deckName == "EVA" || deckName == "Erika" || deckName == "Featherine" || deckName == "Gohda")
+        {
+            return deckName;
+        }
+        else
+        {
+            return "Beatrice";
+        }
+    }
+
+    private void InitializeLeaders()
+    {
+        Sprite leaderSprite = (Sprite)Resources.Load("Leaders/" + EnemyLeader + "2", typeof(Sprite));
+        EnemyLeaderImage.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = EnemyLeader;
         Image enemyLeaderImage = EnemyLeaderImage.transform.GetChild(1).GetComponent<Image>();
         enemyLeaderImage.sprite = leaderSprite;
+
+        Sprite playerLeaderSprite = (Sprite)Resources.Load("Leaders/" + PlayerLeader + "2", typeof(Sprite));
+        Image playerLeaderImage = PlayerLeaderImage.transform.GetChild(1).GetComponent<Image>();
+        playerLeaderImage.sprite = playerLeaderSprite;
 
         EnemyDeck = CreateDeck(EnemyLeader);
         DecksInGame.Add(EnemyDeck);
@@ -91,7 +110,7 @@ public class Game : MonoBehaviour
         RearrangeHand(false);
         TextMeshProUGUI leaderStartingHP = EnemyLeaderImage.transform.GetChild(5).GetComponent<TextMeshProUGUI>();
         leaderStartingHP.text = enemyLeaderCardObject.card.HP.ToString();
-        PlayMusic(enemyLeader);
+        PlayMusic(EnemyLeader);
     }
 
     internal void RemoveCardObjectFromHand(GameObject handArea, Card card)
@@ -1019,7 +1038,7 @@ public class Game : MonoBehaviour
             pphpGODad.SetActive(false);
             ppatkGODad.SetActive(false);
         }
-        if (cardSlot != null)
+        if (cardSlot != null && cardSlot.activeSelf)
         {
             string slotNumber = cardSlot.name.Substring(8, 2);
             GameObject hpGODad = cardSlot.transform.Find("HPBlock" + slotNumber).gameObject;

@@ -101,6 +101,7 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                                 Card c = cardObject.card;
                                 c.InitializeEffectParametrs();
                                 c.SetUsedByPlayer(true);
+                                c.SetTargetCardObject(cardObject);
                                 Game.INSTANCE.UseCardEffect(cardObject, null);
                                 Debug.Log("Using effect");
                             }
