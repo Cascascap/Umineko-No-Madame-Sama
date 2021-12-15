@@ -7,7 +7,6 @@ public class DeckGrid : MonoBehaviour
     [SerializeField] private int Width, Height;
     [SerializeField] private DeckGridTile TilePrefab;
     [SerializeField] private GameObject Background;
-    [SerializeField] private Transform Camera;
     private int OFFSET = 20;
     private int STARTINGX = -320;
     private int STARTINGY = 940;
