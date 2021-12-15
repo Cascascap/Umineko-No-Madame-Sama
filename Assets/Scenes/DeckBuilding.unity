@@ -527,8 +527,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2139652590}
   m_HandleRect: {fileID: 2139652589}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.00000010490385
+  m_Value: 1
+  m_Size: 0.41668397
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1233,7 +1233,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -3.56, y: 0}
-  m_SizeDelta: {x: 0, y: 581.82}
+  m_SizeDelta: {x: 0, y: 1396.31}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1257544185
 GameObject:
@@ -1283,8 +1283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 067cab03d45425e42b639fbc139e621b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Width: 0
-  Height: 0
+  Width: 200
+  Height: 34
   CardInDeckPrefab: {fileID: 6132278932367162833, guid: 924cb179f146b8f4d9606731302b0848,
     type: 3}
   Background: {fileID: 1230160539}
@@ -1985,7 +1985,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -117.24, y: 0}
+  m_AnchoredPosition: {x: -117.24002, y: 0}
   m_SizeDelta: {x: -234.49, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1765935525

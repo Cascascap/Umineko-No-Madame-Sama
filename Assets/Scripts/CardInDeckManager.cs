@@ -8,12 +8,18 @@ public class CardInDeckManager : MonoBehaviour
     [SerializeField] private CardInDeck CardInDeckPrefab;
     [SerializeField] private GameObject Background;
     // Start is called before the first frame update
-    private int INITIALY = 265;
+    private int INITIALY = -25;
+    private int OFFSET = -5;
     void Start()
     {
-        CardInDeck spawnedCard = Instantiate(CardInDeckPrefab, new Vector3(0,0), Quaternion.identity, Background.transform);
-        RectTransform rectTransform = spawnedCard.GetComponent<RectTransform>();
-        rectTransform.localPosition = new Vector2(3, -25);
-        spawnedCard.name = "CardInDeck1";
+        int cardsInDeck = 40;
+        for(int i=0; i<cardsInDeck; i++)
+        {
+            CardInDeck spawnedCard = Instantiate(CardInDeckPrefab, new Vector3(0, 0), Quaternion.identity, Background.transform);
+            RectTransform rectTransform = spawnedCard.GetComponent<RectTransform>();
+            rectTransform.localPosition = new Vector2(3, INITIALY + OFFSET - (Height*i));
+            spawnedCard.name = "CardInDeck" + i.ToString();
+        }
+
     }
 }
