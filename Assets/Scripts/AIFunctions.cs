@@ -293,8 +293,8 @@ public class AIFunctions : MonoBehaviour
                 {
                     if (co.card.RequiresAI)
                     {
-                        SetBestEffectTarget(co.card);
-                        Game.INSTANCE.UseCardEffect(co, co);
+                        CardObject bestTargetCO = GetBestEffectTarget(co.card);
+                        Game.INSTANCE.UseCardEffect(co, bestTargetCO);
                     }
                     else
                     {
@@ -311,20 +311,20 @@ public class AIFunctions : MonoBehaviour
         }
     }
 
-    private void SetBestEffectTarget(Card effectUser)
+    private CardObject GetBestEffectTarget(Card effectUser)
     {
         if (effectUser.ImageName == "Nanjo")
         {
-            NanjoEffectAI(effectUser);
+            return NanjoEffectAI(effectUser);
         }
         else if(effectUser.ImageName == "Shannon")
         {
-            ShannonEffectAI(effectUser);
+            return ShannonEffectAI(effectUser);
         }
-        return;
+        return null;
     }
 
-    private void NanjoEffectAI(Card effectUser)
+    private CardObject NanjoEffectAI(Card effectUser)
     {
         CardObject bestTarget = null;
         for (int i = 0; i < Game.INSTANCE.CardObjectsInGame.Count; i++)
@@ -354,10 +354,10 @@ public class AIFunctions : MonoBehaviour
                 }
             }
         }
-        effectUser.SetTargetCardObject(bestTarget);
+        return bestTarget;
     }
 
-    private void ShannonEffectAI(Card effectUser)
+    private CardObject ShannonEffectAI(Card effectUser)
     {
         CardObject bestTarget = null;
         bool cardsInFrontRow = false;
@@ -406,7 +406,7 @@ public class AIFunctions : MonoBehaviour
                 }
             }
         }
-        effectUser.SetTargetCardObject(bestTarget);
+        return bestTarget;
     }
 
     private CardObject GetCardInFieldByTag(TagType targetTag, TargetType targetType)

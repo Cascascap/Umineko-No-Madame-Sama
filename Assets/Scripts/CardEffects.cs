@@ -69,10 +69,16 @@ public class CardEffects
             if(cardInGame.ImageName == "Will")
             {
                 List<CardObject> cos = Game.INSTANCE.FindCardObject(cardInGame.ImageName);
-                if(cos.Count != 0)
+                if(cos.Count != 0)  
                 {
-                    willInGame = true;
-                    return false;
+                    foreach(CardObject co in cos)
+                    {
+                        if(co.GameObject.transform.parent.parent.name == field.name)
+                        {
+                            willInGame = true;
+                            return false;
+                        }
+                    }
                 }
             }
         }

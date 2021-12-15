@@ -65,22 +65,19 @@ public class Deck
         foreach (var value in values.OrderBy(x => rnd.Next()))
             this.cards.Push(value);
     }
-    private void AddCardRegister(Card card, bool leader = false, int times = 1)
+    private void AddCardRegister(Card card, bool leader = false)
     {
         Game.INSTANCE.CardsInGame.Add(card);
         if (!leader)
         {
-            for (int i = 0; i < times; i++)
-            {
-                this.cards.Push(card);
-            }
+            this.cards.Push(card);
         }
     }
 
     public void GoatCard()
     {
         Card goat = new Card(1, 2, 2, CardEffects.GoatEffect, "Goat", new List<TagType> { TagType.Summon }, true, false, 0);
-        AddCardRegister(goat, times: 10);
+        AddCardRegister(goat);
     }
 
     public void AsmodeusCard()
@@ -146,7 +143,7 @@ public class Deck
     public void KonpeitouCard()
     {
         Card Konpeitou = new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summon, TagType.Object }, true, false, 0);
-        AddCardRegister(Konpeitou, times: 4);
+        AddCardRegister(Konpeitou);
     }
     public void LionCard()
     {
@@ -276,7 +273,7 @@ public class Deck
 
     public void StartingDeck()
     {
-        AddCardToDeck(CardsByID.Goat);
+        AddCardToDeck(CardsByID.Goat, 10);
         AddCardToDeck(CardsByID.Asmodeus);
         AddCardToDeck(CardsByID.Beelzebub);
         AddCardToDeck(CardsByID.Belphegor);
@@ -287,30 +284,51 @@ public class Deck
         AddCardToDeck(CardsByID.Gaap);
         AddCardToDeck(CardsByID.Ronove);
         AddCardToDeck(CardsByID.Virgilia);
+        PlayerPrefs.SetInt("PlayerHasDeck", 1);
     }
 
-    //Default decks:
+    private void SaveCardToDeck(CardsByID goat, int cardNumber)
+    {
+        PlayerPrefs.SetInt(goat.ToString(), cardNumber);
+    }
+
+
     public void Beatrice()
     {
         this.leaderCard = new Card(0, 36, 3, CardEffects.BeatriceEffect, "Beatrice", new List<TagType> { TagType.Leader, TagType.Witch }, false, false, 1);
         AddCardRegister(this.leaderCard, true);
-        if (true)
+        if (PlayerPrefs.GetInt("PlayerHasDeck") != 1)
         {
             StartingDeck();
         }
         else
         {
-            CreateDeck();
+            LoadDeck();
         }
     }
 
-    private void CreateDeck()
+    private void LoadDeck()
     {
+        foreach(CardsByID cbi in Enum.GetValues(typeof(CardsByID)))
+        {
+            int numberOfCardsInDeck = PlayerPrefs.GetInt(cbi.ToString());
+            if(numberOfCardsInDeck > 0)
+            {
+                AddCardToDeck(cbi, numberOfCardsInDeck, false);
+            }
+        }
     }
 
-    private void AddCardToDeck(CardsByID goat)
+    private void AddCardToDeck(CardsByID card, int cardNumber=1, bool saveCard=true)
     {
-        CallMethod(goat.ToString() + "Card");
+        for(int i=0; i<cardNumber; i++)
+        {
+            CallMethod(card.ToString() + "Card");
+        }
+        if (saveCard)
+        {
+            SaveCardToDeck(card, cardNumber);
+        }
     }
 
     public void Lambda()
@@ -318,10 +336,10 @@ public class Deck
         this.leaderCard = new Card(0, 36, 3, CardEffects.LambdaEffect, "Lambda", new List<TagType> { TagType.Leader, TagType.Witch}, false, false, 1);
         AddCardRegister(this.leaderCard, true);
 
-        AddCardToDeck(CardsByID.Konpeitou);
-        AddCardToDeck(CardsByID.Lion);
-        AddCardToDeck(CardsByID.Will);
-        AddCardToDeck(CardsByID.Diana);
+        AddCardToDeck(CardsByID.Konpeitou, 4, false);
+        AddCardToDeck(CardsByID.Lion, saveCard:false);
+        AddCardToDeck(CardsByID.Will, saveCard: false);
+        AddCardToDeck(CardsByID.Diana, saveCard: false);
     }
 
     public void Kinzo()
@@ -330,12 +348,28 @@ public class Deck
         AddCardRegister(this.leaderCard, true);
 
 
-        AddCardToDeck(CardsByID.Genji);
-        AddCardToDeck(CardsByID.Gohda);
-        AddCardToDeck(CardsByID.Kanon);
-        AddCardToDeck(CardsByID.Kumasawa);
-        AddCardToDeck(CardsByID.Nanjo);
-        AddCardToDeck(CardsByID.Shannon);
+        AddCardToDeck(CardsByID.Genji, saveCard: false);
+        AddCardToDeck(CardsByID.Gohda, saveCard: false);
+        AddCardToDeck(CardsByID.Kanon, saveCard: false);
+        AddCardToDeck(CardsByID.Kumasawa, saveCard: false);
+        AddCardToDeck(CardsByID.Nanjo, saveCard: false);
+        AddCardToDeck(CardsByID.Shannon, saveCard: false);
+    }
+    public void Ange()
+    {
+        this.leaderCard = new Card(0, 36, 3, CardEffects.AngeEffect, "Ange", new List<TagType> { TagType.Leader, TagType.Human }, false, false, 1);
+        AddCardRegister(this.leaderCard, true);
+
+        AddCardToDeck(CardsByID.Asmodeus, saveCard: false);
+        AddCardToDeck(CardsByID.Beelzebub, saveCard: false);
+        AddCardToDeck(CardsByID.Belphegor, saveCard: false);
+        AddCardToDeck(CardsByID.Leviathan, saveCard: false);
+        AddCardToDeck(CardsByID.Mammon, saveCard: false);
+        AddCardToDeck(CardsByID.Satan, saveCard: false);
+        AddCardToDeck(CardsByID.Lucifer, saveCard: false);
+        AddCardToDeck(CardsByID.Sakutarou, saveCard: false);
+        AddCardToDeck(CardsByID.Maria, saveCard: false);
+        AddCardToDeck(CardsByID.MariaBeatrice, saveCard: false);
     }
 
     public void Battler()
@@ -343,34 +377,18 @@ public class Deck
         this.leaderCard = new Card(0, 40, 1, CardEffects.BattlerEffect, "Battler", new List<TagType> { TagType.Leader, TagType.Human }, false, false, 1);
         AddCardRegister(this.leaderCard, true);
 
-
-        AddCardToDeck(CardsByID.Rudolf);
-        AddCardToDeck(CardsByID.Kyrie);
-        AddCardToDeck(CardsByID.Eva);
-        AddCardToDeck(CardsByID.George);
-        AddCardToDeck(CardsByID.Hideyoshi);
-        AddCardToDeck(CardsByID.Jessica);
-        AddCardToDeck(CardsByID.Krauss);
-        AddCardToDeck(CardsByID.Natsuhi);
-        AddCardToDeck(CardsByID.Rosa);
+        AddCardToDeck(CardsByID.Rudolf, saveCard: false);
+        AddCardToDeck(CardsByID.Kyrie, saveCard: false);
+        AddCardToDeck(CardsByID.Eva, saveCard: false);
+        AddCardToDeck(CardsByID.George, saveCard: false);
+        AddCardToDeck(CardsByID.Hideyoshi, saveCard: false);
+        AddCardToDeck(CardsByID.Jessica, saveCard: false);
+        AddCardToDeck(CardsByID.Krauss, saveCard: false);
+        AddCardToDeck(CardsByID.Natsuhi, saveCard: false);
+        AddCardToDeck(CardsByID.Rosa, saveCard: false);
     }
 
-    public void Ange()
-    {
-        this.leaderCard = new Card(0, 36, 3, CardEffects.AngeEffect, "Ange", new List<TagType> { TagType.Leader, TagType.Human }, false, false, 1);
-        AddCardRegister(this.leaderCard, true);
-
-        AddCardToDeck(CardsByID.Asmodeus);
-        AddCardToDeck(CardsByID.Beelzebub);
-        AddCardToDeck(CardsByID.Belphegor);
-        AddCardToDeck(CardsByID.Leviathan);
-        AddCardToDeck(CardsByID.Mammon);
-        AddCardToDeck(CardsByID.Satan);
-        AddCardToDeck(CardsByID.Lucifer);
-        AddCardToDeck(CardsByID.Sakutarou);
-        AddCardToDeck(CardsByID.Maria);
-        AddCardToDeck(CardsByID.MariaBeatrice);
-    }
+    
 
 
     public Card FindCardInDeck(string name)
