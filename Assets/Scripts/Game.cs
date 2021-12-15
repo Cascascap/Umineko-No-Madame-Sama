@@ -136,7 +136,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void DamageCard(CardObject co, int damage)
+    public void DamageCard(CardObject co, int damage)
     {
         co.currentHP -= damage;
         if (co.card.ImageName == EnemyLeader)

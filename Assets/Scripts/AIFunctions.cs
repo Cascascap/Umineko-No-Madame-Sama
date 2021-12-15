@@ -287,14 +287,14 @@ public class AIFunctions : MonoBehaviour
                 c.SetUsedByPlayer(false);
                 if (!co.card.UsesTarget)
                 {
-                    Game.INSTANCE.UseCardEffect(co, null);
+                    Game.INSTANCE.UseCardEffect(co, co);
                 }
                 else
                 {
                     if (co.card.RequiresAI)
                     {
                         SetBestEffectTarget(co.card);
-                        Game.INSTANCE.UseCardEffect(co, null);
+                        Game.INSTANCE.UseCardEffect(co, co);
                     }
                     else
                     {

@@ -33,6 +33,11 @@ public class GameInitializer : MonoBehaviour, IPointerClickHandler
         SceneManager.LoadScene(1);
     }
 
+    private void GoToDeckBuilding()
+    {
+        SceneManager.LoadScene(2);
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)

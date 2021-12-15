@@ -150,7 +150,6 @@ public class CardEffects
 
     internal static bool LeviathanEffect(Card c)
     {
-        Debug.Log("");
         CardObject co = c.GetTargetCardObject();
         if (co.counters == 0)
         {
@@ -189,11 +188,12 @@ public class CardEffects
         return true;
     }
 
-    internal static bool GenjiEffect(Card arg)
+    internal static bool GenjiEffect(Card c)
     {
+        GameObject playerField = GetPlayerField(c);
         foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
         {
-            if (co.card.ImageName == "Kinzo")
+            if (co.card.ImageName == "Kinzo" && co.GameObject.transform.parent.parent.name == playerField.name)
             {
                 Game.INSTANCE.AddCounterEffect(co, 3);
                 return true;
@@ -212,6 +212,23 @@ public class CardEffects
     internal static bool ShannonEffect(Card c)
     {
         Game.INSTANCE.CreateShield(c.GetTargetCardObject().GameObject);
+        return true;
+    }
+
+    internal static bool BattlerEffect(Card c)
+    {
+        GameObject playerField = GetPlayerField(c);
+        CardObject battlerCO = c.GetTargetCardObject();
+
+        List<CardObject> iteratable = new List<CardObject>(Game.INSTANCE.CardObjectsInGame);
+        foreach (CardObject co in iteratable)
+        {
+            if(co.GameObject.transform.parent.parent.name != playerField.name && co.card.Tags.Contains(TagType.Witch))
+            {
+                Game.INSTANCE.DamageCard(co, battlerCO.counters + battlerCO.card.Attack);
+            }
+        }
+        Game.INSTANCE.UpdateAllStatBoxes();
         return true;
     }
 
@@ -252,13 +269,130 @@ public class CardEffects
         }
     }
 
-    internal static bool GohdaEffect(Card arg)
+    internal static bool RudolfEffect(Card c)
     {
-        foreach(CardObject co in Game.INSTANCE.CardObjectsInGame)
+        GameObject playerField = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
         {
-            if(co.GameObject.transform.parent.parent.name == "EnemyField")
+            if (co.card.ImageName == "Battler" && co.GameObject.transform.parent.parent.name == playerField.name)
+            {
+                Game.INSTANCE.AddCounterEffect(co, 3);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    internal static bool KyrieEffect(Card c)
+    {
+        GameObject playerField = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.card.ImageName == "Battler" && co.GameObject.transform.parent.parent.name == playerField.name)
+            {
+                Game.INSTANCE.AddCounterEffect(co, 3);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    internal static bool EvaEffect(Card c)
+    {
+        CardObject targetCardObject = c.GetTargetCardObject();
+        if (!targetCardObject.acted)
+        {
+            targetCardObject.currentHP = targetCardObject.card.HP + targetCardObject.counters;
+            Game.INSTANCE.UpdateStatBoxes(targetCardObject, targetCardObject.GameObject.transform.parent.gameObject);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    internal static bool GeorgeEffect(Card c)
+    {
+
+        CardObject co = c.GetTargetCardObject();
+        if (co.counters == 0)
+        {
+            return false;
+        }
+        else
+        {
+            int countersToRemove = co.counters;
+            if (countersToRemove >= 2)
+            {
+                countersToRemove = 2;
+            }
+            Game.INSTANCE.RemoveCounter(co, countersToRemove);
+            CardObject leviathanCO = Game.INSTANCE.FindCardObject(Game.INSTANCE.SelectedCardGameObject);
+            Game.INSTANCE.AddCounterEffect(leviathanCO, countersToRemove);
+            return true;
+        }
+    }
+
+    internal static bool HideyoshiEffect(Card arg)
+    {
+        return true;
+    }
+
+    internal static bool GohdaEffect(Card c)
+    {
+        GameObject field = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.GameObject.transform.parent.parent.name == field.name)
             {
                 Game.INSTANCE.AddCounterEffect(co, 1);
+            }
+        }
+        return true;
+    }
+
+    private static GameObject GetPlayerField(Card c)
+    {
+        GameObject field = null;
+        if (c.GetUsedByPlayer())
+        {
+            field = Game.INSTANCE.PlayerField;
+        }
+        else
+        {
+            field = Game.INSTANCE.EnemyField;
+        }
+
+        return field;
+    }
+
+    internal static bool JessicaEffect(Card c)
+    {
+        GameObject playerField = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.GameObject.transform.parent.parent.name != playerField.name && Game.INSTANCE.HasShield(co.GameObject))
+            {
+                Game.INSTANCE.RemoveShield(co.GameObject);
+            }
+        }
+        return true;
+    }
+
+    internal static bool KraussEffect(Card arg)
+    {
+        return true;
+    }
+
+    internal static bool NatsuhiEffect(Card c)
+    {
+        GameObject playerField = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.GameObject.transform.parent.parent.name == playerField.name && co.card.Tags.Contains(TagType.Human))
+            {
+                Game.INSTANCE.AddCounterEffect(co, 2);
             }
         }
         return true;
@@ -268,6 +402,11 @@ public class CardEffects
     {
         CardObject kanon = c.GetTargetCardObject();
         Game.INSTANCE.AddCounterEffect(kanon, 1);
+        return true;
+    }
+
+    internal static bool RosaEffect(Card arg)
+    {
         return true;
     }
 

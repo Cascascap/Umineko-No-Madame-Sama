@@ -77,13 +77,12 @@ public class Deck
         }
     }
 
-    //Default decks:
-    public void Beatrice()
+    public void StartingDeck()
     {
         this.leaderCard = new Card(0, 36, 3, CardEffects.BeatriceEffect, "Beatrice", new List<TagType> { TagType.Leader, TagType.Witch }, false, false, 1);
         AddCardRegister(this.leaderCard, true);
         Card goat = new Card(1, 2, 2, CardEffects.GoatEffect, "Goat", new List<TagType> { TagType.Summon }, true, false, 0);
-        AddCardRegister(goat, times:10);
+        AddCardRegister(goat, times: 10);
         Card asmodeus = new Card(1, 4, 4, CardEffects.AsmodeusEffect, "Asmodeus", new List<TagType> { TagType.Summon, TagType.Stake }, false, true, 1, TagType.Summon, TargetType.Ally);
         AddCardRegister(asmodeus);
         Card beelzebub = new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
@@ -105,6 +104,12 @@ public class Deck
         EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(gaap);
         AddCardRegister(new Card(2, 8, 4, CardEffects.RonoveEffect, "Ronove", new List<TagType> { TagType.Summon, TagType.Demon }, false, true, 2, TagType.All, TargetType.Ally));
         AddCardRegister(new Card(3, 12, 6, CardEffects.VirgiliaEffect, "Virgilia", new List<TagType> { TagType.Witch }, false, false, 3));
+    }
+
+    //Default decks:
+    public void Beatrice()
+    {
+        StartingDeck();
     }
 
     public void Lambda()
@@ -139,6 +144,36 @@ public class Deck
         AddCardRegister(Kumasawa);
         AddCardRegister(new Card(2, 10, 4, CardEffects.NanjoEffect, "Nanjo", new List<TagType> { TagType.Human }, false, true, 1, requiresAI: true));
         AddCardRegister(new Card(1, 2, 2, CardEffects.ShannonEffect, "Shannon", new List<TagType> { TagType.Human, TagType.Servant }, false, true, 1, requiresAI: true));
+    }
+
+    public void Battler()
+    {
+        this.leaderCard = new Card(0, 40, 1, CardEffects.BattlerEffect, "Battler", new List<TagType> { TagType.Leader, TagType.Human }, false, false, 1);
+        AddCardRegister(this.leaderCard, true);
+        Card Rudolf = new Card(1, 10, 1, CardEffects.RudolfEffect, "Rudolf", new List<TagType> { TagType.Human }, true, false, 0);
+        EffectListener.INSTANCE.TurnEndingList.Add(Rudolf);
+        AddCardRegister(Rudolf);
+        Card Kyrie = new Card(1, 10, 1, CardEffects.KyrieEffect, "Kyrie", new List<TagType> { TagType.Human }, true, false, 0);
+        EffectListener.INSTANCE.TurnEndingList.Add(Kyrie);
+        AddCardRegister(Kyrie);
+        Card Eva = new Card(1, 9, 3, CardEffects.EvaEffect, "Eva", new List<TagType> { TagType.Human }, true, false, 0);
+        EffectListener.INSTANCE.TurnEndingList.Add(Eva);
+        AddCardRegister(Eva);
+        Card George = new Card(1, 4, 8, CardEffects.GeorgeEffect, "George", new List<TagType> { TagType.Human }, false, true, 0);
+        AddCardRegister(George);
+        Card Hideyoshi = new Card(1, 10, 2, CardEffects.HideyoshiEffect, "Hideyoshi", new List<TagType> { TagType.Human }, true, false, 0);
+        EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(Hideyoshi);
+        AddCardRegister(Hideyoshi);
+        Card Jessica = new Card(1, 5, 8, CardEffects.JessicaEffect, "Jessica", new List<TagType> { TagType.Human }, false, false, 0);
+        AddCardRegister(Jessica);
+        Card Krauss = new Card(1, 8, 8, CardEffects.KraussEffect, "Krauss", new List<TagType> { TagType.Human }, true, false, 0);
+        AddCardRegister(Krauss);
+        Card Natsuhi = new Card(1, 8, 8, CardEffects.NatsuhiEffect, "Natsuhi", new List<TagType> { TagType.Human }, true, false, 0);
+        EffectListener.INSTANCE.TurnEndingList.Add(Natsuhi);
+        AddCardRegister(Natsuhi);
+        Card Rosa = new Card(2, 20, 6, CardEffects.RosaEffect, "Rosa", new List<TagType> { TagType.Human }, true, false, 0);
+        AddCardRegister(Rosa);
+        EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(Rosa);
     }
 
     public void Ange()
