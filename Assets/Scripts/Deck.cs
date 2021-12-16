@@ -620,7 +620,7 @@ public class Deck
     }
 
     // 1-6, 2-6, 3-6
-    public static void LambdaReward()
+    public static CardsByID LambdaReward()
     {
         int rn = new Random().Next(1, 31);
         CardsByID reward;
@@ -644,9 +644,10 @@ public class Deck
             reward = possibleRewards[rnpr];
         }
         AddCardToInventory(reward);
+        return reward;
     }
 
-    public static void KinzoReward()
+    public static CardsByID KinzoReward()
     {
 
         int rn = new Random().Next(1, 31);
@@ -671,9 +672,10 @@ public class Deck
             reward = possibleRewards[rnpr];
         }
         AddCardToInventory(reward);
+        return reward;
     }
 
-    public static void AngeReward()
+    public static CardsByID AngeReward()
     {
         int rn = new Random().Next(1, 31);
         CardsByID reward;
@@ -697,9 +699,10 @@ public class Deck
             reward = possibleRewards[rnpr];
         }
         AddCardToInventory(reward);
+        return reward;
     }
 
-    public static void BattlerReward()
+    public static CardsByID BattlerReward()
     {
         int rn = new Random().Next(1, 31);
         CardsByID reward;
@@ -723,9 +726,10 @@ public class Deck
             reward = possibleRewards[rnpr];
         }
         AddCardToInventory(reward);
+        return reward;
     }
 
-    public static void EVAReward()
+    public static CardsByID EVAReward()
     {
         int rn = new Random().Next(1, 31);
         CardsByID reward;
@@ -743,9 +747,10 @@ public class Deck
             reward = possibleRewards[rnpr];
         }
         AddCardToInventory(reward);
+        return reward;
     }
 
-    public static void ErikaReward()
+    public static CardsByID ErikaReward()
     {
         int rn = new Random().Next(1, 31);
         CardsByID reward;
@@ -769,9 +774,10 @@ public class Deck
             reward = possibleRewards[rnpr];
         }
         AddCardToInventory(reward);
+        return reward;
     }
 
-    public static void FeatherineReward()
+    public static CardsByID FeatherineReward()
     {
         int rn = new Random().Next(1, 31);
         CardsByID reward;
@@ -795,8 +801,9 @@ public class Deck
             reward = possibleRewards[rnpr];
         }
         AddCardToInventory(reward);
+        return reward;
     }
-    public static void GohdaReward()
+    public static CardsByID GohdaReward()
     {
         int rn = new Random().Next(1, 31);
         CardsByID reward;
@@ -820,6 +827,7 @@ public class Deck
             reward = possibleRewards[rnpr];
         }
         AddCardToInventory(reward);
+        return reward;
     }
     
     public Card FindCardInDeck(string name)

@@ -15,7 +15,7 @@ public class Game : MonoBehaviour
     public GameObject PlayerHandArea, EnemyHandArea;
     public GameObject CardSlot00, CardSlot01, CardSlot02, CardSlot10, CardSlot11, CardSlot12, CardSlot20, CardSlot21, CardSlot22, CardSlot30, CardSlot31, CardSlot32;
     public GameObject ZoomedCard, PlayerDeckSlot, EnemyDeckSlot, PlayerGraveyard, EnemyGraveyard, PlayerField, EnemyField;
-    public GameObject Background;
+    public GameObject Background, RewardPanel;
 
     public GameObject CardPrefab;
     public Button EndTurnButton, UndoButton, GoToMainMenuButton;
@@ -657,39 +657,45 @@ public class Game : MonoBehaviour
     {
         EndTurnButton.gameObject.SetActive(false);
         UndoButton.gameObject.SetActive(false);
-
-        if(EnemyLeader == "Lambda")
+        Deck.CardsByID reward = Deck.CardsByID.Goat;
+        if (EnemyLeader == "Lambda")
         {
-            Deck.LambdaReward();
+           reward = Deck.LambdaReward();
         }
         else if(EnemyLeader == "Kinzo")
         {
-            Deck.KinzoReward();
+            reward = Deck.KinzoReward();
         }
         else if (EnemyLeader == "Ange")
         {
-            Deck.AngeReward();
+            reward = Deck.AngeReward();
         }
         else if (EnemyLeader == "Battler")
         {
-            Deck.BattlerReward();
+            reward = Deck.BattlerReward();
         }
         else if (EnemyLeader == "EVA")
         {
-            Deck.EVAReward();
+            reward = Deck.EVAReward();
         }
         else if (EnemyLeader == "Erika")
         {
-            Deck.ErikaReward();
+            reward = Deck.ErikaReward();
         }
         else if (EnemyLeader == "Featherine")
         {
-            Deck.FeatherineReward();
+            reward = Deck.FeatherineReward();
         }
         else if (EnemyLeader == "Gohda")
         {
-            Deck.GohdaReward();
+            reward = Deck.GohdaReward();
         }
+        RewardPanel.SetActive(true);
+        Image rewardedCardImage = RewardPanel.transform.GetChild(0).GetComponent<Image>();
+        TextMeshProUGUI cardRewardText = RewardPanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        rewardedCardImage.sprite =(Sprite)Resources.Load("cards/" + reward.ToString(), typeof(Sprite));
+        cardRewardText.text = $" {reward.ToString()} obtained!";
+
         int victories = PlayerPrefs.GetInt(EnemyLeader + "Victories");
         PlayerPrefs.SetInt(EnemyLeader + "Victories", victories + 1);
         GoToMainMenuButton.gameObject.SetActive(true);
