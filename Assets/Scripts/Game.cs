@@ -652,10 +652,17 @@ public class Game : MonoBehaviour
     {
         EndTurnButton.gameObject.SetActive(false);
         UndoButton.gameObject.SetActive(false);
+
+        if(EnemyLeader == "Lambda")
+        {
+            Deck.LambdaReward();
+        }
+
         int victories = PlayerPrefs.GetInt(EnemyLeader + "Victories");
         PlayerPrefs.SetInt(EnemyLeader + "Victories", victories + 1);
         GoToMainMenuButton.gameObject.SetActive(true);
         GoToMainMenuButton.onClick.AddListener(GoBackToMainMenu);
+
     }
 
     private void OnEndTurn()

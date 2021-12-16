@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using Random = System.Random;
 
 public class Deck 
 {
@@ -410,7 +411,7 @@ public class Deck
         }
     }
 
-    private void AddCardToInventory(CardsByID card, int number=1)
+    private static void AddCardToInventory(CardsByID card, int number=1)
     {
         int inInventory = PlayerPrefs.GetInt(card.ToString() + "Inventory");
         PlayerPrefs.SetInt(card.ToString() + "Inventory", inInventory + number);
@@ -473,8 +474,32 @@ public class Deck
         AddCardToDeck(CardsByID.Rosa, saveCard: false);
     }
 
-    
-
+    // 1-6, 2-6, 3-6
+    public static void LambdaReward()
+    {
+        int rn = new Random().Next(1, 31);
+        CardsByID reward;
+        List<CardsByID> possibleRewards;
+        if (rn <= 5)
+        {
+            possibleRewards = new List<CardsByID> {CardsByID.Will};
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else if(rn <= 15)
+        {
+            possibleRewards = new List<CardsByID> {CardsByID.Lion};
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Diana, CardsByID.Konpeitou };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        AddCardToInventory(reward);
+    }
 
     public Card FindCardInDeck(string name)
     {
@@ -575,7 +600,11 @@ public class Deck
         new Card(1, 5, 8, CardEffects.JessicaEffect, "Jessica", new List<TagType> { TagType.Human }, false, false, 0),
         new Card(1, 8, 8, CardEffects.KraussEffect, "Krauss", new List<TagType> { TagType.Human }, true, false, 0),
         new Card(1, 8, 8, CardEffects.NatsuhiEffect, "Natsuhi", new List<TagType> { TagType.Human }, true, false, 0),
-        new Card(2, 20, 6, CardEffects.RosaEffect, "Rosa", new List<TagType> { TagType.Human }, true, false, 0)
+        new Card(2, 20, 6, CardEffects.RosaEffect, "Rosa", new List<TagType> { TagType.Human }, true, false, 0),
+        new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<TagType> { TagType.Human }, true, false, 0),
+        new Card(2, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human}, false, false, 1, requiresAI: true),
+        new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<TagType> { TagType.Cat, TagType.Pet }, true, false, 1),
+        new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summon, TagType.Object }, true, false, 0)
         };
         return ret;
     }
