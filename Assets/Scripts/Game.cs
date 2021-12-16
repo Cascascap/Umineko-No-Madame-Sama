@@ -345,6 +345,21 @@ public class Game : MonoBehaviour
         return card;
     }
 
+    internal Card FindCard(Deck.CardsByID cbi)
+    {
+        Card card = null;
+        string name = cbi.ToString();
+        foreach (Card c in CardsInGame)
+        {
+            if (c.ImageName == name)
+            {
+                card = c;
+                break;
+            }
+        }
+        return card;
+    }
+
     internal void Defeat()
     {
         EndTurnButton.gameObject.SetActive(false);

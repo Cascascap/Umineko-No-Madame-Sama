@@ -90,6 +90,7 @@ public class Deck
     {
         Card beelzebub = new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
         AddCardRegister(beelzebub);
+        EffectListener.INSTANCE.GettingCountersList.Add(beelzebub);
     }
 
     public void BelphegorCard()
@@ -274,16 +275,27 @@ public class Deck
     public void StartingDeck()
     {
         AddCardToDeck(CardsByID.Goat, 10);
+        AddCardToInventory(CardsByID.Goat, 10);
         AddCardToDeck(CardsByID.Asmodeus);
+        AddCardToInventory(CardsByID.Asmodeus);
         AddCardToDeck(CardsByID.Beelzebub);
+        AddCardToInventory(CardsByID.Beelzebub);
         AddCardToDeck(CardsByID.Belphegor);
+        AddCardToInventory(CardsByID.Belphegor);
         AddCardToDeck(CardsByID.Leviathan);
+        AddCardToInventory(CardsByID.Leviathan);
         AddCardToDeck(CardsByID.Mammon);
+        AddCardToInventory(CardsByID.Mammon);
         AddCardToDeck(CardsByID.Satan);
+        AddCardToInventory(CardsByID.Satan);
         AddCardToDeck(CardsByID.Lucifer);
+        AddCardToInventory(CardsByID.Lucifer);
         AddCardToDeck(CardsByID.Gaap);
+        AddCardToInventory(CardsByID.Gaap);
         AddCardToDeck(CardsByID.Ronove);
+        AddCardToInventory(CardsByID.Ronove);
         AddCardToDeck(CardsByID.Virgilia);
+        AddCardToInventory(CardsByID.Virgilia);
         PlayerPrefs.SetInt("PlayerHasDeck", 1);
     }
 
@@ -319,7 +331,8 @@ public class Deck
         }
     }
 
-    private void AddCardToDeck(CardsByID card, int cardNumber=1, bool saveCard=true)
+
+    private void AddCardToDeck(CardsByID card, int cardNumber=1, bool saveCard=true, bool addToinventory=false)
     {
         for(int i=0; i<cardNumber; i++)
         {
@@ -329,6 +342,16 @@ public class Deck
         {
             SaveCardToDeck(card, cardNumber);
         }
+        if (addToinventory)
+        {
+            AddCardToInventory(card);
+        }
+    }
+
+    private void AddCardToInventory(CardsByID card, int number=1)
+    {
+        int inInventory = PlayerPrefs.GetInt(card.ToString() + "Inventory");
+        PlayerPrefs.SetInt(card.ToString() + "Inventory", inInventory + number);
     }
 
     public void Lambda()
