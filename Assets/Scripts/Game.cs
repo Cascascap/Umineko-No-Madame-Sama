@@ -213,6 +213,10 @@ public class Game : MonoBehaviour
 
     public void CreateShield(GameObject go)
     {
+        if (HasShield(go))
+        {
+            return;
+        }
         Sprite shieldSprite = (Sprite)Resources.Load("RonoveShield", typeof(Sprite));
         GameObject gos = new GameObject("Shield");
         RectTransform rectTransform = gos.AddComponent<RectTransform>();

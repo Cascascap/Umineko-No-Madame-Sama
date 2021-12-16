@@ -364,7 +364,7 @@ public class Deck
 
     public void DlanorCard()
     {
-        Card Dlanor = new Card(3, 8, 6, CardEffects.DlanorEffect, "Dlanor", new List<TagType> { TagType.Angel }, true, false, 0);
+        Card Dlanor = new Card(3, 40, 12, CardEffects.DlanorEffect, "Dlanor", new List<TagType> { TagType.Angel }, true, false, 0);
         if (EffectListener.INSTANCE != null)
         {
             EffectListener.INSTANCE.EffectStopperList.Add(Dlanor);
@@ -605,7 +605,7 @@ public class Deck
         {
             EffectListener.INSTANCE.EffectStopperList.Add(this.leaderCard);
         }
-        AddCardToDeck(CardsByID.FutureGoat, 20, false);
+        AddCardToDeck(CardsByID.FutureGoat, 3, false);
         AddCardToDeck(CardsByID.Cornelia, saveCard: false);
         AddCardToDeck(CardsByID.Gertrude, saveCard: false);
         AddCardToDeck(CardsByID.Dlanor, saveCard: false);
@@ -942,7 +942,7 @@ public class Deck
         new Card(2, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human}, false, false, 1, requiresAI: true),
         new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<TagType> { TagType.Cat, TagType.Pet }, true, false, 1),
         new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summon, TagType.Object }, true, false, 0),
-        new Card(3, 8, 6, CardEffects.DlanorEffect, "Dlanor", new List<TagType> { TagType.Angel }, true, false, 0),
+        new Card(3, 40, 12, CardEffects.DlanorEffect, "Dlanor", new List<TagType> { TagType.Angel }, true, false, 0),
         new Card(2, 20, 6, CardEffects.CorneliaEffect, "Cornelia", new List<TagType> { TagType.Human }, false, false, 2),
         new Card(2, 20, 6, CardEffects.GertrudeEffect, "Gertrude", new List<TagType> { TagType.Human }, true, false, 0),
         new Card(1, 8, 8, CardEffects.FutureGoatEffect, "FutureGoat", new List<TagType> { TagType.Summon }, true, false, 0),

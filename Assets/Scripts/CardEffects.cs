@@ -372,24 +372,43 @@ public class CardEffects
         return true;
     }
 
-    internal static bool CorneliaEffect(Card arg)
+    internal static bool CorneliaEffect(Card c)
     {
-
-        Debug.Log("Cooldown 2: Grants a shield to every ally");
+        GameObject playerField = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.GameObject.transform.parent.parent.name == playerField.name)
+            {
+                Game.INSTANCE.CreateShield(co.GameObject);
+            }
+        }
         return true;
     }
 
-    internal static bool GertrudeEffect(Card arg)
+    internal static bool GertrudeEffect(Card c)
     {
 
-        Debug.Log("Passive: Grants Dlanor 5 +1/+1 counters at the end of the turn");
-        return true;
+        GameObject playerField = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.card.ImageName == "Dlanor" && co.GameObject.transform.parent.parent.name == playerField.name)
+            {
+                Game.INSTANCE.AddCounterEffect(co, 5);
+                return true;
+            }
+        }
+        return false;
     }
 
-    internal static bool DlanorEffect(Card arg)
+    internal static bool DlanorEffect(Card c)
     {
-
-        Debug.Log("Passive: Prevents enemy leader from using it's effect");
+        Debug.Log("Leaders cant use their skill");
+        List<TagType> tags = c.GetTargetCardTags();
+        CardObject effectUser = c.GetTargetCardObject();
+        if (tags.Contains(TagType.Leader) && effectUser.GameObject.transform.parent.parent.name == "PlayerField")
+        {
+            return false;
+        }
         return true;
     }
 
@@ -697,6 +716,13 @@ public class CardEffects
     {
         CardObject cardMoving = c.GetTargetCardObject();
         GameObject field = GetPlayerField(c);
+        foreach(CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if(co.card.ImageName == "Dlanor" && co.GameObject.transform.parent.parent.name != field.name)
+            {
+                return true;
+            }
+        }
         if (cardMoving.card.Cost == 1 && cardMoving.GameObject.transform.parent.parent.name != field.name)
         {
             return false;
