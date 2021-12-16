@@ -27,7 +27,8 @@ public class Deck
         Cat,
         Pet,
         Object,
-        Servant
+        Servant,
+        Angel
     }
 
     public int remainingCards = 0;
@@ -328,7 +329,39 @@ public class Deck
         Card MariaBeatrice = new Card(3, 8, 6, CardEffects.MariaBeatriceEffect, "MariaBeatrice", new List<TagType> { TagType.Witch }, false, false, 0);
         AddCardRegister(MariaBeatrice);
     }
-    
+
+    public void FutureGoatCard()
+    {
+        Card FutureGoat = new Card(1, 8, 8, CardEffects.FutureGoatEffect, "FutureGoat", new List<TagType> { TagType.Summon }, true, false, 0);
+        AddCardRegister(FutureGoat);
+    }
+
+    public void GertrudeCard()
+    {
+        Card Gertrude = new Card(2, 20, 6, CardEffects.GertrudeEffect, "Gertrude", new List<TagType> { TagType.Human }, true, false, 0);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Gertrude);
+        }
+        AddCardRegister(Gertrude);
+    }
+
+    public void CorneliaCard()
+    {
+        Card Cornelia = new Card(2, 20, 6, CardEffects.CorneliaEffect, "Cornelia", new List<TagType> { TagType.Human }, false, false, 2);
+        AddCardRegister(Cornelia);
+    }
+
+    public void DlanorCard()
+    {
+        Card Dlanor = new Card(3, 8, 6, CardEffects.DlanorEffect, "Dlanor", new List<TagType> { TagType.Angel }, true, false, 0);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.EffectStopperList.Add(Dlanor);
+        }
+        AddCardRegister(Dlanor);
+    }
+
 
     public void StartingDeck()
     {
@@ -411,6 +444,17 @@ public class Deck
         }
     }
 
+    public static void RewardAllCards()
+    {
+        foreach(CardsByID cbi in Enum.GetValues(typeof(CardsByID)))
+        {
+            if (!cbi.ToString().StartsWith("PlaceHolder"))
+            {
+                AddCardToInventory(cbi);
+            }
+        }
+    }
+
     private static void AddCardToInventory(CardsByID card, int number=1)
     {
         int inInventory = PlayerPrefs.GetInt(card.ToString() + "Inventory");
@@ -472,6 +516,20 @@ public class Deck
         AddCardToDeck(CardsByID.Krauss, saveCard: false);
         AddCardToDeck(CardsByID.Natsuhi, saveCard: false);
         AddCardToDeck(CardsByID.Rosa, saveCard: false);
+    }
+
+    public void Erika()
+    {
+        this.leaderCard = new Card(0, 100, 8, CardEffects.ErikaEffect, "Erika", new List<TagType> { TagType.Leader, TagType.Witch }, true, false, 1);
+        AddCardRegister(this.leaderCard, true);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.EffectStopperList.Add(this.leaderCard);
+        }
+        AddCardToDeck(CardsByID.FutureGoat, 20, false);
+        AddCardToDeck(CardsByID.Cornelia, saveCard: false);
+        AddCardToDeck(CardsByID.Gertrude, saveCard: false);
+        AddCardToDeck(CardsByID.Dlanor, saveCard: false);
     }
 
     // 1-6, 2-6, 3-6
@@ -644,7 +702,12 @@ public class Deck
         Cat=42,
         Piece=43,
         AngeBeatrice=44,
-        EvaBeatrice=45
+        EvaBeatrice=45,
+        FutureGoat = 46,
+        PlaceHolder47 = 47,
+        PlaceHolder48 = 48,
+        PlaceHolder49 = 49,
+        PlaceHolder50 = 50
     }
 
     public static List<Card> GetAllCards()
@@ -683,7 +746,11 @@ public class Deck
         new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<TagType> { TagType.Human }, true, false, 0),
         new Card(2, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human}, false, false, 1, requiresAI: true),
         new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<TagType> { TagType.Cat, TagType.Pet }, true, false, 1),
-        new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summon, TagType.Object }, true, false, 0)
+        new Card(1, 1, 3, CardEffects.KonpeitouEffect, "Konpeitou", new List<TagType> { TagType.Summon, TagType.Object }, true, false, 0),
+        new Card(3, 8, 6, CardEffects.DlanorEffect, "Dlanor", new List<TagType> { TagType.Angel }, true, false, 0),
+        new Card(2, 20, 6, CardEffects.CorneliaEffect, "Cornelia", new List<TagType> { TagType.Human }, false, false, 2),
+        new Card(2, 20, 6, CardEffects.GertrudeEffect, "Gertrude", new List<TagType> { TagType.Human }, true, false, 0),
+        new Card(1, 8, 8, CardEffects.FutureGoatEffect, "FutureGoat", new List<TagType> { TagType.Summon }, true, false, 0)
         };
         return ret;
     }

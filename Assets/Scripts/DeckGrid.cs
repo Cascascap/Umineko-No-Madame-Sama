@@ -17,7 +17,7 @@ public class DeckGrid : MonoBehaviour
     [SerializeField] private TextMeshProUGUI CardsOwnedText;
     private int OFFSET = 20;
     private int STARTINGX = -250;
-    private int STARTINGY = 800;
+    private int STARTINGY = 925;
 
     private Dictionary<int, DeckGridTile> CardsMap = new Dictionary<int, DeckGridTile>();
 
@@ -78,7 +78,7 @@ public class DeckGrid : MonoBehaviour
             }
             i++;
         }
-        CardsOwnedText.text = $"{cardsOwned}/45";
+        CardsOwnedText.text = $"{cardsOwned}/46";
     }
 
     void GoBackToMainMenu()

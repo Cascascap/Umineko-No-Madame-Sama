@@ -354,6 +354,11 @@ public class CardEffects
         return true;
     }
 
+    internal static bool FutureGoatEffect(Card arg)
+    {
+        return true;
+    }
+
     internal static bool GohdaEffect(Card c)
     {
         GameObject field = GetPlayerField(c);
@@ -364,6 +369,27 @@ public class CardEffects
                 Game.INSTANCE.AddCounterEffect(co, 1);
             }
         }
+        return true;
+    }
+
+    internal static bool CorneliaEffect(Card arg)
+    {
+
+        Debug.Log("Cooldown 2: Grants a shield to every ally");
+        return true;
+    }
+
+    internal static bool GertrudeEffect(Card arg)
+    {
+
+        Debug.Log("Passive: Grants Dlanor 5 +1/+1 counters at the end of the turn");
+        return true;
+    }
+
+    internal static bool DlanorEffect(Card arg)
+    {
+
+        Debug.Log("Passive: Prevents enemy leader from using it's effect");
         return true;
     }
 
@@ -576,6 +602,12 @@ public class CardEffects
         {
             return false;
         }
+    }
+
+    internal static bool ErikaEffect(Card arg)
+    {
+        Debug.Log("Prevents enemy cards on the first row from using their abilities");
+        return true;
     }
 
     internal static bool BelphegorEffect(Card c)

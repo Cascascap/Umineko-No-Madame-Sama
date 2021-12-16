@@ -77,6 +77,11 @@ public class Game : MonoBehaviour
         {
             return deckName;
         }
+        else if(deckName == "Casca")
+        {
+            Deck.RewardAllCards();
+            return "Beatrice";
+        }
         else
         {
             return "Beatrice";
