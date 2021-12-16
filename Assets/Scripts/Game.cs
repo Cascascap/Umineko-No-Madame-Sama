@@ -657,6 +657,18 @@ public class Game : MonoBehaviour
         {
             Deck.LambdaReward();
         }
+        else if(EnemyLeader == "Kinzo")
+        {
+            Deck.KinzoReward();
+        }
+        else if (EnemyLeader == "Ange")
+        {
+            Deck.AngeReward();
+        }
+        else if (EnemyLeader == "Battler")
+        {
+            Deck.BattlerReward();
+        }
 
         int victories = PlayerPrefs.GetInt(EnemyLeader + "Victories");
         PlayerPrefs.SetInt(EnemyLeader + "Victories", victories + 1);

@@ -201,7 +201,7 @@ public class Deck
 
     public void GohdaCard()
     {
-        Card Gohda = new Card(2, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 1);
+        Card Gohda = new Card(3, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 1);
         AddCardRegister(Gohda);
         if (EffectListener.INSTANCE != null)
         {
@@ -230,7 +230,7 @@ public class Deck
     }
     public void ShannonCard()
     {
-        AddCardRegister(new Card(1, 2, 2, CardEffects.ShannonEffect, "Shannon", new List<TagType> { TagType.Human, TagType.Servant }, false, true, 1, requiresAI: true));
+        AddCardRegister(new Card(1, 2, 2, CardEffects.ShannonEffect, "Shannon", new List<TagType> { TagType.Human, TagType.Servant }, false, true, 2, requiresAI: true));
     }
 
     public void RudolfCard()
@@ -501,6 +501,85 @@ public class Deck
         AddCardToInventory(reward);
     }
 
+    public static void KinzoReward()
+    {
+
+        int rn = new Random().Next(1, 31);
+        CardsByID reward;
+        List<CardsByID> possibleRewards;
+        if (rn <= 5)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Gohda };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else if (rn <= 15)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Genji, CardsByID.Nanjo};
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Kanon, CardsByID.Shannon, CardsByID.Kumasawa};
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        AddCardToInventory(reward);
+    }
+
+    public static void AngeReward()
+    {
+        int rn = new Random().Next(1, 31);
+        CardsByID reward;
+        List<CardsByID> possibleRewards;
+        if (rn <= 5)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.MariaBeatrice };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else if (rn <= 15)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Maria, CardsByID.Lucifer };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Asmodeus, CardsByID.Beelzebub, CardsByID.Belphegor, CardsByID.Leviathan, CardsByID.Mammon, CardsByID.Satan, CardsByID.Sakutarou };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        AddCardToInventory(reward);
+    }
+
+    public static void BattlerReward()
+    {
+        int rn = new Random().Next(1, 31);
+        CardsByID reward;
+        List<CardsByID> possibleRewards;
+        if (rn <= 5)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Natsuhi };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else if (rn <= 15)
+        {
+            possibleRewards = new List<CardsByID> {CardsByID.Rosa };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Rudolf, CardsByID.Kyrie, CardsByID.Eva, CardsByID.George, CardsByID.Jessica, CardsByID.Hideyoshi, CardsByID.Krauss };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        AddCardToInventory(reward);
+    }
+
     public Card FindCardInDeck(string name)
     {
         List<Card> cardsList = this.cards.ToList(); 
@@ -585,9 +664,9 @@ public class Deck
         new Card(3, 12, 6, CardEffects.VirgiliaEffect, "Virgilia", new List<TagType> { TagType.Witch }, false, false, 3),
         new Card(2, 12, 2, CardEffects.GenjiEffect, "Genji", new List<TagType> { TagType.Servant, TagType.Human }, true, false, 0),
         new Card(1, 2, 2, CardEffects.KumasawaEffect, "Kumasawa", new List<TagType> { TagType.Human, TagType.Servant }, false, false, 2),
-        new Card(2, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 1),
+        new Card(3, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 1),
         new Card(1, 6, 6, CardEffects.KanonEffect, "Kanon", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 0),
-        new Card(1, 2, 2, CardEffects.ShannonEffect, "Shannon", new List<TagType> { TagType.Human, TagType.Servant }, false, true, 1, requiresAI: true),
+        new Card(1, 2, 2, CardEffects.ShannonEffect, "Shannon", new List<TagType> { TagType.Human, TagType.Servant }, false, true, 2, requiresAI: true),
         new Card(2, 10, 4, CardEffects.NanjoEffect, "Nanjo", new List<TagType> { TagType.Human }, false, true, 1, requiresAI: true),
         new Card(2, 4, 1, CardEffects.MariaEffect, "Maria", new List<TagType> { TagType.Human }, true, false, 0),
         new Card(3, 8, 6, CardEffects.MariaBeatriceEffect, "MariaBeatrice", new List<TagType> { TagType.Witch }, false, false, 0),
