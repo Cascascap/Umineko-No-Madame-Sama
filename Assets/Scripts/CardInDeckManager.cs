@@ -12,6 +12,7 @@ public class CardInDeckManager : MonoBehaviour
     [SerializeField] private GameObject Background;
     [SerializeField] public Image ZoomedCard;
     [SerializeField] private TextMeshProUGUI CardsInDeckText;
+    [SerializeField] private DeckGrid DeckGrid;
 
     private static CardInDeckManager INSTANCE;
     private Deck Deck;
@@ -71,11 +72,20 @@ public class CardInDeckManager : MonoBehaviour
 
     public void AddCardToDeck(DeckGridTile card)
     {
+        if(PlayerPrefs.GetInt(card.Card.ImageName + "Inventory") == 0)
+        {
+            return;
+        }
         int cardsInDeck = PlayerPrefs.GetInt(card.Card.ImageName);
         PlayerPrefs.SetInt(card.Card.ImageName, cardsInDeck + 1);
         int cardsInInventory = PlayerPrefs.GetInt(card.Card.ImageName + "Inventory");
         PlayerPrefs.SetInt(card.Card.ImageName + "Inventory", cardsInInventory - 1);
+        if(cardsInInventory == 0)
+        {
+            card.gameObject.SetActive(false);
+        }
         CardsInDeck.Add(card.Card);
+        DeckGrid.LoadCardsInInventory();
         PrintDeck();
     }
 
@@ -92,6 +102,7 @@ public class CardInDeckManager : MonoBehaviour
         int cardsInInventory = PlayerPrefs.GetInt(card.Card.ImageName+"Inventory");
         PlayerPrefs.SetInt(card.Card.ImageName + "Inventory", cardsInInventory + 1);
         CardsInDeck.Remove(card.Card);
+        DeckGrid.LoadCardsInInventory();
         PrintDeck();
     }
 }

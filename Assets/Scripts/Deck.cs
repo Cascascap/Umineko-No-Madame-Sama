@@ -332,27 +332,16 @@ public class Deck
     public void StartingDeck()
     {
         AddCardToDeck(CardsByID.Goat, 10);
-        AddCardToInventory(CardsByID.Goat, 10);
         AddCardToDeck(CardsByID.Asmodeus);
-        AddCardToInventory(CardsByID.Asmodeus);
         AddCardToDeck(CardsByID.Beelzebub);
-        AddCardToInventory(CardsByID.Beelzebub);
         AddCardToDeck(CardsByID.Belphegor);
-        AddCardToInventory(CardsByID.Belphegor);
         AddCardToDeck(CardsByID.Leviathan);
-        AddCardToInventory(CardsByID.Leviathan);
         AddCardToDeck(CardsByID.Mammon);
-        AddCardToInventory(CardsByID.Mammon);
         AddCardToDeck(CardsByID.Satan);
-        AddCardToInventory(CardsByID.Satan);
         AddCardToDeck(CardsByID.Lucifer);
-        AddCardToInventory(CardsByID.Lucifer);
         AddCardToDeck(CardsByID.Gaap);
-        AddCardToInventory(CardsByID.Gaap);
         AddCardToDeck(CardsByID.Ronove);
-        AddCardToInventory(CardsByID.Ronove);
         AddCardToDeck(CardsByID.Virgilia);
-        AddCardToInventory(CardsByID.Virgilia);
         PlayerPrefs.SetInt("PlayerHasDeck", 1);
     }
 

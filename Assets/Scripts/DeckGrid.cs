@@ -45,7 +45,7 @@ public class DeckGrid : MonoBehaviour
         LoadCardsInInventory();
     }
 
-    private void LoadCardsInInventory()
+    public void LoadCardsInInventory()
     {
         int i = 1;
         int cardsOwned = 0;
@@ -53,18 +53,28 @@ public class DeckGrid : MonoBehaviour
         {
             int cardsHold = PlayerPrefs.GetInt(cbi.ToString()+"Inventory");
             DeckGridTile cardTile = CardsMap[i];
-            if (cardsHold != 0)
+            Image tileImage = cardTile.gameObject.GetComponent<Image>();
+            if (cardsHold > 0)
             {
                 Sprite cardSprite = (Sprite)Resources.Load("Cards/" + cbi.ToString(), typeof(Sprite));
-                cardTile.gameObject.GetComponent<Image>().sprite = cardSprite;
-                //CardInDeckManager.GetInstance().Deck.AddCardToDeck(cbi);
-                //List<Card> newCards = new List<Card>(CardInDeckManager.GetInstance().Deck.cards);
+                tileImage.sprite = cardSprite;
+                tileImage.color = new Color32(255, 255, 255, 255);
                 cardTile.Card = Deck.GetAllCards().Find(x => x.ImageName == cbi.ToString());
 ;               cardsOwned++;
             }
             else
             {
-                cardTile.gameObject.SetActive(false);
+                if(PlayerPrefs.GetInt(cbi.ToString())>0)
+                {
+                    Sprite cardSprite = (Sprite)Resources.Load("Cards/" + cbi.ToString(), typeof(Sprite));
+                    tileImage.sprite = cardSprite;
+                    cardTile.Card = Deck.GetAllCards().Find(x => x.ImageName == cbi.ToString());
+                    tileImage.color = new Color32(40, 40, 40, 255);
+                }
+                else
+                {
+                    cardTile.gameObject.SetActive(false);
+                }
             }
             i++;
         }

@@ -477,10 +477,10 @@ RectTransform:
   m_Father: {fileID: 612149069}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 374.94, y: 0}
-  m_SizeDelta: {x: -749.87, y: 0}
+  m_SizeDelta: {x: 258.13, y: 630}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &242526036
 MonoBehaviour:
@@ -880,10 +880,10 @@ RectTransform:
   m_Father: {fileID: 242526035}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.30065918, y: 290.91}
-  m_SizeDelta: {x: -10.401, y: -588.83}
+  m_SizeDelta: {x: 255.599, y: 47.169983}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &442936082
 MonoBehaviour:
@@ -1030,10 +1030,10 @@ RectTransform:
   m_Father: {fileID: 840293204}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 1106, y: 692}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &612149070
 MonoBehaviour:
@@ -1360,10 +1360,10 @@ RectTransform:
   m_Father: {fileID: 617496283}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &791514614
 MonoBehaviour:
@@ -2237,6 +2237,7 @@ MonoBehaviour:
   Background: {fileID: 1230160539}
   ZoomedCard: {fileID: 206097262}
   CardsInDeckText: {fileID: 965458153}
+  DeckGrid: {fileID: 2115333735}
   MAX_CARDS_PER_DECK: 4
   MIN_DECK_SIZE: 5
   MAX_DECK_SIZE: 30
@@ -2935,10 +2936,10 @@ RectTransform:
   m_Father: {fileID: 612149069}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -135.61996, y: -32.089996}
-  m_SizeDelta: {x: -271.25, y: -64.18}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -135.62, y: -32.089996}
+  m_SizeDelta: {x: 736.75, y: 565.82}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1765935525
 MonoBehaviour:
@@ -3127,7 +3128,6 @@ MonoBehaviour:
   ZoomedCardInInventory: {fileID: 1113906295}
   ZoomedCardInDeck: {fileID: 206097262}
   CardsOwnedText: {fileID: 855980801}
-  CardInDeckManager: {fileID: 0}
 --- !u!4 &2115333736
 Transform:
   m_ObjectHideFlags: 0
