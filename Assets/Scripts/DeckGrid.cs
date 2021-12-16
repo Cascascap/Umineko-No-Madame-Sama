@@ -78,7 +78,7 @@ public class DeckGrid : MonoBehaviour
             }
             i++;
         }
-        CardsOwnedText.text = $"{cardsOwned}/46";
+        CardsOwnedText.text = $"{cardsOwned}/47";
     }
 
     void GoBackToMainMenu()

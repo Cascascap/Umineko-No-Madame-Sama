@@ -77,7 +77,7 @@ public class Game : MonoBehaviour
         {
             return deckName;
         }
-        else if(deckName == "Casca")
+        else if(deckName == "CascaIsGreat")
         {
             Deck.RewardAllCards();
             return "Beatrice";
@@ -681,6 +681,14 @@ public class Game : MonoBehaviour
         else if (EnemyLeader == "Erika")
         {
             Deck.ErikaReward();
+        }
+        else if (EnemyLeader == "Featherine")
+        {
+            Deck.FeatherineReward();
+        }
+        else if (EnemyLeader == "Gohda")
+        {
+            Deck.GohdaReward();
         }
         int victories = PlayerPrefs.GetInt(EnemyLeader + "Victories");
         PlayerPrefs.SetInt(EnemyLeader + "Victories", victories + 1);

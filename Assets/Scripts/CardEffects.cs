@@ -459,6 +459,16 @@ public class CardEffects
         return true;
     }
 
+    internal static bool BernkastelEffect(Card arg)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static bool AngeBeatriceEffect(Card arg)
+    {
+        throw new NotImplementedException();
+    }
+
     internal static bool KanonEffect(Card c)
     {
         CardObject kanon = c.GetTargetCardObject();
@@ -476,6 +486,16 @@ public class CardEffects
         CardObject satanCO = c.GetTargetCardObject();
         Game.INSTANCE.AddCounterEffect(satanCO, 1);
         return true;
+    }
+
+    internal static bool PieceEffect(Card arg)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static bool CatsEffect(Card arg)
+    {
+        throw new NotImplementedException();
     }
 
     internal static bool KumasawaEffect(Card c)
@@ -624,10 +644,6 @@ public class CardEffects
         }
     }
 
-    internal static bool EvaBeatriceEffect(Card arg)
-    {
-        throw new NotImplementedException();
-    }
 
     internal static bool ErikaEffect(Card arg)
     {
@@ -648,5 +664,20 @@ public class CardEffects
         {
             return false;
         }
+    }
+
+    internal static bool Featherineffect(Card arg)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static bool EvaBeatrice2Effect(Card arg)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static bool EvaBeatriceEffect(Card arg)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -254,9 +254,9 @@ public class Deck
         }
     }
 
-    public void EvaCard()
+    public void Eva2Card()
     {
-        Card Eva = new Card(1, 9, 3, CardEffects.EvaEffect, "Eva", new List<TagType> { TagType.Human }, true, false, 0);
+        Card Eva = new Card(1, 9, 3, CardEffects.EvaEffect, "Eva2", new List<TagType> { TagType.Human }, true, false, 0);
         AddCardRegister(Eva);
         if (EffectListener.INSTANCE != null)
         {
@@ -304,6 +304,12 @@ public class Deck
         {
             EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(Rosa);
         }
+    }
+
+    public void Battler2Card()
+    {
+        Card Battler = new Card(1, 12, 1, CardEffects.BattlerEffect, "Battler2", new List<TagType> {TagType.Human }, false, false, 1);
+        AddCardRegister(Battler);
     }
 
     public void SakutarouCard()
@@ -381,7 +387,41 @@ public class Deck
     public void Chiester556Card()
     {
         Card Chiester556 = new Card(2, 20, 10, CardEffects.Chiester556Effect, "Chiester556", new List<TagType> { TagType.Chiester, TagType.Summon }, true, false, 1);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Chiester556);
+        }
         AddCardRegister(Chiester556);
+    }
+
+    public void BernkastelCard()
+    {
+        Card Bernkastel = new Card(3, 36, 10, CardEffects.BernkastelEffect, "Bernkastel", new List<TagType> { TagType.Witch}, false, false, 1);
+        AddCardRegister(Bernkastel);
+    }
+
+    public void AngeBeatriceCard()
+    {
+        Card AngeBeatrice = new Card(2, 36, 10, CardEffects.AngeBeatriceEffect, "AngeBeatrice", new List<TagType> { TagType.Witch }, false, false, 2);
+        AddCardRegister(AngeBeatrice);
+    }
+
+    public void EvaBeatrice2Card()
+    {
+        Card EvaBeatrice = new Card(2, 36, 10, CardEffects.EvaBeatriceEffect, "EvaBeatrice2", new List<TagType> { TagType.Witch }, false, false, 1);
+        AddCardRegister(EvaBeatrice);
+    }
+
+    public void PieceCard()
+    {
+        Card Piece = new Card(3, 36, 10, CardEffects.PieceEffect, "Piece", new List<TagType> { TagType.Witch }, false, false, 2);
+        AddCardRegister(Piece);
+    }
+
+    public void CatsCard()
+    {
+        Card Cats = new Card(1, 1, 1, CardEffects.CatsEffect, "Cats", new List<TagType> { TagType.Cat }, true, false, 1);
+        AddCardRegister(Cats);
     }
 
     public void StartingDeck()
@@ -530,7 +570,7 @@ public class Deck
 
         AddCardToDeck(CardsByID.Rudolf, saveCard: false);
         AddCardToDeck(CardsByID.Kyrie, saveCard: false);
-        AddCardToDeck(CardsByID.Eva, saveCard: false);
+        AddCardToDeck(CardsByID.Eva2, saveCard: false);
         AddCardToDeck(CardsByID.George, saveCard: false);
         AddCardToDeck(CardsByID.Hideyoshi, saveCard: false);
         AddCardToDeck(CardsByID.Jessica, saveCard: false);
@@ -566,6 +606,17 @@ public class Deck
         AddCardToDeck(CardsByID.Cornelia, saveCard: false);
         AddCardToDeck(CardsByID.Gertrude, saveCard: false);
         AddCardToDeck(CardsByID.Dlanor, saveCard: false);
+    }
+
+    public void Featherine()
+    {
+        this.leaderCard = new Card(0, 160, 20, CardEffects.Featherineffect, "Featherine", new List<TagType> { TagType.Leader, TagType.Witch }, false, false, 1);
+        AddCardRegister(this.leaderCard, true);
+        AddCardToDeck(CardsByID.FutureGoat, 10, false);
+        AddCardToDeck(CardsByID.Bernkastel, saveCard: false);
+        AddCardToDeck(CardsByID.Piece, saveCard: false);
+        AddCardToDeck(CardsByID.AngeBeatrice, saveCard: false);
+        AddCardToDeck(CardsByID.EvaBeatrice2, saveCard: false);
     }
 
     // 1-6, 2-6, 3-6
@@ -661,13 +712,13 @@ public class Deck
         }
         else if (rn <= 15)
         {
-            possibleRewards = new List<CardsByID> {CardsByID.Rosa };
+            possibleRewards = new List<CardsByID> {CardsByID.Rosa, CardsByID.Battler2};
             int rnpr = new Random().Next(0, possibleRewards.Count);
             reward = possibleRewards[rnpr];
         }
         else
         {
-            possibleRewards = new List<CardsByID> { CardsByID.Rudolf, CardsByID.Kyrie, CardsByID.Eva, CardsByID.George, CardsByID.Jessica, CardsByID.Hideyoshi, CardsByID.Krauss };
+            possibleRewards = new List<CardsByID> { CardsByID.Rudolf, CardsByID.Kyrie, CardsByID.Eva2, CardsByID.George, CardsByID.Jessica, CardsByID.Hideyoshi, CardsByID.Krauss };
             int rnpr = new Random().Next(0, possibleRewards.Count);
             reward = possibleRewards[rnpr];
         }
@@ -720,6 +771,57 @@ public class Deck
         AddCardToInventory(reward);
     }
 
+    public static void FeatherineReward()
+    {
+        int rn = new Random().Next(1, 31);
+        CardsByID reward;
+        List<CardsByID> possibleRewards;
+        if (rn <= 5)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Bernkastel, CardsByID.Piece };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else if (rn <= 15)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.AngeBeatrice, CardsByID.EvaBeatrice2 };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Cats, CardsByID.FutureGoat };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        AddCardToInventory(reward);
+    }
+    public static void GohdaReward()
+    {
+        int rn = new Random().Next(1, 31);
+        CardsByID reward;
+        List<CardsByID> possibleRewards;
+        if (rn <= 5)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Dlanor };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else if (rn <= 15)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Gertrude, CardsByID.Cornelia };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.FutureGoat };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        AddCardToInventory(reward);
+    }
+    
     public Card FindCardInDeck(string name)
     {
         List<Card> cardsList = this.cards.ToList(); 
@@ -764,7 +866,7 @@ public class Deck
         Kyrie=22,
         Krauss=23,
         Natsuhi=24,
-        Eva=25,
+        Eva2=25,
         Hideyoshi=26,
         Rosa=27,
         George=28,
@@ -781,12 +883,12 @@ public class Deck
         Diana=39,
         Konpeitou=40,
         Bernkastel=41,
-        Cat=42,
+        Cats=42,
         Piece=43,
         AngeBeatrice=44,
-        EvaBeatrice=45,
+        EvaBeatrice2=45,
         FutureGoat = 46,
-        PlaceHolder47 = 47,
+        Battler2 = 47,
         PlaceHolder48 = 48,
         PlaceHolder49 = 49,
         PlaceHolder50 = 50
@@ -836,7 +938,13 @@ public class Deck
         new Card(3, 30, 15, CardEffects.Chiester00Effect, "Chiester00", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 2),
         new Card(1, 8, 8, CardEffects.Chiester410Effect, "Chiester410", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 1),
         new Card(1, 8, 8, CardEffects.Chiester45Effect, "Chiester45", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 1),
-        new Card(2, 20, 10, CardEffects.Chiester556Effect, "Chiester556", new List<TagType> { TagType.Chiester, TagType.Summon }, true, false, 1)
+        new Card(2, 20, 10, CardEffects.Chiester556Effect, "Chiester556", new List<TagType> { TagType.Chiester, TagType.Summon }, true, false, 1),
+        new Card(1, 12, 1, CardEffects.BattlerEffect, "Battler2", new List<TagType> {TagType.Human }, false, false, 1),
+        new Card(3, 36, 10, CardEffects.BernkastelEffect, "Bernkastel", new List<TagType> { TagType.Witch }, false, false, 1),
+        new Card(2, 36, 10, CardEffects.AngeBeatriceEffect, "AngeBeatrice", new List<TagType> { TagType.Witch }, false, false, 2),
+        new Card(2, 36, 10, CardEffects.EvaBeatrice2Effect, "EvaBeatrice2", new List<TagType> { TagType.Witch }, false, false, 1),
+        new Card(3, 36, 10, CardEffects.PieceEffect, "Piece", new List<TagType> { TagType.Witch }, false, false, 2),
+        new Card(1, 1, 1, CardEffects.CatsEffect, "Cats", new List<TagType> { TagType.Cat }, true, false, 1),
     };
         return ret;
     }
