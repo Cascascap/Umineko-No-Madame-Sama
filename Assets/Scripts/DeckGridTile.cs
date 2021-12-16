@@ -10,7 +10,6 @@ public class DeckGridTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
     }
 
     public void OnPointerEnter(PointerEventData eventData)

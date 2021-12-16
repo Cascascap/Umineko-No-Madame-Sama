@@ -25,7 +25,6 @@ public class Game : MonoBehaviour
     public List<GameObject> StatBoxes = new List<GameObject>();
     public GameObject CountersPrefab;
 
-
     private Dictionary<string, GameObject> SlotMap = new Dictionary<string, GameObject>();
     public TextMeshProUGUI TurnStateDisplay;
 
@@ -44,15 +43,12 @@ public class Game : MonoBehaviour
     //TODO: move to a leader class
     public string EnemyLeader, PlayerLeader;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         if (INSTANCE == null)
         {
             INSTANCE = this;
         }
-        Debug.Log("Starting");
         string enemyLeaderName = PlayerPrefs.GetString("EnemyName");
         string deckName = PlayerPrefs.GetString("DeckName");
         string playerName = GetPlayerName(deckName);
@@ -368,7 +364,6 @@ public class Game : MonoBehaviour
         PlayerPrefs.SetInt(EnemyLeader + "Defeats", defeats + 1);
         GoToMainMenuButton.gameObject.SetActive(true);
         GoToMainMenuButton.onClick.AddListener(GoBackToMainMenu);
-        Debug.Log("Get rekt m8");
     }
 
     internal List<CardObject> FindCardsInGameByTag(Deck.TagType stake, bool playerCards)
@@ -664,7 +659,6 @@ public class Game : MonoBehaviour
         PlayerPrefs.SetInt(EnemyLeader + "Victories", victories + 1);
         GoToMainMenuButton.gameObject.SetActive(true);
         GoToMainMenuButton.onClick.AddListener(GoBackToMainMenu);
-        Debug.Log("GG");
     }
 
     private void OnEndTurn()
@@ -820,7 +814,6 @@ public class Game : MonoBehaviour
 
     public void UseCardEffect(CardObject co, CardObject objective)
     {
-        Debug.Log("Using " + co.card.ImageName + "'s effect");
         Card c = co.card;
         if (objective != null)
         {
@@ -829,6 +822,7 @@ public class Game : MonoBehaviour
         bool effectSuccess = co.card.Effect(c);
         if (effectSuccess)
         {
+            Debug.Log("Using " + co.card.ImageName + "'s effect");
             co.usedEffect = true;
             co.TurnEffectWasUsedOn = Turn;
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class DeckGrid : MonoBehaviour
     [SerializeField] private Button GoBackButton;
     [SerializeField] private Image ZoomedCardInInventory;
     [SerializeField] private Image ZoomedCardInDeck;
+    [SerializeField] private TextMeshProUGUI CardsOwnedText;
     private int OFFSET = 20;
     private int STARTINGX = -250;
     private int STARTINGY = 800;
@@ -46,17 +48,24 @@ public class DeckGrid : MonoBehaviour
     private void LoadCardsInInventory()
     {
         int i = 1;
+        int cardsOwned = 0;
         foreach(Deck.CardsByID cbi in Enum.GetValues(typeof(Deck.CardsByID)))
         {
             int cardsHold = PlayerPrefs.GetInt(cbi.ToString()+"Inventory");
-            if(cardsHold != 0)
+            DeckGridTile cardTile = CardsMap[i];
+            if (cardsHold != 0)
             {
-                DeckGridTile cardTile = CardsMap[i];
                 Sprite cardSprite = (Sprite)Resources.Load("Cards/" + cbi.ToString(), typeof(Sprite));
                 cardTile.gameObject.GetComponent<Image>().sprite = cardSprite;
+                cardsOwned++;
+            }
+            else
+            {
+                cardTile.gameObject.SetActive(false);
             }
             i++;
         }
+        CardsOwnedText.text = $"{cardsOwned}/45";
     }
 
     void GoBackToMainMenu()

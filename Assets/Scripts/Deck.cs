@@ -67,7 +67,10 @@ public class Deck
     }
     private void AddCardRegister(Card card, bool leader = false)
     {
-        Game.INSTANCE.CardsInGame.Add(card);
+        if (Game.INSTANCE != null)
+        {
+            Game.INSTANCE.CardsInGame.Add(card);
+        }
         if (!leader)
         {
             this.cards.Push(card);
@@ -90,14 +93,20 @@ public class Deck
     {
         Card beelzebub = new Card(1, 5, 3, CardEffects.BeelzebubEffect, "Beelzebub", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
         AddCardRegister(beelzebub);
-        EffectListener.INSTANCE.GettingCountersList.Add(beelzebub);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.GettingCountersList.Add(beelzebub);
+        }
     }
 
     public void BelphegorCard()
     {
         Card belphegor = new Card(1, 6, 2, CardEffects.BelphegorEffect, "Belphegor", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
-        EffectListener.INSTANCE.TurnEndingList.Add(belphegor);
         AddCardRegister(belphegor);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(belphegor);
+        }
     }
 
     public void LeviathanCard()
@@ -114,21 +123,30 @@ public class Deck
     {
         Card satan = new Card(1, 2, 6, CardEffects.SatanEffect, "Satan", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
         AddCardRegister(satan);
-        EffectListener.INSTANCE.DestroysCardsList.Add(satan);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.DestroysCardsList.Add(satan);
+        }
     }
 
     public void LuciferCard()
     {
         Card lucifer = new Card(2, 7, 7, CardEffects.LuciferEffect, "Lucifer", new List<TagType> { TagType.Summon, TagType.Stake }, true, false, 0);
         AddCardRegister(lucifer);
-        EffectListener.INSTANCE.CardPlayedList.Add(lucifer);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.CardPlayedList.Add(lucifer);
+        }
     }
 
     public void GaapCard()
     {
         Card gaap = new Card(2, 4, 4, CardEffects.GaapEffect, "Gaap", new List<TagType> { TagType.Summon, TagType.Demon }, true, false, 0);
         AddCardRegister(gaap);
-        EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(gaap);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(gaap);
+        }
     }
 
     public void RonoveCard()
@@ -155,34 +173,49 @@ public class Deck
     {
         Card will = new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<TagType> { TagType.Human }, true, false, 0);
         AddCardRegister(will);
-        EffectListener.INSTANCE.EffectStopperList.Add(will);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.EffectStopperList.Add(will);
+        }
     }
     public void DianaCard()
     {
         Card diana = new Card(1, 2, 2, CardEffects.DianaEffect, "Diana", new List<TagType> { TagType.Cat, TagType.Pet }, true, false, 1);
-        EffectListener.INSTANCE.TurnEndingList.Add(diana);
         AddCardRegister(diana);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(diana);
+        }
     }
 
     public void GenjiCard()
     {
         Card Genji = new Card(2, 12, 2, CardEffects.GenjiEffect, "Genji", new List<TagType> { TagType.Servant, TagType.Human }, true, false, 0);
-        EffectListener.INSTANCE.TurnEndingList.Add(Genji);
         AddCardRegister(Genji);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Genji);
+        }
     }
 
     public void GohdaCard()
     {
         Card Gohda = new Card(2, 10, 4, CardEffects.GohdaEffect, "Gohda", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 1);
-        EffectListener.INSTANCE.TurnEndingList.Add(Gohda);
         AddCardRegister(Gohda);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Gohda);
+        }
     }
 
     public void KanonCard()
     {
         Card Kanon = new Card(1, 6, 6, CardEffects.KanonEffect, "Kanon", new List<TagType> { TagType.Human, TagType.Servant }, true, false, 0);
         AddCardRegister(Kanon);
-        EffectListener.INSTANCE.DestroysCardsList.Add(Kanon);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.DestroysCardsList.Add(Kanon);
+        }
     }
 
     public void KumasawaCard()
@@ -202,21 +235,30 @@ public class Deck
     public void RudolfCard()
     {
         Card Rudolf = new Card(1, 10, 1, CardEffects.RudolfEffect, "Rudolf", new List<TagType> { TagType.Human }, true, false, 0);
-        EffectListener.INSTANCE.TurnEndingList.Add(Rudolf);
         AddCardRegister(Rudolf);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Rudolf);
+        }
     }
     public void KyrieCard()
     {
         Card Kyrie = new Card(1, 10, 1, CardEffects.KyrieEffect, "Kyrie", new List<TagType> { TagType.Human }, true, false, 0);
-        EffectListener.INSTANCE.TurnEndingList.Add(Kyrie);
         AddCardRegister(Kyrie);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Kyrie);
+        }
     }
 
     public void EvaCard()
     {
         Card Eva = new Card(1, 9, 3, CardEffects.EvaEffect, "Eva", new List<TagType> { TagType.Human }, true, false, 0);
-        EffectListener.INSTANCE.TurnEndingList.Add(Eva);
         AddCardRegister(Eva);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Eva);
+        }
     }
     public void GeorgeCard()
     {
@@ -226,8 +268,11 @@ public class Deck
     public void HideyoshiCard()
     {
         Card Hideyoshi = new Card(1, 10, 2, CardEffects.HideyoshiEffect, "Hideyoshi", new List<TagType> { TagType.Human }, true, false, 0);
-        EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(Hideyoshi);
         AddCardRegister(Hideyoshi);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(Hideyoshi);
+        }
     }
     public void JessicaCard()
     {
@@ -242,28 +287,40 @@ public class Deck
     public void NatsuhiCard()
     {
         Card Natsuhi = new Card(1, 8, 8, CardEffects.NatsuhiEffect, "Natsuhi", new List<TagType> { TagType.Human }, true, false, 0);
-        EffectListener.INSTANCE.TurnEndingList.Add(Natsuhi);
         AddCardRegister(Natsuhi);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Natsuhi);
+        }
     }
     public void RosaCard()
     {
         Card Rosa = new Card(2, 20, 6, CardEffects.RosaEffect, "Rosa", new List<TagType> { TagType.Human }, true, false, 0);
         AddCardRegister(Rosa);
-        EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(Rosa); Card Rudolf = new Card(1, 10, 1, CardEffects.RudolfEffect, "Rudolf", new List<TagType> { TagType.Human }, true, false, 0);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.CanAttackFromAnywhereList.Add(Rosa);
+        }
     }
 
     public void SakutarouCard()
     {
         Card Sakutarou = new Card(1, 5, 1, CardEffects.SakutarouEffect, "Sakutarou", new List<TagType> { TagType.Summon }, true, false, 0);
-        EffectListener.INSTANCE.TurnEndingList.Add(Sakutarou);
         AddCardRegister(Sakutarou);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Sakutarou);
+        }
     }
 
     public void MariaCard()
     {
         Card Maria = new Card(2, 4, 1, CardEffects.MariaEffect, "Maria", new List<TagType> { TagType.Human }, true, false, 0);
-        EffectListener.INSTANCE.TurnEndingList.Add(Maria);
         AddCardRegister(Maria);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Maria);
+        }
     }
     public void MariaBeatriceCard()
     {
@@ -319,7 +376,7 @@ public class Deck
         }
     }
 
-    private void LoadDeck()
+    public void LoadDeck()
     {
         foreach(CardsByID cbi in Enum.GetValues(typeof(CardsByID)))
         {
