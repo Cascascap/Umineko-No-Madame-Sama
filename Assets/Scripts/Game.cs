@@ -1041,6 +1041,30 @@ public class Game : MonoBehaviour
         return cardObject;
     }
 
+    public CardObject CreateCardInSlot(Card card, GameObject cardSlot)
+    {;
+        Sprite enemyLeaderSprite = (Sprite)Resources.Load("cards/" + card.ImageName, typeof(Sprite));
+        GameObject go = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        RectTransform rectTransform = go.GetComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(112, 160);
+        Image image = go.GetComponent<Image>();
+        image.sprite = enemyLeaderSprite;
+        go.transform.SetParent(cardSlot.transform, false);
+        CardFunctions script = go.GetComponent<CardFunctions>();
+        script.ZoomedCard = ZoomedCard;
+        CardObject cardObject = new CardObject(go, card);
+        if (card.Tags.Contains(Deck.TagType.Leader))
+        {
+            go.name = card.ImageName + "Card";
+        }
+        else
+        {
+            go.name = card.ImageName + go.GetInstanceID() + "Card";
+        }
+        UpdateStatBoxes(cardObject, cardSlot: cardSlot);
+        return cardObject;
+    }
+
     public CardObject CreateCardInSlot(string cardName, GameObject cardSlot)
     {
         Sprite enemyLeaderSprite = (Sprite)Resources.Load("cards/" + cardName, typeof(Sprite));

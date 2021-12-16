@@ -417,7 +417,7 @@ public class Deck
 
     public void PieceCard()
     {
-        Card Piece = new Card(3, 36, 10, CardEffects.PieceEffect, "Piece", new List<TagType> { TagType.Witch }, false, false, 2);
+        Card Piece = new Card(2, 36, 10, CardEffects.PieceEffect, "Piece", new List<TagType> { TagType.Witch }, false, true, 2, requiresAI: true);
         AddCardRegister(Piece);
     }
 
@@ -617,13 +617,20 @@ public class Deck
 
     public void Featherine()
     {
-        this.leaderCard = new Card(0, 160, 20, CardEffects.FeatherineEffect, "Featherine", new List<TagType> { TagType.Leader, TagType.Witch }, false, false, 1);
+        this.leaderCard = new Card(0, 160, 20, CardEffects.FeatherineEffect, "Featherine", new List<TagType> { TagType.Leader, TagType.Witch }, false, true, 1, requiresAI:true);
         AddCardRegister(this.leaderCard, true);
-        AddCardToDeck(CardsByID.FutureGoat, 10, false);
+        AddCardToDeck(CardsByID.FutureGoat, 5, false);
         AddCardToDeck(CardsByID.Bernkastel, saveCard: false);
         AddCardToDeck(CardsByID.Piece, saveCard: false);
         AddCardToDeck(CardsByID.AngeBeatrice, saveCard: false);
         AddCardToDeck(CardsByID.EvaBeatrice2, saveCard: false);
+
+
+        Card Cats = new Card(1, 1, 0, CardEffects.CatsEffect, "Cats", new List<TagType> { TagType.Cat }, true, false, 1);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Cats);
+        }
     }
 
     // 1-6, 2-6, 3-6

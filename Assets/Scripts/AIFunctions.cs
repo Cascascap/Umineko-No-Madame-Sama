@@ -294,6 +294,10 @@ public class AIFunctions : MonoBehaviour
                     if (co.card.RequiresAI)
                     {
                         CardObject bestTargetCO = GetBestEffectTarget(co.card);
+                        if (bestTargetCO == null)
+                        {
+                            continue;
+                        }
                         Game.INSTANCE.UseCardEffect(co, bestTargetCO);
                     }
                     else
@@ -321,7 +325,43 @@ public class AIFunctions : MonoBehaviour
         {
             return ShannonEffectAI(effectUser);
         }
+        else if (effectUser.ImageName == "Featherine")
+        {
+            return FeatherineEffectAI(effectUser);
+        }
+        else if (effectUser.ImageName == "Piece")
+        {
+            return FeatherineEffectAI(effectUser);
+        }
         return null;
+    }
+
+    private CardObject FeatherineEffectAI(Card effectUser)
+    {
+        CardObject bestTarget = null;
+        for (int i = 0; i < Game.INSTANCE.CardObjectsInGame.Count; i++)
+        {
+            CardObject candidate = Game.INSTANCE.CardObjectsInGame[i];
+            if (candidate.GameObject.transform.parent.parent.name == Game.INSTANCE.EnemyField.name || candidate.card.Tags.Contains(TagType.Leader))
+            {
+                continue;
+            }
+            else
+            {
+                if (bestTarget == null)
+                {
+                    bestTarget = candidate;
+                }
+                else
+                {
+                    if ((bestTarget.card.HP + bestTarget.counters) < (candidate.card.HP + candidate.counters))
+                    {
+                        bestTarget = candidate;
+                    }
+                }
+            }
+        }
+        return bestTarget;
     }
 
     private CardObject NanjoEffectAI(Card effectUser)

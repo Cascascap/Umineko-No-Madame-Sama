@@ -513,7 +513,9 @@ public class CardEffects
         }
         while (enemyOpenSlot != null)
         {
-            Game.INSTANCE.CreateCardInSlot(Deck.CardsByID.Cats.ToString(), enemyOpenSlot);
+            Card catCard = Deck.GetAllCards().Find(x => x.ImageName == Deck.CardsByID.Cats.ToString());
+            CardObject co = Game.INSTANCE.CreateCardInSlot(catCard, enemyOpenSlot);
+            Game.INSTANCE.CardObjectsInGame.Add(co);
             enemyOpenSlot = FindOpenSlot(field);
 
         }
@@ -560,13 +562,13 @@ public class CardEffects
     internal static bool PieceEffect(Card c)
     {
         GameObject field = GetPlayerField(c);
-        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        CardObject target = c.GetTargetCardObject();
+        if (target.GameObject.transform.parent.parent.name != field.name && !target.card.Tags.Contains(TagType.Leader))
         {
-            if (co.GameObject.transform.parent.parent.name != field.name && !co.card.Tags.Contains(TagType.Leader))
-            {
-                Game.INSTANCE.DamageCard(co, co.currentHP);
-                return true;
-            }
+            Game.INSTANCE.DamageCard(target, target.currentHP);
+            Game.INSTANCE.UpdateAllStatBoxes();
+            Game.INSTANCE.RecalculateCosts();
+            return true;
         }
         return false;
     }
@@ -579,6 +581,7 @@ public class CardEffects
             if (co.GameObject.transform.parent.parent.name == field.name && co.card.Tags.Contains(TagType.Leader))
             {
                 Game.INSTANCE.DamageCard(co, 3);
+                Game.INSTANCE.UpdateAllStatBoxes();
                 return true;
             }
         }
@@ -767,13 +770,13 @@ public class CardEffects
         {
             return false;
         }
-        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        CardObject target = c.GetTargetCardObject();
+        if (target != null)
         {
-            if (co.GameObject.transform.parent.parent.name != field.name && !co.card.Tags.Contains(TagType.Leader))
-            {
-                co.GameObject.transform.SetParent(os.transform);
-                return true;
-            }
+            target.GameObject.transform.SetParent(os.transform, false);
+            Game.INSTANCE.UpdateAllStatBoxes();
+            Game.INSTANCE.RecalculateCosts();
+            return true;
         }
         return false;
     }
