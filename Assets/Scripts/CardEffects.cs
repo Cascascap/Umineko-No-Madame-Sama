@@ -408,9 +408,15 @@ public class CardEffects
         return field;
     }
 
-    internal static bool Chiester00Effect(Card arg)
+    internal static bool Chiester00Effect(Card c)
     {
-        throw new NotImplementedException();
+        List<CardObject> chiesters = Game.INSTANCE.FindCardsInGameByTag(Deck.TagType.Chiester, c.GetUsedByPlayer());
+        if (chiesters.Count == 0)
+        {
+            return false;
+        }
+        Game.INSTANCE.DamageAllEnemyCards(5 * chiesters.Count, c.GetUsedByPlayer());
+        return true;
     }
 
     internal static bool JessicaEffect(Card c)
@@ -426,19 +432,30 @@ public class CardEffects
         return true;
     }
 
-    internal static bool Chiester45Effect(Card arg)
+    internal static bool Chiester45Effect(Card c)
     {
-        throw new NotImplementedException();
+        Game.INSTANCE.DamageAllEnemyCards(2, c.GetUsedByPlayer(), row:"front");
+        return true;
     }
 
-    internal static bool Chiester556Effect(Card arg)
+    internal static bool Chiester556Effect(Card c)
     {
-        throw new NotImplementedException();
+        GameObject field = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.GameObject.transform.parent.parent.name == field.name)
+            {
+                Game.INSTANCE.AddCounterEffect(co, 2);
+            }
+        }
+        return true;
+        
     }
 
-    internal static bool Chiester410Effect(Card arg)
+    internal static bool Chiester410Effect(Card c)
     {
-        throw new NotImplementedException();
+        Game.INSTANCE.DamageAllEnemyCards(2, c.GetUsedByPlayer(), row: "back");
+        return true;
     }
 
     internal static bool KraussEffect(Card arg)
@@ -554,9 +571,9 @@ public class CardEffects
         CardObject effectUser = c.GetTargetCardObject();
         if (tags.Contains(TagType.Witch) && effectUser.GameObject.transform.parent.parent.name == "PlayerField")
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     internal static bool SakutarouEffect(Card c)
@@ -676,8 +693,14 @@ public class CardEffects
         throw new NotImplementedException();
     }
 
-    internal static bool EvaBeatriceEffect(Card arg)
+    internal static bool EvaBeatriceEffect(Card c)
     {
-        throw new NotImplementedException();
+        CardObject cardMoving = c.GetTargetCardObject();
+        GameObject field = GetPlayerField(c);
+        if (cardMoving.card.Cost == 1 && cardMoving.GameObject.transform.parent.parent.name != field.name)
+        {
+            return false;
+        }
+        return true;
     }
 }

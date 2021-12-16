@@ -386,7 +386,7 @@ public class Deck
     }
     public void Chiester556Card()
     {
-        Card Chiester556 = new Card(2, 20, 10, CardEffects.Chiester556Effect, "Chiester556", new List<TagType> { TagType.Chiester, TagType.Summon }, true, false, 1);
+        Card Chiester556 = new Card(1, 20, 10, CardEffects.Chiester556Effect, "Chiester556", new List<TagType> { TagType.Chiester, TagType.Summon }, true, false, 1);
         if (EffectListener.INSTANCE != null)
         {
             EffectListener.INSTANCE.TurnEndingList.Add(Chiester556);
@@ -408,7 +408,7 @@ public class Deck
 
     public void EvaBeatrice2Card()
     {
-        Card EvaBeatrice = new Card(2, 36, 10, CardEffects.EvaBeatriceEffect, "EvaBeatrice2", new List<TagType> { TagType.Witch }, false, false, 1);
+        Card EvaBeatrice = new Card(2, 36, 10, CardEffects.EvaBeatrice2Effect, "EvaBeatrice2", new List<TagType> { TagType.Witch }, false, false, 1);
         AddCardRegister(EvaBeatrice);
     }
 
@@ -581,7 +581,7 @@ public class Deck
 
     public void EVA()
     {
-        this.leaderCard = new Card(0, 100, 8, CardEffects.EvaBeatriceEffect, "EVA", new List<TagType> { TagType.Leader, TagType.Witch }, true, false, 1);
+        this.leaderCard = new Card(0, 80, 15, CardEffects.EvaBeatriceEffect, "EVA", new List<TagType> { TagType.Leader, TagType.Witch }, true, false, 1);
         AddCardRegister(this.leaderCard, true);
         if (EffectListener.INSTANCE != null)
         {
@@ -946,7 +946,7 @@ public class Deck
         new Card(3, 30, 15, CardEffects.Chiester00Effect, "Chiester00", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 2),
         new Card(1, 8, 8, CardEffects.Chiester410Effect, "Chiester410", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 1),
         new Card(1, 8, 8, CardEffects.Chiester45Effect, "Chiester45", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 1),
-        new Card(2, 20, 10, CardEffects.Chiester556Effect, "Chiester556", new List<TagType> { TagType.Chiester, TagType.Summon }, true, false, 1),
+        new Card(1, 20, 10, CardEffects.Chiester556Effect, "Chiester556", new List<TagType> { TagType.Chiester, TagType.Summon }, true, false, 1),
         new Card(1, 12, 1, CardEffects.BattlerEffect, "Battler2", new List<TagType> {TagType.Human }, false, false, 1),
         new Card(3, 36, 10, CardEffects.BernkastelEffect, "Bernkastel", new List<TagType> { TagType.Witch }, false, false, 1),
         new Card(2, 36, 10, CardEffects.AngeBeatriceEffect, "AngeBeatrice", new List<TagType> { TagType.Witch }, false, false, 2),

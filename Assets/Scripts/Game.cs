@@ -132,7 +132,7 @@ public class Game : MonoBehaviour
         ass.Play();
     }
 
-    internal void DamageAllEnemyCards(int damage, bool playerCard)
+    internal void DamageAllEnemyCards(int damage, bool playerCard, string row="")
     {
         List<CardObject> iteratable = new List<CardObject>(CardObjectsInGame);
         String fieldName;
@@ -146,11 +146,15 @@ public class Game : MonoBehaviour
         }
         foreach(CardObject co in iteratable)
         {
-            if(co.GameObject.transform.parent.parent.name == fieldName)
+            string rowCoord = co.GameObject.transform.parent.name.Substring(8, 1);
+            if (co.GameObject.transform.parent.parent.name == fieldName && (row=="" || 
+                (row=="front" && (rowCoord == "1" || rowCoord == "2")) ||
+                (row == "back" && (rowCoord == "0" || rowCoord == "3"))))
             {
                 DamageCard(co, damage);
             }
         }
+        UpdateAllStatBoxes();
     }
 
     public void DamageCard(CardObject co, int damage)

@@ -224,6 +224,11 @@ public class CardFunctions : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                                 Debug.Log("Already moved");
                                 return;
                             }
+                            if(!EffectListener.INSTANCE.OnAllowMovement(cardObject))
+                            {
+                                Debug.Log("Effect is stopping this card from moving");
+                                return;
+                            }
                             bool canMove = CanMoveToPosition(movingCard, eventData.pointerClick);
                             if (!canMove)
                             {

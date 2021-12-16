@@ -19,6 +19,27 @@ public class EffectListener
         INSTANCE = this;
     }
 
+    public bool OnAllowMovement(CardObject cardMoving)
+    {
+        bool effectAllowed = true;
+        foreach (Card c in MovementStopperList)
+        {
+            List<CardObject> cos = Game.INSTANCE.FindCardObject(c.ImageName);
+            foreach (CardObject co in cos)
+            {
+                c.InitializeEffectParametrs();
+                c.SetTargetCardObject(cardMoving);
+                c.SetUsedByPlayer(co.GameObject.transform.parent.parent.name == Game.INSTANCE.PlayerField.name);
+                bool effectResult = c.Effect.Invoke(c);
+                if (!effectResult)
+                {
+                    return false;
+                }
+            }
+        }
+        return effectAllowed;
+    }
+
     public bool OnAllowUseEffect(CardObject cardUsingEffect)
     {
         bool effectAllowed = true;
