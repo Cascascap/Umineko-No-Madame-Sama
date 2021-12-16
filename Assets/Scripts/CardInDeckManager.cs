@@ -76,6 +76,11 @@ public class CardInDeckManager : MonoBehaviour
         {
             return;
         }
+        if(PlayerPrefs.GetInt(card.Card.ImageName) == 4)
+        {
+            EditorUtility.DisplayDialog("Can't do action", $"Cant have more than {MAX_CARDS_PER_DECK} copies of this card in your deck", "OK");
+            return;
+        }
         int cardsInDeck = PlayerPrefs.GetInt(card.Card.ImageName);
         PlayerPrefs.SetInt(card.Card.ImageName, cardsInDeck + 1);
         int cardsInInventory = PlayerPrefs.GetInt(card.Card.ImageName + "Inventory");
@@ -94,7 +99,6 @@ public class CardInDeckManager : MonoBehaviour
         if(CardsInDeck.Count <= MIN_DECK_SIZE)
         {
             EditorUtility.DisplayDialog("Can't do action", $"Cant have less than {MIN_DECK_SIZE} cards in deck", "OK");
-            Debug.Log($"Cant have less than {MIN_DECK_SIZE} cards in deck");
             return;
         }
         int cardsInDeck = PlayerPrefs.GetInt(card.Card.ImageName);

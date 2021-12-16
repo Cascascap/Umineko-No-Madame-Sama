@@ -98,7 +98,10 @@ public class Deck
         AddCardRegister(beelzebub);
         if (EffectListener.INSTANCE != null)
         {
-            EffectListener.INSTANCE.GettingCountersList.Add(beelzebub);
+            if (EffectListener.INSTANCE.GettingCountersList.Find(x=> x.ImageName == "Beelzebub")==null)
+            {
+                EffectListener.INSTANCE.GettingCountersList.Add(beelzebub);
+            }
         }
     }
 
@@ -289,7 +292,7 @@ public class Deck
     }
     public void NatsuhiCard()
     {
-        Card Natsuhi = new Card(1, 8, 8, CardEffects.NatsuhiEffect, "Natsuhi", new List<TagType> { TagType.Human }, true, false, 0);
+        Card Natsuhi = new Card(3, 8, 8, CardEffects.NatsuhiEffect, "Natsuhi", new List<TagType> { TagType.Human }, true, false, 0);
         AddCardRegister(Natsuhi);
         if (EffectListener.INSTANCE != null)
         {
@@ -933,7 +936,7 @@ public class Deck
         new Card(1, 10, 2, CardEffects.HideyoshiEffect, "Hideyoshi", new List<TagType> { TagType.Human }, true, false, 0),
         new Card(1, 5, 8, CardEffects.JessicaEffect, "Jessica", new List<TagType> { TagType.Human }, false, false, 0),
         new Card(1, 8, 8, CardEffects.KraussEffect, "Krauss", new List<TagType> { TagType.Human }, true, false, 0),
-        new Card(1, 8, 8, CardEffects.NatsuhiEffect, "Natsuhi", new List<TagType> { TagType.Human }, true, false, 0),
+        new Card(3, 8, 8, CardEffects.NatsuhiEffect, "Natsuhi", new List<TagType> { TagType.Human }, true, false, 0),
         new Card(2, 20, 6, CardEffects.RosaEffect, "Rosa", new List<TagType> { TagType.Human }, true, false, 0),
         new Card(3, 8, 10, CardEffects.WillEffect, "Will", new List<TagType> { TagType.Human }, true, false, 0),
         new Card(2, 6, 2, CardEffects.LionEffect, "Lion", new List<TagType> { TagType.Human}, false, false, 1, requiresAI: true),

@@ -443,7 +443,7 @@ public class CardEffects
         GameObject field = GetPlayerField(c);
         foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
         {
-            if (co.GameObject.transform.parent.parent.name == field.name)
+            if (co.GameObject.transform.parent.parent.name == field.name && co.card.Tags.Contains(TagType.Chiester))
             {
                 Game.INSTANCE.AddCounterEffect(co, 2);
             }
@@ -571,9 +571,9 @@ public class CardEffects
         CardObject effectUser = c.GetTargetCardObject();
         if (tags.Contains(TagType.Witch) && effectUser.GameObject.transform.parent.parent.name == "PlayerField")
         {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     internal static bool SakutarouEffect(Card c)
@@ -674,7 +674,7 @@ public class CardEffects
         if (!targetCardObject.acted)
         {
             targetCardObject.currentHP = targetCardObject.card.HP + targetCardObject.counters;
-            Game.INSTANCE.UpdateStatBoxes(targetCardObject, targetCardObject.GameObject.transform.parent.gameObject);
+            Game.INSTANCE.UpdateAllStatBoxes();
             return true;
         }
         else

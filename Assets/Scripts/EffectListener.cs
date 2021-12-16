@@ -117,7 +117,8 @@ public class EffectListener
     {
         foreach(Card c in GettingCountersList)
         {
-            if (go.name.StartsWith(c.ImageName) && Game.INSTANCE.FindCardObject(go)!=null)
+            bool usedByPlayer = go.transform.parent.parent.name == Game.INSTANCE.PlayerField.name;
+            if ((go.name.StartsWith(c.ImageName) && Game.INSTANCE.FindCardObject(go)!=null) && ((usedByPlayer && Game.INSTANCE.GameState != Game.State.EnemyTurn) || (!usedByPlayer && Game.INSTANCE.GameState == Game.State.EnemyTurn)))
             {
                 c.InitializeEffectParametrs();
                 CardObject co = Game.INSTANCE.FindCardObject(go);

@@ -46,6 +46,7 @@ public class Game : MonoBehaviour
         {
             INSTANCE = this;
         }
+        Deck.EVAReward();
         string enemyLeaderName = PlayerPrefs.GetString("EnemyName");
         string deckName = PlayerPrefs.GetString("DeckName");
         string playerName = GetPlayerName(deckName);
