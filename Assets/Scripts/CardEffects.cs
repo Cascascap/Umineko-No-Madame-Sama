@@ -585,7 +585,6 @@ public class CardEffects
 
     internal static bool WillEffect(Card c)
     {
-        Debug.Log("Witches cant use their skill");
         List<TagType> tags = c.GetTargetCardTags();
         CardObject effectUser = c.GetTargetCardObject();
         if (tags.Contains(TagType.Witch) && effectUser.GameObject.transform.parent.parent.name == "PlayerField")
@@ -681,9 +680,16 @@ public class CardEffects
     }
 
 
-    internal static bool ErikaEffect(Card arg)
+    internal static bool ErikaEffect(Card c)
     {
-        Debug.Log("Prevents enemy cards on the first row from using their abilities");
+        string fieldName = GetPlayerField(c).name;
+        CardObject effectUser = c.GetTargetCardObject();
+        string rowCoord = effectUser.GameObject.transform.parent.name.Substring(8, 1);
+        if ((Game.INSTANCE.PlayerField.name == fieldName && rowCoord == "1") ||
+            (Game.INSTANCE.EnemyField.name == fieldName && rowCoord == "2"))
+        {
+            return false;
+        }
         return true;
     }
 
