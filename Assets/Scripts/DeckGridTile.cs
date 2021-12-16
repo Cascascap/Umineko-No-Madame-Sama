@@ -7,9 +7,12 @@ using UnityEngine.UI;
 public class DeckGridTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] public Image ZoomedCard;
+    public Card Card;
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        CardInDeckManager.GetInstance().AddCardToDeck(this);
+        ZoomedCard.gameObject.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

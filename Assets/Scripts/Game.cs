@@ -28,9 +28,6 @@ public class Game : MonoBehaviour
     private Dictionary<string, GameObject> SlotMap = new Dictionary<string, GameObject>();
     public TextMeshProUGUI TurnStateDisplay;
 
-    public int MAX_CARDS_PER_DECK = 4;
-    public int MIN_DECK_SIZE = 5;
-    public int MAX_DECK_SIZE = 30;
     public int MAX_CARDS_HAND = 8;
     public int STARTING_CARDS_HAND = 5;
 

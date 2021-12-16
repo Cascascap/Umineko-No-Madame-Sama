@@ -13,9 +13,12 @@ public class CardInDeck : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public TextMeshProUGUI CardInDeckATK;
     public Sprite CardInDeckSprite;
     public Image ZoomedCard;
+    public Card Card;
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        CardInDeckManager.GetInstance().RemoveCardFromDeck(this);
+        ZoomedCard.gameObject.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

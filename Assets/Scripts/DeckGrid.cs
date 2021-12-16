@@ -57,7 +57,10 @@ public class DeckGrid : MonoBehaviour
             {
                 Sprite cardSprite = (Sprite)Resources.Load("Cards/" + cbi.ToString(), typeof(Sprite));
                 cardTile.gameObject.GetComponent<Image>().sprite = cardSprite;
-                cardsOwned++;
+                //CardInDeckManager.GetInstance().Deck.AddCardToDeck(cbi);
+                //List<Card> newCards = new List<Card>(CardInDeckManager.GetInstance().Deck.cards);
+                cardTile.Card = Deck.GetAllCards().Find(x => x.ImageName == cbi.ToString());
+;               cardsOwned++;
             }
             else
             {
