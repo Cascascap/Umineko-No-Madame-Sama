@@ -674,7 +674,14 @@ public class Game : MonoBehaviour
         {
             Deck.BattlerReward();
         }
-
+        else if (EnemyLeader == "EVA")
+        {
+            Deck.EVAReward();
+        }
+        else if (EnemyLeader == "Erika")
+        {
+            Deck.ErikaReward();
+        }
         int victories = PlayerPrefs.GetInt(EnemyLeader + "Victories");
         PlayerPrefs.SetInt(EnemyLeader + "Victories", victories + 1);
         GoToMainMenuButton.gameObject.SetActive(true);

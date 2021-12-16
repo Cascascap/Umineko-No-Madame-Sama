@@ -28,7 +28,8 @@ public class Deck
         Pet,
         Object,
         Servant,
-        Angel
+        Angel,
+        Chiester
     }
 
     public int remainingCards = 0;
@@ -362,6 +363,26 @@ public class Deck
         AddCardRegister(Dlanor);
     }
 
+    public void Chiester00Card()
+    {
+        Card Chiester00 = new Card(3, 30, 15, CardEffects.Chiester00Effect, "Chiester00", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 2);
+        AddCardRegister(Chiester00);
+    }
+    public void Chiester410Card()
+    {
+        Card Chiester410 = new Card(1, 8, 8, CardEffects.Chiester410Effect, "Chiester410", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 1);
+        AddCardRegister(Chiester410);
+    }
+    public void Chiester45Card()
+    {
+        Card Chiester45 = new Card(1, 8, 8, CardEffects.Chiester45Effect, "Chiester45", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 1);
+        AddCardRegister(Chiester45);
+    }
+    public void Chiester556Card()
+    {
+        Card Chiester556 = new Card(2, 20, 10, CardEffects.Chiester556Effect, "Chiester556", new List<TagType> { TagType.Chiester, TagType.Summon }, true, false, 1);
+        AddCardRegister(Chiester556);
+    }
 
     public void StartingDeck()
     {
@@ -518,6 +539,21 @@ public class Deck
         AddCardToDeck(CardsByID.Rosa, saveCard: false);
     }
 
+    public void EVA()
+    {
+        this.leaderCard = new Card(0, 100, 8, CardEffects.EvaBeatriceEffect, "EVA", new List<TagType> { TagType.Leader, TagType.Witch }, true, false, 1);
+        AddCardRegister(this.leaderCard, true);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.MovementStopperList.Add(this.leaderCard);
+        }
+        AddCardToDeck(CardsByID.FutureGoat, 5, false);
+        AddCardToDeck(CardsByID.Chiester00, saveCard: false);
+        AddCardToDeck(CardsByID.Chiester410, saveCard: false);
+        AddCardToDeck(CardsByID.Chiester45, saveCard: false);
+        AddCardToDeck(CardsByID.Chiester556, saveCard: false);
+    }
+
     public void Erika()
     {
         this.leaderCard = new Card(0, 100, 8, CardEffects.ErikaEffect, "Erika", new List<TagType> { TagType.Leader, TagType.Witch }, true, false, 1);
@@ -638,6 +674,52 @@ public class Deck
         AddCardToInventory(reward);
     }
 
+    public static void EVAReward()
+    {
+        int rn = new Random().Next(1, 31);
+        CardsByID reward;
+        List<CardsByID> possibleRewards;
+        if (rn <= 5)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Chiester00 };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Chiester410, CardsByID.Chiester45, CardsByID.Chiester556, CardsByID.FutureGoat};
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        AddCardToInventory(reward);
+    }
+
+    public static void ErikaReward()
+    {
+        int rn = new Random().Next(1, 31);
+        CardsByID reward;
+        List<CardsByID> possibleRewards;
+        if (rn <= 5)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Dlanor };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else if (rn <= 15)
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.Gertrude, CardsByID.Cornelia };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        else
+        {
+            possibleRewards = new List<CardsByID> { CardsByID.FutureGoat };
+            int rnpr = new Random().Next(0, possibleRewards.Count);
+            reward = possibleRewards[rnpr];
+        }
+        AddCardToInventory(reward);
+    }
+
     public Card FindCardInDeck(string name)
     {
         List<Card> cardsList = this.cards.ToList(); 
@@ -750,8 +832,12 @@ public class Deck
         new Card(3, 8, 6, CardEffects.DlanorEffect, "Dlanor", new List<TagType> { TagType.Angel }, true, false, 0),
         new Card(2, 20, 6, CardEffects.CorneliaEffect, "Cornelia", new List<TagType> { TagType.Human }, false, false, 2),
         new Card(2, 20, 6, CardEffects.GertrudeEffect, "Gertrude", new List<TagType> { TagType.Human }, true, false, 0),
-        new Card(1, 8, 8, CardEffects.FutureGoatEffect, "FutureGoat", new List<TagType> { TagType.Summon }, true, false, 0)
-        };
+        new Card(1, 8, 8, CardEffects.FutureGoatEffect, "FutureGoat", new List<TagType> { TagType.Summon }, true, false, 0),
+        new Card(3, 30, 15, CardEffects.Chiester00Effect, "Chiester00", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 2),
+        new Card(1, 8, 8, CardEffects.Chiester410Effect, "Chiester410", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 1),
+        new Card(1, 8, 8, CardEffects.Chiester45Effect, "Chiester45", new List<TagType> { TagType.Chiester, TagType.Summon }, false, false, 1),
+        new Card(2, 20, 10, CardEffects.Chiester556Effect, "Chiester556", new List<TagType> { TagType.Chiester, TagType.Summon }, true, false, 1)
+    };
         return ret;
     }
 }

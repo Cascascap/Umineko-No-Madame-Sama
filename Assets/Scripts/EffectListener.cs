@@ -12,6 +12,7 @@ public class EffectListener
     public List<Card> DestroysCardsList = new List<Card>();
     public List<Card> CardPlayedList = new List<Card>();
     public List<Card> EffectStopperList = new List<Card>();
+    public List<Card> MovementStopperList = new List<Card>();
 
     public EffectListener()
     {

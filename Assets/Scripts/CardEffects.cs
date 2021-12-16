@@ -408,6 +408,11 @@ public class CardEffects
         return field;
     }
 
+    internal static bool Chiester00Effect(Card arg)
+    {
+        throw new NotImplementedException();
+    }
+
     internal static bool JessicaEffect(Card c)
     {
         GameObject playerField = GetPlayerField(c);
@@ -419,6 +424,21 @@ public class CardEffects
             }
         }
         return true;
+    }
+
+    internal static bool Chiester45Effect(Card arg)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static bool Chiester556Effect(Card arg)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal static bool Chiester410Effect(Card arg)
+    {
+        throw new NotImplementedException();
     }
 
     internal static bool KraussEffect(Card arg)
@@ -602,6 +622,11 @@ public class CardEffects
         {
             return false;
         }
+    }
+
+    internal static bool EvaBeatriceEffect(Card arg)
+    {
+        throw new NotImplementedException();
     }
 
     internal static bool ErikaEffect(Card arg)
