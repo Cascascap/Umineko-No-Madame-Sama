@@ -495,14 +495,47 @@ public class CardEffects
         return true;
     }
 
-    internal static bool BernkastelEffect(Card arg)
+    internal static bool BernkastelEffect(Card c)
     {
-        throw new NotImplementedException();
+        GameObject field = null;
+        if (c.GetUsedByPlayer())
+        {
+            field = Game.INSTANCE.EnemyField;
+        }
+        else
+        {
+            field = Game.INSTANCE.PlayerField;
+        }
+        GameObject enemyOpenSlot = FindOpenSlot(field);
+        if (enemyOpenSlot == null)
+        {
+            return false;
+        }
+        while (enemyOpenSlot != null)
+        {
+            Game.INSTANCE.CreateCardInSlot(Deck.CardsByID.Cats.ToString(), enemyOpenSlot);
+            enemyOpenSlot = FindOpenSlot(field);
+
+        }
+        Game.INSTANCE.UpdateAllStatBoxes();
+        Game.INSTANCE.RecalculateCosts();
+        return true;
     }
 
-    internal static bool AngeBeatriceEffect(Card arg)
+    internal static bool AngeBeatriceEffect(Card c)
     {
-        throw new NotImplementedException();
+        GameObject playerField = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.GameObject.transform.parent.parent.name != playerField.name)
+            {
+                if (Game.INSTANCE.GetCounterPanel(co.GameObject) != null)
+                {
+                    Game.INSTANCE.RemoveCounter(co, co.counters);
+                }
+            }
+        }
+        return true;
     }
 
     internal static bool KanonEffect(Card c)
@@ -524,14 +557,32 @@ public class CardEffects
         return true;
     }
 
-    internal static bool PieceEffect(Card arg)
+    internal static bool PieceEffect(Card c)
     {
-        throw new NotImplementedException();
+        GameObject field = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.GameObject.transform.parent.parent.name != field.name && !co.card.Tags.Contains(TagType.Leader))
+            {
+                Game.INSTANCE.DamageCard(co, co.currentHP);
+                return true;
+            }
+        }
+        return false;
     }
 
-    internal static bool CatsEffect(Card arg)
+    internal static bool CatsEffect(Card c)
     {
-        throw new NotImplementedException();
+        GameObject field = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.GameObject.transform.parent.parent.name == field.name && co.card.Tags.Contains(TagType.Leader))
+            {
+                Game.INSTANCE.DamageCard(co, 3);
+                return true;
+            }
+        }
+        return false;
     }
 
     internal static bool KumasawaEffect(Card c)
@@ -708,14 +759,39 @@ public class CardEffects
         }
     }
 
-    internal static bool Featherineffect(Card arg)
+    internal static bool FeatherineEffect(Card c)
     {
-        throw new NotImplementedException();
+        GameObject field = GetPlayerField(c);
+        GameObject os = FindOpenSlot(field);
+        if (os == null)
+        {
+            return false;
+        }
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.GameObject.transform.parent.parent.name != field.name && !co.card.Tags.Contains(TagType.Leader))
+            {
+                co.GameObject.transform.SetParent(os.transform);
+                return true;
+            }
+        }
+        return false;
     }
 
-    internal static bool EvaBeatrice2Effect(Card arg)
+    internal static bool EvaBeatrice2Effect(Card c)
     {
-        throw new NotImplementedException();
+        GameObject field = GetPlayerField(c);
+        foreach (CardObject co in Game.INSTANCE.CardObjectsInGame)
+        {
+            if (co.GameObject.transform.parent.parent.name != field.name)
+            {
+                if (Game.INSTANCE.HasShield(co.GameObject))
+                {
+                    Game.INSTANCE.RemoveShield(co.GameObject);
+                }
+            }
+        }
+        return true;
     }
 
     internal static bool EvaBeatriceEffect(Card c)
@@ -734,5 +810,18 @@ public class CardEffects
             return false;
         }
         return true;
+    }
+
+    internal static GameObject FindOpenSlot(GameObject field)
+    {
+        for(int i=0; i<field.transform.childCount; i++)
+        {
+            GameObject slot = field.transform.GetChild(i).gameObject;
+            if (!Game.INSTANCE.SlotWithCard(slot))
+            {
+                return slot;
+            }
+        }
+        return null;
     }
 }

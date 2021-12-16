@@ -423,7 +423,11 @@ public class Deck
 
     public void CatsCard()
     {
-        Card Cats = new Card(1, 1, 1, CardEffects.CatsEffect, "Cats", new List<TagType> { TagType.Cat }, true, false, 1);
+        Card Cats = new Card(1, 1, 0, CardEffects.CatsEffect, "Cats", new List<TagType> { TagType.Cat }, true, false, 1);
+        if (EffectListener.INSTANCE != null)
+        {
+            EffectListener.INSTANCE.TurnEndingList.Add(Cats);
+        }
         AddCardRegister(Cats);
     }
 
@@ -514,7 +518,7 @@ public class Deck
         {
             if (!cbi.ToString().StartsWith("PlaceHolder"))
             {
-                AddCardToInventory(cbi);
+                AddCardToInventory(cbi, 4);
             }
         }
     }
@@ -613,7 +617,7 @@ public class Deck
 
     public void Featherine()
     {
-        this.leaderCard = new Card(0, 160, 20, CardEffects.Featherineffect, "Featherine", new List<TagType> { TagType.Leader, TagType.Witch }, false, false, 1);
+        this.leaderCard = new Card(0, 160, 20, CardEffects.FeatherineEffect, "Featherine", new List<TagType> { TagType.Leader, TagType.Witch }, false, false, 1);
         AddCardRegister(this.leaderCard, true);
         AddCardToDeck(CardsByID.FutureGoat, 10, false);
         AddCardToDeck(CardsByID.Bernkastel, saveCard: false);
@@ -955,8 +959,8 @@ public class Deck
         new Card(2, 36, 10, CardEffects.AngeBeatriceEffect, "AngeBeatrice", new List<TagType> { TagType.Witch }, false, false, 2),
         new Card(2, 36, 10, CardEffects.EvaBeatrice2Effect, "EvaBeatrice2", new List<TagType> { TagType.Witch }, false, false, 1),
         new Card(3, 36, 10, CardEffects.PieceEffect, "Piece", new List<TagType> { TagType.Witch }, false, false, 2),
-        new Card(1, 1, 1, CardEffects.CatsEffect, "Cats", new List<TagType> { TagType.Cat }, true, false, 1),
-    };
+        new Card(1, 1, 0, CardEffects.CatsEffect, "Cats", new List<TagType> { TagType.Cat }, true, false, 1),
+        };
         return ret;
     }
 }
