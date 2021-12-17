@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DeckBuilding.unity
     guid: 6634822b87828e848bfcc12178a15d74
+  - enabled: 1
+    path: Assets/Scenes/Story.unity
+    guid: 139da125e6f4a8e448d5d6bb9d7accf2
   m_configObjects: {}

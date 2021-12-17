@@ -13,6 +13,7 @@ public class CardInDeckManager : MonoBehaviour
     [SerializeField] public Image ZoomedCard;
     [SerializeField] private TextMeshProUGUI CardsInDeckText;
     [SerializeField] private DeckGrid DeckGrid;
+    [SerializeField] private GameObject DialogPanel;
 
     private static CardInDeckManager INSTANCE;
     private Deck Deck;
@@ -22,7 +23,7 @@ public class CardInDeckManager : MonoBehaviour
 
     public int MAX_CARDS_PER_DECK = 4;
     public int MIN_DECK_SIZE = 5;
-    public int MAX_DECK_SIZE = 30;
+    public int MAX_DECK_SIZE = 30; 
 
     public static CardInDeckManager GetInstance()
     {
@@ -36,8 +37,15 @@ public class CardInDeckManager : MonoBehaviour
             Deck = new Deck();
             Deck.LoadDeck();
             CardsInDeck = new List<Card>(Deck.cards);
+            Button closePanelButton = DialogPanel.transform.GetChild(0).GetComponent<Button>();
+            closePanelButton.onClick.AddListener(ClosePanel);
         }
         PrintDeck();
+    }
+
+    private void ClosePanel()
+    {
+        DialogPanel.SetActive(false);
     }
 
     private void PrintDeck()
@@ -70,6 +78,7 @@ public class CardInDeckManager : MonoBehaviour
         }
     }
 
+
     public void AddCardToDeck(DeckGridTile card)
     {
         if(PlayerPrefs.GetInt(card.Card.ImageName + "Inventory") == 0)
@@ -78,7 +87,16 @@ public class CardInDeckManager : MonoBehaviour
         }
         if(PlayerPrefs.GetInt(card.Card.ImageName) == 4 && card.Card.ImageName != "Goat" && card.Card.ImageName != "FutureGoat")
         {
-            //EditorUtility.DisplayDialog("Can't do action", $"Cant have more than {MAX_CARDS_PER_DECK} copies of this card in your deck", "OK");
+            DialogPanel.SetActive(true);
+            TextMeshProUGUI dialogueText = DialogPanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            dialogueText.text = $"Can't have more than {MAX_CARDS_PER_DECK} copies of a card that isn't a goat";
+            return;
+        }
+        if (CardsInDeck.Count >= MAX_DECK_SIZE)
+        {
+            DialogPanel.SetActive(true);
+            TextMeshProUGUI dialogueText = DialogPanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            dialogueText.text = $"Cant have more than {MAX_DECK_SIZE} cards in deck";
             return;
         }
         int cardsInDeck = PlayerPrefs.GetInt(card.Card.ImageName);
@@ -98,7 +116,9 @@ public class CardInDeckManager : MonoBehaviour
     {
         if(CardsInDeck.Count <= MIN_DECK_SIZE)
         {
-            //EditorUtility.DisplayDialog("Can't do action", $"Cant have less than {MIN_DECK_SIZE} cards in deck", "OK");
+            DialogPanel.SetActive(true);
+            TextMeshProUGUI dialogueText = DialogPanel.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            dialogueText.text = $"Cant have less than {MIN_DECK_SIZE} cards in deck";
             return;
         }
         int cardsInDeck = PlayerPrefs.GetInt(card.Card.ImageName);
