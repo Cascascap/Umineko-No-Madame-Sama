@@ -16,16 +16,19 @@ public class ResetProgress : MonoBehaviour
 
     private void ResetAll()
     {
-        if (EditorUtility.DisplayDialog("Reset all progress",
+        /*
+         if (EditorUtility.DisplayDialog("Reset all progress",
                 "Do you want to erease all your saved progress?", "Yes", "No"))
         {
-            PlayerPrefs.DeleteAll();
-            MMM.HideObjects();
-            Debug.Log("Ereased");
+            
         }
         else
         {
             Debug.Log("Not ereased");
         }
+         */
+        PlayerPrefs.DeleteAll();
+        MMM.HideObjects();
+        Debug.Log("Ereased");
     }
 }

@@ -76,9 +76,9 @@ public class CardInDeckManager : MonoBehaviour
         {
             return;
         }
-        if(PlayerPrefs.GetInt(card.Card.ImageName) == 4)
+        if(PlayerPrefs.GetInt(card.Card.ImageName) == 4 && card.Card.ImageName != "Goat" && card.Card.ImageName != "FutureGoat")
         {
-            EditorUtility.DisplayDialog("Can't do action", $"Cant have more than {MAX_CARDS_PER_DECK} copies of this card in your deck", "OK");
+            //EditorUtility.DisplayDialog("Can't do action", $"Cant have more than {MAX_CARDS_PER_DECK} copies of this card in your deck", "OK");
             return;
         }
         int cardsInDeck = PlayerPrefs.GetInt(card.Card.ImageName);
@@ -98,7 +98,7 @@ public class CardInDeckManager : MonoBehaviour
     {
         if(CardsInDeck.Count <= MIN_DECK_SIZE)
         {
-            EditorUtility.DisplayDialog("Can't do action", $"Cant have less than {MIN_DECK_SIZE} cards in deck", "OK");
+            //EditorUtility.DisplayDialog("Can't do action", $"Cant have less than {MIN_DECK_SIZE} cards in deck", "OK");
             return;
         }
         int cardsInDeck = PlayerPrefs.GetInt(card.Card.ImageName);
